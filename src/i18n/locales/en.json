@@ -1,0 +1,66 @@
+{
+  "app": {
+    "title": "Alpha Project"
+  },
+  "nav": {
+    "home": "Home",
+    "friends": "Friends",
+    "box": "Mystery Box"
+  },
+  "home": {
+    "connect_wallet": "Connect Wallet",
+    "daily_claim": "Daily ALPHA Claim",
+    "claim_description": "Sign in Alpha tokens and earn rewards through team building",
+    "claim_button": "Sign in to Claim",
+    "pending_claim": "Pending ALPHA Tokens",
+    "claimable_amount": "Claimable Alpha token amount",
+    "claim_token": "Claim Tokens",
+    "bind_inviter": "Bind Inviter",
+    "inviter_address_placeholder": "Enter inviter address",
+    "confirm_inviter": "Confirm Binding"
+  },
+  "friends": {
+    "current_level": "Current Level",
+    "team_size": "Team Size",
+    "people": "People",
+    "livestream_list": "Direct Push List",
+    "connect_wallet_view": "Please connect wallet to view",
+    "contribution_points": "Contribution Points",
+    "claim_bnb": "Claim BNB",
+    "your_invitation_link": "Your Invitation Link",
+    "copy": "Copy"
+  },
+  "box": {
+    "open_box": "Open Box",
+    "share_box": "10x Box",
+    "reward_title": "Box Reward",
+    "reward_congrats": "Congratulations",
+    "reward_got": "You got",
+    "reward_alpha": "ALPHA",
+    "confirm": "Confirm",
+    "box_description": "Opening boxes daily adds team contribution value, Contribution value can be exchanged for BNB, higher team contribution means higher rewards.",
+    "footer": "© 2025 Alpha Blockchain"
+  },
+  "common": {
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "unbind": "Unbind",
+    "loading": "Loading...",
+    "copied": "Copied!",
+    "error": "An error occurred",
+    "success": "Success!",
+    "errors": {
+      "wallet_not_connected": "Please connect wallet first",
+      "invalid_address": "Invalid inviter address",
+      "not_bound": "Please bind inviter first",
+      "inviter_not_bound": "This address cannot be used as inviter because it has no upline",
+      "binding_failed": "Failed to bind inviter",
+      "claim_failed": "Failed to claim tokens",
+      "user_rejected": "User rejected the transaction",
+      "no_contribution": "No contribution points available",
+      "network_error": "Network error, please try again",
+      "purchase_too_frequent": "Purchase too frequent, please try again later",
+      "no_pending_tokens": "No tokens available to claim"
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "app": {
+    "title": "Alpha 项目"
+  },
+  "nav": {
+    "home": "首页",
+    "friends": "好友",
+    "box": "盲盒"
+  },
+  "home": {
+    "connect_wallet": "连接钱包",
+    "daily_claim": "每日ALPHA领取",
+    "claim_description": "签到Alpha代币并通过团队建设赚取奖励",
+    "claim_button": "签到领取",
+    "pending_claim": "待领取ALPHA代币",
+    "claimable_amount": "可领取的Alpha代币数量",
+    "claim_token": "领取代币",
+    "bind_inviter": "绑定邀请人",
+    "inviter_address_placeholder": "请输入邀请人地址",
+    "confirm_inviter": "确认绑定"
+  },
+  "friends": {
+    "current_level": "当前等级",
+    "team_size": "团队规模",
+    "people": "人",
+    "livestream_list": "直推列表",
+    "connect_wallet_view": "请连接钱包查看",
+    "contribution_points": "贡献点",
+    "claim_bnb": "领取BNB",
+    "your_invitation_link": "您的邀请链接",
+    "copy": "复制"
+  },
+  "box": {
+    "open_box": "开启盲盒",
+    "share_box": "翻倍盲盒",
+    "reward_title": "盲盒奖励",
+    "reward_congrats": "恭喜您",
+    "reward_got": "获得",
+    "reward_alpha": "ALPHA",
+    "confirm": "确认",
+    "box_description": "每开启盲盒增加团队贡献值，贡献值可以换取BNB，团队开启越多贡献值越高",
+    "footer": "© 2025 Alpha Blockchain"
+  },
+  "common": {
+    "connect": "连接",
+    "disconnect": "断开",
+    "unbind": "未绑定",
+    "loading": "加载中...",
+    "copied": "已复制！",
+    "error": "发生错误",
+    "success": "成功！",
+    "errors": {
+      "wallet_not_connected": "请先连接钱包",
+      "invalid_address": "无效的邀请人地址",
+      "not_bound": "请先绑定邀请人",
+      "inviter_not_bound": "该地址未绑定上级，不能作为邀请人",
+      "binding_failed": "绑定邀请人失败",
+      "claim_failed": "领取代币失败",
+      "user_rejected": "用户拒绝了交易",
+      "no_contribution": "没有可领取的贡献点",
+      "network_error": "网络错误，请重试",
+      "purchase_too_frequent": "购买太频繁，请稍后再试",
+      "no_pending_tokens": "没有可领取的代币"
+    }
+  }
+}
