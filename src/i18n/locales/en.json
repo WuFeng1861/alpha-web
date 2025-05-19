@@ -59,7 +59,7 @@
       "user_rejected": "User rejected the transaction",
       "no_contribution": "No contribution points available",
       "network_error": "Network error, please try again",
-      "purchase_too_frequent": "Purchase too frequent, please try again later",
+      "purchase_too_frequent": "Sign in Alpha tokens too frequent, please try again later",
       "no_pending_tokens": "No tokens available to claim"
     }
   }
