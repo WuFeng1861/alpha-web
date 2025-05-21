@@ -314,7 +314,7 @@ const handleClaimBNB = async () => {
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <img
-                src="https://cryptologos.cc/logos/bnb-bnb-logo.png"
+                src="http://wufeng98.cn/imgServerApi/images/7151f34e-2b93-4684-91e9-c74d25d1c70f.png"
                 alt="BNB"
                 class="w-6 h-6"
               />
