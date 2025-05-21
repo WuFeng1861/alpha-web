@@ -320,7 +320,7 @@ const handleClaimBNB = async () => {
               />
               <span class="text-black font-medium">BNB</span>
             </div>
-            <span class="text-black font-bold">{{ (Number(contributions.amount) * 0.0001).toFixed(4) }}</span>
+            <span class="text-black font-bold">{{ (Number(contributions.amount) * 0.000024).toFixed(4) }}</span>
           </div>
         </div>
 
