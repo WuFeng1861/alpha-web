@@ -382,7 +382,7 @@ export const getDirectRefsList = async (forceUpdate: boolean = false): Promise<A
     // 获取每个直推地址的下级数量
     const refsWithCount = await Promise.all(
       refs.map(async (address: string) => {
-        const count = await etherWallet.contractFn('getDirectRefCount', address);
+        const count = await etherWallet.contractFn('getTeamSize', address);
         return {
           address,
           count: Number(count)
