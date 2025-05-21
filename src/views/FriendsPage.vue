@@ -11,7 +11,7 @@ import Clipboard from "clipboard";
 const { t } = useI18n()
 const walletStore = useWalletStore()
 const showCopied = ref(false)
-const contributions = ref({amount: '0', level: 0})
+const contributions = ref({amount: '0', level: 0, received: '0'})
 const teamSize = ref('0')
 const directRefs = ref<Array<{address: string; count: number}>>([])
 const currentPage = ref(1)
@@ -232,7 +232,7 @@ const handleClaimBNB = async () => {
           class="h-16 w-16 object-contain mr-4"
         />
         <div class="text-left">
-          <p class="text-sm mb-1 tracking-widest" style="color: #45CD44">{{ t('friends.current_level') }}</p>
+          <p class="text-sm mb-1 tracking-widest" style="color: #45CD44">{{ t('friends.current_level') }}{{Number(contributions.received) > 0 ? `(${Number(contributions.received)+Number(contributions.amount)}`: `(${Number(contributions.amount)}`}})</p>
           <p class="text-2xl font-bold tracking-widest" style="color: #45CD44">Lv{{ contributions.level }}</p>
         </div>
       </div>

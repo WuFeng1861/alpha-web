@@ -3,6 +3,7 @@ import config from '../assets/config';
 import { useWalletStore } from '../stores/wallet';
 import toast from './toast';
 import { ref, computed } from 'vue';
+import axios from 'axios';
 
 let etherWallet = new EthWallet();
 
@@ -24,6 +25,7 @@ const directRefsCache = ref<{
 const contributionsCache = ref<{
   address: string;
   amount: string;
+  received: string;
   level: number;
   timestamp: number;
 } | null>(null);
@@ -642,6 +644,7 @@ export const getContributions = async (forceUpdate: boolean = false): Promise<{a
       contributionsCache.value.address === walletStore.address) {
     return {
       amount: contributionsCache.value.amount,
+      received: contributionsCache.value.received,
       level: contributionsCache.value.level
     };
   }
@@ -650,23 +653,42 @@ export const getContributions = async (forceUpdate: boolean = false): Promise<{a
     etherWallet.setABI(config.contractAbi);
     etherWallet.updateTokenContract(config.contractAddress);
     const amount = await etherWallet.contractFn('getContributions', walletStore.address);
-    const formattedAmount = amount;
-    const level = calculateLevel(formattedAmount);
+    let receivedAmount = await getContributionsReceived();
+    const formattedAmount = Number(amount) + Number(receivedAmount);
+    const level = calculateLevel(formattedAmount.toString());
     
     // 更新缓存
     contributionsCache.value = {
       address: walletStore.address,
-      amount: formattedAmount,
+      amount: amount.toString(),
+      received: receivedAmount,
       level,
       timestamp: now
     };
     
-    return {amount: formattedAmount, level};
+    return {amount: amount.toString(), level, received: receivedAmount};
   } catch (error) {
     console.error('获取贡献点失败:', error);
     return {amount: '0', level: 0};
   }
 };
+
+// 获取用户以领取贡献点
+export const getContributionsReceived = async (): Promise<string> => {
+  const walletStore = useWalletStore();
+  
+  if (!walletStore.address || !walletStore.hasUpline) {
+    return '0';
+  }
+  try {
+    let result = await axios.get(`https://alpha.ac.cn/alphaServerApi/api/contribution/${walletStore.address}`);
+    return result.data.contribution.toString();
+  } catch (error) {
+    console.error('获取以领取贡献点失败：', error);
+    return '0';
+  }
+};
+
 
 // 获取团队规模
 export const getTeamSize = async (forceUpdate: boolean = false): Promise<string> => {
