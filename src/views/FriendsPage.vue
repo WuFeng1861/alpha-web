@@ -298,14 +298,32 @@ const handleClaimBNB = async () => {
       <!-- 贡献点数卡片 -->
       <div class="rounded-xl py-6 px-4 mb-3" style="background: linear-gradient(to bottom, #7CDD3D 0%, #53CB43 100%)">
         <div class="flex justify-between items-center mb-2">
-          <div class="flex items-center">
+          <div class="flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <h3 class="text-base font-bold text-black">{{ t('friends.contribution_points') }}</h3>
           </div>
-          <span class="text-xl font-bold text-black">{{ contributions.amount }}</span>
+          <div class="flex items-center gap-4">
+            <span class="text-xl font-bold text-black">{{ contributions.amount }}</span>
+          </div>
         </div>
+        
+        <!-- BNB 数值显示 -->
+        <div class="bg-white bg-opacity-20 rounded-lg p-3 mt-3 mb-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <img
+                src="https://cryptologos.cc/logos/bnb-bnb-logo.png"
+                alt="BNB"
+                class="w-6 h-6"
+              />
+              <span class="text-black font-medium">BNB</span>
+            </div>
+            <span class="text-black font-bold">{{ (Number(contributions.amount) * 0.0001).toFixed(4) }}</span>
+          </div>
+        </div>
+
         <button
           @click="handleClaimBNB"
           class="btn-secondary w-full mt-4 py-3 text-black font-bold rounded-full"
