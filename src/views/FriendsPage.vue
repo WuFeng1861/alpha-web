@@ -297,36 +297,31 @@ const handleClaimBNB = async () => {
 
       <!-- 贡献点数卡片 -->
       <div class="rounded-xl py-6 px-4 mb-3" style="background: linear-gradient(to bottom, #7CDD3D 0%, #53CB43 100%)">
-        <div class="flex justify-between items-center mb-2">
-          <div class="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h3 class="text-base font-bold text-black">{{ t('friends.contribution_points') }}</h3>
-          </div>
-          <div class="flex items-center gap-4">
-            <span class="text-xl font-bold text-black">{{ contributions.amount }}</span>
-          </div>
-        </div>
-        
-        <!-- BNB 数值显示 -->
-        <div class="bg-white bg-opacity-20 rounded-lg p-3 mt-3 mb-4">
+        <!-- BNB和贡献点显示 -->
+        <div class="bg-white bg-opacity-20 rounded-lg p-4 mb-4">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center">
               <img
                 src="http://wufeng98.cn/imgServerApi/images/7151f34e-2b93-4684-91e9-c74d25d1c70f.png"
                 alt="BNB"
-                class="w-6 h-6"
+                class="w-12 h-12 mr-3"
               />
-              <span class="text-black font-medium">BNB</span>
+              <div class="flex flex-col">
+                <span class="text-3xl font-bold text-black">{{ (Number(contributions.amount) * 0.000024).toFixed(4) }}</span>
+                <div class="flex items-center mt-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span class="text-sm text-black">{{ contributions.amount }}</span>
+                </div>
+              </div>
             </div>
-            <span class="text-black font-bold">{{ (Number(contributions.amount) * 0.000024).toFixed(4) }}</span>
           </div>
         </div>
 
         <button
           @click="handleClaimBNB"
-          class="btn-secondary w-full mt-4 py-3 text-black font-bold rounded-full"
+          class="btn-secondary w-full py-3 text-black font-bold rounded-full"
           style="background: linear-gradient(to bottom right, #AEE346, #51E24B)"
         >
           {{ t('friends.claim_bnb') }}
