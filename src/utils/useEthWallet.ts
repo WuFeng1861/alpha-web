@@ -71,7 +71,7 @@ export const updatePendingTokens = async (forceUpdate: boolean = false): Promise
     etherWallet.setABI(config.contractAbi);
     etherWallet.updateTokenContract(config.contractAddress);
     const amount = await etherWallet.contractFn('getPendingTokens', walletStore.address);
-    const formattedAmount = etherWallet.weiToEth(amount);
+    const formattedAmount = Number(etherWallet.weiToEth(amount)).toString();
     
     // 更新缓存
     pendingTokensCache.value = {
