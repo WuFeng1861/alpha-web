@@ -723,3 +723,4 @@ export const getTeamSize = async (forceUpdate: boolean = false): Promise<string>
     return '0';
   }
 };
+

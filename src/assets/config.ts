@@ -45,15 +45,20 @@ export default {
   // Social media links
   socialLinks: [
     {
+      name: 'Gitbook',
+      url: 'https://alpha-20.gitbook.io/alpha',
+      icon: 'github'
+    },
+    {
       name: 'Twitter',
       url: 'https://twitter.com',
       icon: 'twitter'
     },
-    {
-      name: 'GitHub',
-      url: 'https://github.com',
-      icon: 'github'
-    },
+    // {
+    //   name: 'GitHub',
+    //   url: 'https://github.com',
+    //   icon: 'github'
+    // },
     {
       name: 'Telegram',
       url: 'https://t.me',
