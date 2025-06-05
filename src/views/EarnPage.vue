@@ -177,23 +177,28 @@ onMounted(() => {
             <div
                 v-for="pair in tradingPairs"
                 :key="pair.id"
-                class="flex items-center justify-between p-3 rounded-lg bg-white cursor-pointer hover:bg-gray-50"
+                class="flex items-center justify-between py-3 rounded-lg bg-white cursor-pointer hover:bg-gray-50"
                 @click="goToPancakeSwap(pair.symbol)"
             >
               <div class="flex items-center relative">
                 <img
                     :src="getFirstTokenLogo(pair.symbol)"
                     :alt="getFirstToken(pair.symbol)"
-                    class="w-8 h-8 rounded-full z-10"
+                    class="w-12 h-12 rounded-full z-10"
                 />
                 <img
                     :src="getSecondTokenLogo(pair.symbol)"
                     :alt="getSecondToken(pair.symbol)"
-                    class="w-8 h-8 rounded-full absolute left-4"
+                    class="w-12 h-12 rounded-full absolute left-6"
+                />
+                <img
+                    src="http://wufeng98.cn/imgServerApi/images/c02024f0-a0d6-4001-b223-58dc34409ddd.png"
+                    alt="Pancake Logo"
+                    class="w-4 h-4 rounded-full absolute left-16 top-8"
                 />
                 <div class="flex flex-col items-start">
-                  <span class="text-black text-xl ml-8">{{ pair.symbol }}</span>
-                  <span class="text-gray-400 text-[10px]">UNISWAP V3</span>
+                  <span class="text-black text-xl ml-10">{{ pair.symbol }}</span>
+                  <span class="text-gray-400 text-[10px] ml-10">PancakeSwapV3</span>
                 </div>
               </div>
               <div style="color: #43D43F" class="font-bold">{{ pair.annualizedRate }}%</div>
