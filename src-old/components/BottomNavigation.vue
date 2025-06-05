@@ -49,20 +49,6 @@ const navigateTo = (path: string) => {
         </svg>
         <span class="text-xs mt-1">{{ t('nav.box') }}</span>
       </button>
-      
-      <button 
-        @click="navigateTo('/earn')" 
-        class="flex flex-col items-center py-1 transition-all duration-300"
-        :class="currentRoute === '/earn' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
-      >
-        <img 
-          :src="'http://wufeng98.cn/imgServerApi/images/222821d0-e50b-4013-9b3f-a96170143c65.png'"
-          class="w-6 h-6"
-          :class="currentRoute !== '/earn' ? 'opacity-40' : ''"
-          alt="Alpha"
-        />
-        <span class="text-xs mt-1">{{ t('nav.alpha') }}</span>
-      </button>
     </div>
   </nav>
 </template>

@@ -5,8 +5,7 @@
   "nav": {
     "home": "首页",
     "friends": "好友",
-    "box": "盲盒",
-    "alpha": "Alpha"
+    "box": "盲盒"
   },
   "home": {
     "connect_wallet": "连接钱包",
@@ -41,19 +40,6 @@
     "confirm": "确认",
     "box_description": "每开启盲盒增加团队贡献值，贡献值可以换取BNB，团队开启越多贡献值越高",
     "footer": "© 2025 Alpha Blockchain"
-  },
-  "earn": {
-    "search_placeholder": "搜索热门 DEFI 网络、协议或资产",
-    "title": "Binance Alpha 赚币专区",
-    "subtitle": "添加流动性，赚取交易手续费奖励",
-    "stake": "前往质押",
-    "liquidity_pools": "流动性池",
-    "tips": {
-      "title": "风险提示",
-      "apr": "Pancake 池的年化 (APR) 基于过去 24 小时的历史数据计算得出，仅供参考，实际收益可能会有所波动；",
-      "earnings": "收益与交易活跃度相关，因市场活跃程度在一天中不断变化，可能无法立即产生收益；",
-      "risk": "添加流动性存在一定风险，市场价格波动可能导致无常损失。"
-    }
   },
   "common": {
     "connect": "连接",

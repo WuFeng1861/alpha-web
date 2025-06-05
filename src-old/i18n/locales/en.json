@@ -5,8 +5,7 @@
   "nav": {
     "home": "Home",
     "friends": "Friends",
-    "box": "Mystery Box",
-    "alpha": "Alpha"
+    "box": "Mystery Box"
   },
   "home": {
     "connect_wallet": "Connect Wallet",
@@ -41,19 +40,6 @@
     "confirm": "Confirm",
     "box_description": "Opening boxes daily adds team contribution value, Contribution value can be exchanged for BNB, higher team contribution means higher rewards.",
     "footer": "© 2025 Alpha Blockchain"
-  },
-  "earn": {
-    "search_placeholder": "Search hot DEFI networks, protocols or assets",
-    "title": "Binance Alpha Earning",
-    "subtitle": "Add liquidity, earn trading fee rewards",
-    "stake": "Stake Now",
-    "liquidity_pools": "Liquidity Pools",
-    "tips": {
-      "title": "Risk Tips",
-      "apr": "The APR of Pancake pools is calculated based on historical data from the past 24 hours and is for reference only. Actual returns may fluctuate;",
-      "earnings": "Returns are related to trading activity. Due to market activity varying throughout the day, returns may not be immediate;",
-      "risk": "Adding liquidity carries certain risks, and market price fluctuations may lead to impermanent loss."
-    }
   },
   "common": {
     "connect": "Connect",

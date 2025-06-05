@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../views/HomePage.vue'
 import FriendsPage from '../views/FriendsPage.vue'
 import BoxPage from '../views/BoxPage.vue'
-import EarnPage from '../views/EarnPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -24,12 +23,6 @@ const router = createRouter({
       name: 'box',
       component: BoxPage,
       meta: { title: 'Box - Alpha Project' }
-    },
-    {
-      path: '/earn',
-      name: 'earn',
-      component: EarnPage,
-      meta: { title: 'Earn - Alpha Project' }
     },
     // Redirect any unknown routes to home
     {
