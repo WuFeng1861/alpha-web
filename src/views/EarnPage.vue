@@ -117,14 +117,12 @@ onMounted(() => {
 
         <!-- Banner区域 -->
         <div class="rounded-xl p-4 mb-4 relative overflow-hidden text-white" style="background: linear-gradient(135deg, rgba(42, 47, 47, 0.3) 0%, rgba(29, 34, 35, 0.3) 100%)">
-          <img src="http://wufeng98.cn/imgServerApi/images/1f478a1b-5fcc-473e-b599-e6d49dd40961.png" alt="Binance Alpha Logo" class="h-12 mb-4" />
+          <img src="https://wufeng98.cn/imgServerApi/images/1f478a1b-5fcc-473e-b599-e6d49dd40961.png" alt="Binance Alpha Logo" class="h-12 mb-4" />
           <!-- 提示图标 -->
           <div class="absolute top-4 right-4">
             <div class="relative">
               <button
                   @click="showTooltip = !showTooltip"
-                  @mouseenter="showTooltip = true"
-                  @mouseleave="showTooltip = false"
                   class="text-gray-400 hover:text-white transition-colors"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -192,7 +190,7 @@ onMounted(() => {
                     class="w-12 h-12 rounded-full absolute left-6"
                 />
                 <img
-                    src="http://wufeng98.cn/imgServerApi/images/c02024f0-a0d6-4001-b223-58dc34409ddd.png"
+                    src="https://wufeng98.cn/imgServerApi/images/c02024f0-a0d6-4001-b223-58dc34409ddd.png"
                     alt="Pancake Logo"
                     class="w-4 h-4 rounded-full absolute left-16 top-8"
                 />

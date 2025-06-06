@@ -17,8 +17,8 @@ const navigateTo = (path: string) => {
 <template>
   <nav class="fixed bottom-0 w-full bg-alpha-secondary border-t border-gray-800 px-4 py-2 z-50">
     <div class="flex justify-around items-center">
-      <button 
-        @click="navigateTo('/')" 
+      <button
+        @click="navigateTo('/')"
         class="flex flex-col items-center py-1 transition-all duration-300"
         :class="currentRoute === '/' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
       >
@@ -28,8 +28,8 @@ const navigateTo = (path: string) => {
         <span class="text-xs mt-1">{{ t('nav.home') }}</span>
       </button>
 
-      <button 
-        @click="navigateTo('/friends')" 
+      <button
+        @click="navigateTo('/friends')"
         class="flex flex-col items-center py-1 transition-all duration-300"
         :class="currentRoute === '/friends' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
       >
@@ -39,8 +39,8 @@ const navigateTo = (path: string) => {
         <span class="text-xs mt-1">{{ t('nav.friends') }}</span>
       </button>
 
-      <button 
-        @click="navigateTo('/box')" 
+      <button
+        @click="navigateTo('/box')"
         class="flex flex-col items-center py-1 transition-all duration-300"
         :class="currentRoute === '/box' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
       >
@@ -49,14 +49,14 @@ const navigateTo = (path: string) => {
         </svg>
         <span class="text-xs mt-1">{{ t('nav.box') }}</span>
       </button>
-      
-      <button 
-        @click="navigateTo('/earn')" 
+
+      <button
+        @click="navigateTo('/earn')"
         class="flex flex-col items-center py-1 transition-all duration-300"
         :class="currentRoute === '/earn' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
       >
-        <img 
-          :src="'http://wufeng98.cn/imgServerApi/images/222821d0-e50b-4013-9b3f-a96170143c65.png'"
+        <img
+          :src="'https://wufeng98.cn/imgServerApi/images/222821d0-e50b-4013-9b3f-a96170143c65.png'"
           class="w-6 h-6"
           :class="currentRoute !== '/earn' ? 'opacity-40' : ''"
           alt="Alpha"
