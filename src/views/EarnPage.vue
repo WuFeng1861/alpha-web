@@ -40,7 +40,7 @@ const fetchTradingPairs = async () => {
   try {
     const res = await getTradingPairs()
     if (res.code === 200) {
-      tradingPairs.value = res.data
+      tradingPairs.value = res.data.sort((a, b) => Number(b.annualizedRate) - Number(a.annualizedRate))
     }
   } catch (error) {
     console.error('获取交易对失败:', error)
