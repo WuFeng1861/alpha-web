@@ -51,7 +51,7 @@ export default {
     },
     {
       name: 'Twitter',
-      url: 'https://twitter.com',
+      url: 'https://x.com/Alpha5837135553/',
       icon: 'twitter'
     },
     // {
