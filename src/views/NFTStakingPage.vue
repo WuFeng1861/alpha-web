@@ -147,7 +147,7 @@ onUnmounted(() => {
 
 // 返回上一页
 const goBack = () => {
-  router.back()
+  router.push('/staking')
 }
 
 // 处理领取按钮
