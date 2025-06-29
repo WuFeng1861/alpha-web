@@ -147,14 +147,7 @@ onUnmounted(() => {
 
 // 返回上一页
 const goBack = () => {
-  console.log(window.history, router);
-  // 检查是否有历史记录可以返回
-  if (window.history.length > 1) {
-    router.back()
-  } else {
-    // 如果没有历史记录，返回到质押页面
-    router.push('/staking')
-  }
+  router.back()
 }
 
 // 处理领取按钮
