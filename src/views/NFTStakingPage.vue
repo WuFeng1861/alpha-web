@@ -147,7 +147,7 @@ onUnmounted(() => {
 
 // 返回上一页
 const goBack = () => {
-  router.push('/box')
+  router.bakc();
 }
 
 // 处理领取按钮
