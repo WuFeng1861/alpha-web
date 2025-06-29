@@ -77,7 +77,6 @@
     "errors": {
       "wallet_not_connected": "请先连接钱包",
       "invalid_address": "无效的邀请人地址",
-      "invalid_amount": "请输入有效的数量",
       "not_bound": "请先绑定邀请人",
       "inviter_not_bound": "该地址未绑定上级，不能作为邀请人",
       "binding_failed": "绑定邀请人失败",

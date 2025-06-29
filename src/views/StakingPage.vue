@@ -63,10 +63,10 @@ const updateUserStakes = async (forceUpdate: boolean = false) => {
       let findIndex = showStakes.findIndex(it => it.poolNumber === item.poolNumber);
       let thisItem = null;
       if (findIndex !== -1) {
-        thisItem = showStakes[findIndex];
-        thisItem['stakingAmount'] += item['stakingAmount'];
-        thisItem['stakingReward'] += item['stakingReward'];
-        continue;
+    	thisItem = showStakes[findIndex];
+    	thisItem['stakingAmount'] += item['stakingAmount'];
+    	thisItem['stakingReward'] += item['stakingReward'];
+    	continue;
       }
       showStakes.push(item);
     }

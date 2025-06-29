@@ -77,7 +77,6 @@
     "errors": {
       "wallet_not_connected": "Please connect wallet first",
       "invalid_address": "Invalid inviter address",
-      "invalid_amount": "Please enter a valid amount",
       "not_bound": "Please bind inviter first",
       "inviter_not_bound": "This address cannot be used as inviter because it has no upline",
       "binding_failed": "Failed to bind inviter",
