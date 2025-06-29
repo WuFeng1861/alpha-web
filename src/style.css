@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #111827;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer components {
+  .btn-connect {
+    @apply text-black font-bold transition-colors duration-300 rounded-l-full;
+    background: linear-gradient(135deg, #AEE346 0%, #4BD341 100%);
+  }
+  
+  .btn-connect:hover, .btn-connect:active {
+    background: #4ab239 !important;
+  }
+  
+  .btn-primary {
+    @apply text-black font-bold py-2 px-6 rounded-full transition-colors duration-300;
+    background: linear-gradient(135deg, #AEE346 0%, #4BD341 100%);
+  }
+  
+  .btn-primary:hover, .btn-primary:active {
+    background: #4ab239 !important;
+  }
+
+  .btn-secondary {
+    @apply text-black font-bold py-2 px-6 rounded-full transition-colors duration-300;
+    background: linear-gradient(135deg, #AEE346 0%, #4BD341 100%);
+  }
+
+  .btn-secondary:hover, .btn-secondary:active {
+    background: #4ab239 !important;
+  }
+
+  /* button:hover, button:active {
+    background: #4ab239 !important;
+  } */
+
+  .card {
+    @apply bg-alpha-surface-light bg-opacity-50 backdrop-blur-sm rounded-2xl p-6 shadow-lg;
+  }
+}
+
+#app {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  min-height: 100vh;
+  background-color: #111827;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+}
+
+/* 隐藏所有滚动条 */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  /* 添加不可选中样式 */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-tap-highlight-color: transparent; /* 移除点击高亮 */
+}
+
+/* Webkit浏览器 */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* 允许输入框和文本区域可选中 */
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* 允许特定的文本内容可选中（如果需要） */
+.selectable {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
