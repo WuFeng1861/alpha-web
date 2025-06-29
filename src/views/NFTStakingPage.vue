@@ -145,6 +145,7 @@ onUnmounted(() => {
 
 // 返回上一页
 const goBack = () => {
+  console.log(window.history);
   // 检查是否有历史记录可以返回
   if (window.history.length > 1) {
     router.back()
