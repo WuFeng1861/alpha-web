@@ -86,9 +86,7 @@
       "no_contribution": "No contribution points available",
       "network_error": "Network error, please try again",
       "purchase_too_frequent": "Sign in Alpha tokens too frequent, please try again later",
-      "no_pending_tokens": "No tokens available to claim",
-      "no_stake_to_unstake": "No stake available to unstake",
-      "no_pool_found": "Pool not found"
+      "no_pending_tokens": "No tokens available to claim"
     }
   },
   "staking": {

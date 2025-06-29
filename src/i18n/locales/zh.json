@@ -86,9 +86,7 @@
       "no_contribution": "没有可领取的贡献点",
       "network_error": "网络错误，请重试",
       "purchase_too_frequent": "领取太频繁，请稍后再试",
-      "no_pending_tokens": "没有可领取的代币",
-      "no_stake_to_unstake": "没有可取消的质押",
-      "no_pool_found": "未找到质押池"
+      "no_pending_tokens": "没有可领取的代币"
     }
   },
   "staking": {
