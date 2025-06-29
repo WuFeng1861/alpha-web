@@ -16,7 +16,7 @@ export const performUnstaking = async (
   poolId: string,
   stakeId: string,
   t: Function
-): Promise<{status: boolean, message: string, data: any}> => {
+): Promise<{ status: boolean, message: string, data: any }> => {
   const walletStore = useWalletStore();
   
   // 检查钱包是否连接
@@ -227,7 +227,7 @@ export const getUserStakes = async (forceUpdate: boolean = false): Promise<Proce
     
     // 过滤掉已经取回的质押记录，并处理数据
     const filteredStakes = stakes
-      .filter((stake: any) => !stake.isWithdrawn) // 过滤掉已取回的质押
+      .filter((stake: any) => !stake.isWithdrawn); // 过滤掉已取回的质押
     
     // 获取所有质押记录的stakeId
     const stakeIds = filteredStakes.map((stake: any) => stake.stakeId.toString());
@@ -281,7 +281,7 @@ export const performStaking = async (
   poolId: string,
   amount: string,
   t: Function
-): Promise<{status: boolean, message: string, data: any}> => {
+): Promise<{ status: boolean, message: string, data: any }> => {
   const walletStore = useWalletStore();
   
   // 检查钱包是否连接
@@ -346,11 +346,11 @@ export const performStaking = async (
     ownerAllowance = wallet.weiToEth(ownerAllowance);
     console.log(ownerAllowance, '检查用户地址允许合约使用代币的数量');
     
-    if (Number(ownerAllowance) <  Number(amount)) {
+    if (Number(ownerAllowance) < Number(amount)) {
       // 调用approve方法授权质押合约使用代币
       console.log(`授权质押合约 ${config.shakingContractAddress} 使用 ${amount} ALPHA...`);
       await wallet.contractFn('approve', config.shakingContractAddress, amountInWei);
-      await sleep(3.5*1000);
+      await sleep(3.5 * 1000);
     }
     
     
@@ -371,7 +371,7 @@ export const performStaking = async (
     
     // 第四步：更新缓存数据
     console.log('第四步：更新缓存数据...');
-    await sleep(3.5*1000);
+    await sleep(3.5 * 1000);
     
     // 强制更新用户代币余额
     await updateTokenBalances(walletStore.address);
@@ -440,9 +440,9 @@ export const getUserStakesWithCache = async (forceUpdate: boolean = false): Prom
   const cacheExpiry = 5 * 60 * 1000; // 5分钟缓存
   
   if (!forceUpdate &&
-      userStakesCache.value &&
-      userStakesCache.value.address === walletStore.address &&
-      (now - userStakesCache.value.timestamp) < cacheExpiry) {
+    userStakesCache.value &&
+    userStakesCache.value.address === walletStore.address &&
+    (now - userStakesCache.value.timestamp) < cacheExpiry) {
     console.log('使用缓存的质押数据');
     return userStakesCache.value.stakes;
   }
@@ -553,8 +553,8 @@ export const getAllPoolsInfoWithCache = async (forceUpdate: boolean = false): Pr
   const cacheExpiry = 10 * 60 * 1000; // 10分钟缓存（质押池信息变化较少）
   
   if (!forceUpdate &&
-      poolsInfoCache.value &&
-      (now - poolsInfoCache.value.timestamp) < cacheExpiry) {
+    poolsInfoCache.value &&
+    (now - poolsInfoCache.value.timestamp) < cacheExpiry) {
     console.log('使用缓存的质押池数据', poolsInfoCache.value);
     return poolsInfoCache.value.pools;
   }
@@ -622,10 +622,10 @@ export const getStakeDividendsWithCache = async (stakeId: string, forceUpdate: b
   const cacheExpiry = 1 * 60 * 1000; // 1分钟缓存（收益变化较快）
   
   if (!forceUpdate &&
-      stakeDividendsCache.value &&
-      stakeDividendsCache.value.address === walletStore.address &&
-      (now - stakeDividendsCache.value.timestamp) < cacheExpiry &&
-      stakeDividendsCache.value.dividends.has(stakeId)) {
+    stakeDividendsCache.value &&
+    stakeDividendsCache.value.address === walletStore.address &&
+    (now - stakeDividendsCache.value.timestamp) < cacheExpiry &&
+    stakeDividendsCache.value.dividends.has(stakeId)) {
     console.log(`使用缓存的质押收益数据 - stakeId: ${stakeId}`);
     return stakeDividendsCache.value.dividends.get(stakeId) || '0';
   }
@@ -655,13 +655,13 @@ export const getBatchStakeDividendsWithCache = async (stakeIds: string[], forceU
   // 并发获取所有质押记录的收益
   const promises = stakeIds.map(async (stakeId) => {
     const dividends = await getStakeDividendsWithCache(stakeId, forceUpdate);
-    return { stakeId, dividends };
+    return {stakeId, dividends};
   });
   
   const dividendsResults = await Promise.all(promises);
   
   // 将结果存入Map
-  dividendsResults.forEach(({ stakeId, dividends }) => {
+  dividendsResults.forEach(({stakeId, dividends}) => {
     results.set(stakeId, dividends);
   });
   
@@ -783,9 +783,9 @@ export const getNFTStakingDataWithCache = async (forceUpdate: boolean = false): 
   const cacheExpiry = 2 * 60 * 1000; // 2分钟缓存
   
   if (!forceUpdate &&
-      nftStakingCache.value &&
-      nftStakingCache.value.address === walletStore.address &&
-      (now - nftStakingCache.value.timestamp) < cacheExpiry) {
+    nftStakingCache.value &&
+    nftStakingCache.value.address === walletStore.address &&
+    (now - nftStakingCache.value.timestamp) < cacheExpiry) {
     console.log('使用缓存的NFT质押数据');
     return nftStakingCache.value.data;
   }
@@ -847,9 +847,9 @@ export const getPoolDividendsWithCache = async (poolId: string, forceUpdate: boo
   const cacheExpiry = 1 * 60 * 1000; // 1分钟缓存
   
   if (!forceUpdate &&
-      poolDividendsCache.value &&
-      (now - poolDividendsCache.value.timestamp) < cacheExpiry &&
-      poolDividendsCache.value.dividends.has(poolId)) {
+    poolDividendsCache.value &&
+    (now - poolDividendsCache.value.timestamp) < cacheExpiry &&
+    poolDividendsCache.value.dividends.has(poolId)) {
     console.log(`使用缓存的质押池收益数据 - poolId: ${poolId}`);
     return poolDividendsCache.value.dividends.get(poolId) || '0';
   }
@@ -869,4 +869,135 @@ export const getPoolDividendsWithCache = async (poolId: string, forceUpdate: boo
   poolDividendsCache.value.timestamp = now;
   
   return dividends;
+};
+
+// 领取质押池收益
+export const claimPoolDividends = async (poolId: string, t: Function): Promise<{ status: boolean, message: string, data: any }> => {
+  const walletStore = useWalletStore();
+  // 检查钱包是否连接
+  if (!walletStore.address) {
+    return {
+      status: false,
+      message: t('common.errors.wallet_not_connected'),
+      data: null
+    };
+  }
+  try {
+    const wallet = getEthWallet();
+    
+    if (!wallet) {
+      return {
+        status: false,
+        message: '钱包实例未初始化',
+        data: null
+      };
+    }
+    // 设置质押合约
+    wallet.setABI(config.shakingContractAbi);
+    wallet.updateTokenContract(config.shakingContractAddress);
+    
+    // 调用claimDividends方法领取收益
+    console.log(`调用claimDividends方法: poolId=${poolId}`);
+    const stakeResult = await wallet.contractFn('claimDividends', poolId);
+    
+    // 更新缓存数据
+    console.log('更新缓存数据...');
+    await sleep(3.5 * 1000);
+    
+    // 强制更新用户代币余额
+    await updateTokenBalances(walletStore.address);
+    
+    console.log('领取质押池收益流程完成');
+    
+    return {
+      status: true,
+      message: `领取质押池${poolId}收益成功`,
+      data: stakeResult
+    };
+    
+  } catch (error) {
+    console.error('领取质押池收益失败:', error);
+    
+    let message = '领取质押池收益失败';
+    
+    if (error.message.includes('user rejected')) {
+      message = t('common.errors.user_rejected');
+    } else if (error.message.includes('insufficient funds')) {
+      message = '余额不足或gas费不够';
+    } else if (error.message.includes('network')) {
+      message = t('common.errors.network_error');
+    } else if (error.message.includes('execution reverted')) {
+      message = '合约执行失败，请检查参数或稍后重试';
+    }
+    
+    return {
+      status: false,
+      message,
+      data: null
+    };
+  }
+};
+
+// 转移质押池分红地址
+export const transferPoolOwner = async (poolId: string, newAddress: string,t: Function): Promise<{ status: boolean, message: string, data: any }> => {
+  const walletStore = useWalletStore();
+  // 检查钱包是否连接
+  if (!walletStore.address) {
+    return {
+      status: false,
+      message: t('common.errors.wallet_not_connected'),
+      data: null
+    };
+  }
+  try {
+    const wallet = getEthWallet();
+    
+    if (!wallet) {
+      return {
+        status: false,
+        message: '钱包实例未初始化',
+        data: null
+      };
+    }
+    // 设置质押合约
+    wallet.setABI(config.shakingContractAbi);
+    wallet.updateTokenContract(config.shakingContractAddress);
+    
+    // 调用更新分红地址方法
+    console.log(`调用更新分红地址方法: poolId=${poolId}, newAddress=${newAddress}`);
+    const updateResult = await wallet.contractFn('updateDividendAddress', poolId, newAddress);
+  
+    // 更新缓存数据
+    console.log('更新缓存数据...');
+    await sleep(3.5 * 1000);
+    
+    console.log('更新分红地址流程完成');
+    
+    return {
+      status: true,
+      message: `更新质押池${poolId}分红地址为${newAddress}成功`,
+      data: updateResult
+    };
+    
+  } catch (error) {
+    console.error('更新分红失败:', error);
+    
+    let message = '更新分红失败';
+    
+    if (error.message.includes('user rejected')) {
+      message = t('common.errors.user_rejected');
+    } else if (error.message.includes('insufficient funds')) {
+      message = '余额不足或gas费不够';
+    } else if (error.message.includes('network')) {
+      message = t('common.errors.network_error');
+    } else if (error.message.includes('execution reverted')) {
+      message = '合约执行失败，请检查参数或稍后重试';
+    }
+    
+    return {
+      status: false,
+      message,
+      data: null
+    };
+  }
 };

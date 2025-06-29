@@ -6,11 +6,12 @@ import AlphaLogo from '../components/AlphaLogo.vue'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import config from '../assets/config'
 import { useWalletStore } from '../stores/wallet'
-import { 
+import {
+  claimPoolDividends,
   getNFTStakingDataWithCache,
   getPoolDividendsWithCache,
-  type NFTStakingData 
-} from '../utils/useStaking'
+  type NFTStakingData
+} from '../utils/useStaking';
 
 const { t } = useI18n()
 const router = useRouter()
@@ -20,7 +21,7 @@ const walletStore = useWalletStore()
 const formatNumber = (num: string | number): string => {
   const numValue = typeof num === 'string' ? parseFloat(num) : num
   if (isNaN(numValue)) return '0'
-  
+
   // 保留两位小数
   const formatted = numValue.toFixed(2)
   // 去除尾部的0和小数点
@@ -41,11 +42,11 @@ const updateNFTStakingData = async (forceUpdate: boolean = false) => {
     nftStakingList.value = []
     return
   }
-  
+
   if (!forceUpdate && isLoading.value) {
     return // 防止重复请求
   }
-  
+
   try {
     isLoading.value = true
     console.log('开始更新NFT质押数据...')
@@ -65,18 +66,18 @@ const updateClaimableRewards = async (forceUpdate: boolean = false) => {
   if (!walletStore.address || nftStakingList.value.length === 0) {
     return
   }
-  
+
   try {
     console.log('开始更新可领取收益数据...')
-    
+
     // 并发获取所有质押池的可领取收益
     const promises = nftStakingList.value.map(async (nft) => {
       const claimableReward = await getPoolDividendsWithCache(nft.poolId, forceUpdate)
       return { id: nft.id, claimableReward }
     })
-    
+
     const rewardsResults = await Promise.all(promises)
-    
+
     // 更新NFT质押列表中的可领取收益数据
     nftStakingList.value.forEach(nft => {
       const result = rewardsResults.find(r => r.id === nft.id)
@@ -84,7 +85,7 @@ const updateClaimableRewards = async (forceUpdate: boolean = false) => {
         nft.claimableReward = result.claimableReward
       }
     })
-    
+
     console.log('可领取收益数据更新完成')
   } catch (error) {
     console.error('更新可领取收益数据失败:', error)
@@ -140,11 +141,11 @@ const goBack = () => {
 }
 
 // 处理领取按钮
-const handleClaim = (id: number, event?: Event) => {
+const handleClaim = async (id: number, event?: Event) => {
   if (event) {
     event.stopPropagation()
   }
-  console.log('领取NFT质押奖励:', id)
+  await claimPoolDividends(id.toString(), t);
 }
 
 // 处理转移按钮
@@ -193,7 +194,7 @@ const handleNFTCardClick = (nft: any) => {
 
         <!-- 绿色背景容器 - 与质押合约页面保持一致 -->
         <div class="rounded-2xl p-4 mb-6" style="background: linear-gradient(135deg, rgba(124, 221, 61, 0.8) 0%, rgba(83, 203, 67, 0.8) 100%)">
-          
+
           <!-- 我的质押按钮 -->
           <button class="btn-primary w-full mb-6 py-4 text-black font-bold text-lg rounded-full flex items-center justify-center">
             <span>{{ t('staking.my_staking_pool') }}</span>
@@ -212,7 +213,7 @@ const handleNFTCardClick = (nft: any) => {
               {{ t('common.loading') }}
             </div>
           </div>
-          
+
           <!-- 暂无NFT质押状态 -->
           <div v-else-if="!walletStore.address" class="text-center py-12">
             <div class="bg-alpha-surface-light bg-opacity-90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-gray-700">
@@ -226,7 +227,7 @@ const handleNFTCardClick = (nft: any) => {
               <p class="text-gray-400 text-sm">连接钱包后即可查看您的NFT质押记录</p>
             </div>
           </div>
-          
+
           <!-- 暂无NFT质押记录 -->
           <div v-else-if="nftStakingList.length === 0" class="text-center">
             <div class="bg-alpha-surface-light bg-opacity-90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-gray-700">
@@ -241,11 +242,11 @@ const handleNFTCardClick = (nft: any) => {
               <p class="text-gray-400 text-xs">只有当您的地址与质押池的dividendAddress相同时，才能查看对应的NFT质押信息</p>
             </div>
           </div>
-          
+
           <!-- NFT质押卡片列表 -->
           <div v-else class="space-y-4">
-            <div 
-              v-for="nft in nftStakingList" 
+            <div
+              v-for="nft in nftStakingList"
               :key="nft.id"
               @click="handleNFTCardClick(nft)"
               class="bg-alpha-surface-light bg-opacity-90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-700"
@@ -276,7 +277,7 @@ const handleNFTCardClick = (nft: any) => {
                     <p class="text-gray-400 text-sm">{{ t('staking.nft_staking_card') }}</p>
                   </div>
                 </div>
-                
+
                 <!-- 状态标签 -->
                 <div class="px-3 py-1.5 rounded-full text-xs font-medium shadow-lg"
                      :class="`bg-gradient-to-r ${nft.levelGradient}`">
@@ -297,13 +298,13 @@ const handleNFTCardClick = (nft: any) => {
                   <!-- 背景装饰效果 -->
                   <div class="absolute inset-0 opacity-20"
                        :style="`background: radial-gradient(circle at 20% 50%, ${nft.levelColor}40 0%, transparent 50%), radial-gradient(circle at 80% 50%, ${nft.levelColor}30 0%, transparent 50%)`"></div>
-                  
+
                   <!-- 闪烁装饰点 -->
                   <div class="absolute top-2 right-2 w-2 h-2 rounded-full animate-pulse"
                        :style="`background: ${nft.levelColor}; box-shadow: 0 0 10px ${nft.levelColor}`"></div>
                   <div class="absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full animate-pulse"
                        :style="`background: ${nft.levelColor}; box-shadow: 0 0 8px ${nft.levelColor}; animation-delay: 0.5s`"></div>
-                  
+
                   <!-- 内容区域 -->
                   <div class="relative z-10">
                     <div class="flex items-center justify-between mb-2">
@@ -320,7 +321,7 @@ const handleNFTCardClick = (nft: any) => {
                         </svg>
                       </div>
                     </div>
-                    
+
                     <!-- 金额显示 -->
                     <div class="flex items-baseline">
                       <p class="text-white font-black text-xl break-all mr-2"
@@ -329,7 +330,7 @@ const handleNFTCardClick = (nft: any) => {
                       </p>
                       <span class="text-gray-400 text-sm font-medium">ALPHA</span>
                     </div>
-                    
+
                     <!-- 底部装饰线 -->
                     <div class="mt-2 h-0.5 rounded-full opacity-60"
                          :style="`background: linear-gradient(90deg, ${nft.levelColor} 0%, transparent 100%)`"></div>
@@ -342,13 +343,13 @@ const handleNFTCardClick = (nft: any) => {
                   <!-- 背景装饰效果 -->
                   <div class="absolute inset-0 opacity-20"
                        style="background: radial-gradient(circle at 20% 50%, #5BF65540 0%, transparent 50%), radial-gradient(circle at 80% 50%, #5BF65530 0%, transparent 50%)"></div>
-                  
+
                   <!-- 闪烁装饰点 -->
                   <div class="absolute top-2 right-2 w-2 h-2 rounded-full animate-pulse"
                        style="background: #5BF655; box-shadow: 0 0 10px #5BF655"></div>
                   <div class="absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full animate-pulse"
                        style="background: #5BF655; box-shadow: 0 0 8px #5BF655; animation-delay: 0.5s"></div>
-                  
+
                   <!-- 内容区域 -->
                   <div class="relative z-10">
                     <div class="flex items-center justify-between mb-2">
@@ -365,7 +366,7 @@ const handleNFTCardClick = (nft: any) => {
                         </svg>
                       </div>
                     </div>
-                    
+
                     <!-- 收益显示 -->
                     <div class="flex items-baseline">
                       <p class="text-white font-black text-xl break-all mr-2"
@@ -374,7 +375,7 @@ const handleNFTCardClick = (nft: any) => {
                       </p>
                       <span class="text-gray-400 text-sm font-medium">ALPHA</span>
                     </div>
-                    
+
                     <!-- 底部装饰线 -->
                     <div class="mt-2 h-0.5 rounded-full opacity-60"
                          style="background: linear-gradient(90deg, #5BF655 0%, transparent 100%)"></div>
@@ -389,7 +390,7 @@ const handleNFTCardClick = (nft: any) => {
                   <p class="text-gray-400 text-sm mb-1">{{ t('staking.annual_rate') }}</p>
                   <p class="font-bold text-base break-all" style="color: #5BF655">{{ nft.yearRate }}</p>
                 </div>
-                
+
                 <!-- 质押分红 -->
                 <div class="bg-alpha-surface rounded-lg p-3 border border-gray-600">
                   <p class="text-gray-400 text-sm mb-1">{{ t('staking.staking_dividend') }}</p>
@@ -401,7 +402,7 @@ const handleNFTCardClick = (nft: any) => {
               <!-- 按钮组 -->
               <div class="grid grid-cols-2 gap-3">
                 <!-- 领取按钮 -->
-                <button 
+                <button
                   @click="handleClaim(nft.id, $event)"
                   class="py-3 text-black font-bold rounded-full transition-all duration-300"
                   :class="`bg-gradient-to-r ${nft.levelGradient} hover:shadow-lg`"
@@ -409,9 +410,9 @@ const handleNFTCardClick = (nft: any) => {
                 >
                   {{ t('common.claim') }}
                 </button>
-                
+
                 <!-- 转移按钮 -->
-                <button 
+                <button
                   @click="handleTransfer(nft.id, $event)"
                   class="py-3 text-white font-bold rounded-full transition-all duration-300 bg-alpha-surface-light border border-gray-600 hover:bg-alpha-surface hover:border-gray-500"
                 >
