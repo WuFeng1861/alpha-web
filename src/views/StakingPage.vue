@@ -205,7 +205,7 @@ const handleMyStakingPool = (stakingId?: number) => {
 
 // 处理NFT质押池按钮点击
 const handleNFTStakingPool = () => {
-  console.log('点击我的质押池(NFT)按钮，跳转到NFT质押页面')
+  console.log('点击我的质押池(NFT)按钮，跳转到NFT质押页面', router)
   router.push('/nft-staking')
 }
 
