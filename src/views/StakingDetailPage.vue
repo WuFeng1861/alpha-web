@@ -272,6 +272,21 @@ const handleStakeAction = async () => {
     return
   }
 
+  // 检查质押池容量限制
+  const currentPoolAmount = parseFloat(stakingDetail.value.totalStaked || '0')
+  const maxPoolCapacity = parseFloat(stakingDetail.value.maxStakeAmount || '0')
+  const afterStakeAmount = currentPoolAmount + amount
+  
+  if (afterStakeAmount > maxPoolCapacity) {
+    const remainingCapacity = maxPoolCapacity - currentPoolAmount
+    if (remainingCapacity <= 0) {
+      toast.error('质押池已满，无法继续质押')
+      return
+    } else {
+      toast.error(`质押金额超出池子容量限制！当前池子剩余容量为 ${formatNumber(remainingCapacity.toString())} ALPHA`)
+      return
+    }
+  }
   try {
     isStaking.value = true
     toast.info('开始质押，请在钱包中确认交易...')
