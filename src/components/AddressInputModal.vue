@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ethers } from 'ethers'
 
 const { t } = useI18n()
 
@@ -37,9 +38,14 @@ const handleClose = () => {
   emit('close')
 }
 
-// 验证地址格式（简单的以太坊地址格式验证）
+// 使用ethers验证地址格式
 const isValidAddress = (address: string): boolean => {
-  return /^0x[a-fA-F0-9]{40}$/.test(address)
+  try {
+    // 使用ethers的isAddress函数验证地址格式
+    return ethers.isAddress(address)
+  } catch (error) {
+    return false
+  }
 }
 
 // 检查输入的地址是否有效
