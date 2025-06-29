@@ -134,11 +134,13 @@ const stopDividendsTimer = () => {
 }
 
 onMounted(() => {
+  console.log(2);
   startNFTStakingTimer()
   startDividendsTimer()
 })
 
 onUnmounted(() => {
+  console.log(3);
   stopNFTStakingTimer()
   stopDividendsTimer()
 })
