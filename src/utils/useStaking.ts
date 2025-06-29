@@ -1,10 +1,9 @@
-import EthWallet from './ethersHelper';
 import config from '../assets/config';
-import { useWalletStore } from '../stores/wallet';
-import { getEthWallet } from './useEthWallet';
-import { ref } from 'vue';
-import { getTokenBalances, updateTokenBalances } from './useTokenBalance';
-import toast from './toast';
+import {useWalletStore} from '../stores/wallet';
+import {getEthWallet} from './useEthWallet';
+import {ref} from 'vue';
+import {getTokenBalances, updateTokenBalances} from './useTokenBalance';
+import {sleep} from './utils';
 
 // 质押池结构体接口定义
 export interface Pool {
@@ -181,8 +180,8 @@ export const getUserStakes = async (forceUpdate: boolean = false): Promise<Proce
  * @returns 质押结果
  */
 export const performStaking = async (
-  poolId: string, 
-  amount: string, 
+  poolId: string,
+  amount: string,
   t: Function
 ): Promise<{status: boolean, message: string, data: any}> => {
   const walletStore = useWalletStore();
@@ -244,9 +243,18 @@ export const performStaking = async (
     // 将数量转换为wei格式
     const amountInWei = wallet.ethToWei(amount);
     
-    // 调用approve方法授权质押合约使用代币
-    console.log(`授权质押合约 ${config.shakingContractAddress} 使用 ${amount} ALPHA...`);
-    await wallet.contractFn('approve', config.shakingContractAddress, amountInWei);
+    // 检查用户地址允许合约使用代币的数量
+    let ownerAllowance = await wallet.contractFn('allowance', walletStore.address, config.shakingContractAddress);
+    ownerAllowance = wallet.weiToEth(ownerAllowance);
+    console.log(ownerAllowance, '检查用户地址允许合约使用代币的数量');
+    
+    if (Number(ownerAllowance) <  Number(amount)) {
+      // 调用approve方法授权质押合约使用代币
+      console.log(`授权质押合约 ${config.shakingContractAddress} 使用 ${amount} ALPHA...`);
+      await wallet.contractFn('approve', config.shakingContractAddress, amountInWei);
+      await sleep(3.5*1000);
+    }
+    
     
     console.log('授权成功，等待确认...');
     
@@ -265,6 +273,7 @@ export const performStaking = async (
     
     // 第四步：更新缓存数据
     console.log('第四步：更新缓存数据...');
+    await sleep(3.5*1000);
     
     // 强制更新用户代币余额
     await updateTokenBalances(walletStore.address);
