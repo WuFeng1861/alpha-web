@@ -495,6 +495,7 @@ const handleNFTCardClick = (nft: any) => {
       @confirm="confirmTransfer"
     />
   </div>
+  </div>
 </template>
 
 <style scoped>
