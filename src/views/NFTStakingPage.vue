@@ -4,14 +4,17 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AlphaLogo from '../components/AlphaLogo.vue'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
+import AddressInputModal from '../components/AddressInputModal.vue'
 import config from '../assets/config'
 import { useWalletStore } from '../stores/wallet'
 import {
   claimPoolDividends,
   getNFTStakingDataWithCache,
   getPoolDividendsWithCache,
+  transferPoolOwner,
   type NFTStakingData
 } from '../utils/useStaking';
+import toast from '../utils/toast'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -31,6 +34,11 @@ const formatNumber = (num: string | number): string => {
 // NFT质押数据
 const nftStakingList = ref<NFTStakingData[]>([])
 const isLoading = ref(false)
+
+// 控制地址输入弹窗显示
+const showAddressModal = ref(false)
+// 当前要转移的NFT质押记录
+const currentTransferNFT = ref<NFTStakingData | null>(null)
 
 // 定时器
 let nftStakingTimer: number | null = null
@@ -149,11 +157,61 @@ const handleClaim = async (id: number, event?: Event) => {
 }
 
 // 处理转移按钮
-const handleTransfer = (id: number, event?: Event) => {
+const handleTransfer = (nft: NFTStakingData, event?: Event) => {
   if (event) {
     event.stopPropagation()
   }
-  console.log('转移NFT质押:', id)
+  // 保存当前要转移的NFT记录
+  currentTransferNFT.value = nft
+  // 显示地址输入弹窗
+  showAddressModal.value = true
+}
+
+// 关闭地址输入弹窗
+const closeAddressModal = () => {
+  showAddressModal.value = false
+  currentTransferNFT.value = null
+}
+
+// 确认转移地址
+const confirmTransfer = async (address: string) => {
+  if (!currentTransferNFT.value) {
+    toast.error('转移信息错误，请重试')
+    return
+  }
+
+  if (!walletStore.address) {
+    toast.error(t('common.errors.wallet_not_connected'))
+    return
+  }
+
+  try {
+    toast.info('开始转移分红地址，请在钱包中确认交易...')
+    
+    // 调用转移分红地址的函数
+    const result = await transferPoolOwner(
+      currentTransferNFT.value.poolId,
+      address,
+      t
+    )
+
+    if (result.status) {
+      toast.success(result.message)
+      
+      // 转移成功后强制更新NFT质押数据
+      await updateNFTStakingData(true)
+      
+      console.log(`成功将质押池 ${currentTransferNFT.value.poolId} 的分红地址转移到 ${address}`)
+    } else {
+      toast.error(result.message)
+    }
+  } catch (error) {
+    console.error('转移分红地址失败:', error)
+    toast.error('转移失败，请重试')
+  } finally {
+    // 关闭弹窗
+    closeAddressModal()
+  }
 }
 
 // 处理NFT卡片点击
@@ -413,7 +471,7 @@ const handleNFTCardClick = (nft: any) => {
 
                 <!-- 转移按钮 -->
                 <button
-                  @click="handleTransfer(nft.id, $event)"
+                  @click="handleTransfer(nft, $event)"
                   class="py-3 text-white font-bold rounded-full transition-all duration-300 bg-alpha-surface-light border border-gray-600 hover:bg-alpha-surface hover:border-gray-500"
                 >
                   {{ t('common.transfer') }}
@@ -426,6 +484,15 @@ const handleNFTCardClick = (nft: any) => {
       </div>
     </div>
   </div>
+
+  <!-- 地址输入弹窗 -->
+  <AddressInputModal
+    :show="showAddressModal"
+    title="转移分红地址"
+    placeholder="请输入新的分红接收地址 (0x...)"
+    @close="closeAddressModal"
+    @confirm="confirmTransfer"
+  />
 </template>
 
 <style scoped>
