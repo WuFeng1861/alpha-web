@@ -1,332 +1,332 @@
 <script setup lang="ts">
-import {useI18n} from 'vue-i18n';
-import {ref, onMounted, onUnmounted} from 'vue';
-import {useRouter, useRoute} from 'vue-router';
-import AlphaLogo from '../components/AlphaLogo.vue';
-import LanguageSwitcher from '../components/LanguageSwitcher.vue';
-import config from '../assets/config';
-import {useWalletStore} from '../stores/wallet';
+import { useI18n } from 'vue-i18n'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import AlphaLogo from '../components/AlphaLogo.vue'
+import LanguageSwitcher from '../components/LanguageSwitcher.vue'
+import config from '../assets/config'
+import { useWalletStore } from '../stores/wallet'
 import {
   getAllPoolsInfoWithCache,
   getUserStakesWithCache,
   getBatchStakeDividendsWithCache,
   type ProcessedPool,
   type ProcessedStakeRecord
-} from '../utils/useStaking';
-import {getTokenBalances} from '../utils/useTokenBalance';
-import toast from '../utils/toast';
-import {performStaking} from '../utils/useStaking';
+} from '../utils/useStaking'
+import { getTokenBalances } from '../utils/useTokenBalance'
+import toast from '../utils/toast'
+import { performStaking } from '../utils/useStaking';
 
 // 导入解除质押函数
-import {performUnstaking} from '../utils/useStaking';
+import { performUnstaking } from '../utils/useStaking'
 
-const {t} = useI18n();
-const router = useRouter();
-const route = useRoute();
-const walletStore = useWalletStore();
+const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
+const walletStore = useWalletStore()
 
 // 控制界面显示状态
-const showClaimInterface = ref(false);
-const isLoading = ref(false);
+const showClaimInterface = ref(false)
+const isLoading = ref(false)
 
 // 输入的质押金额
-const inputAmount = ref('5000');
+const inputAmount = ref('5000')
 // 质押加载状态
-const isStaking = ref(false);
+const isStaking = ref(false)
 // 解除质押加载状态
-const isUnstaking = ref(false);
+const isUnstaking = ref(false)
 
 // 质押详情数据
-const stakingDetail = ref<ProcessedPool | null>(null);
+const stakingDetail = ref<ProcessedPool | null>(null)
 // 用户在该池子的质押记录
-const userStakesInPool = ref<ProcessedStakeRecord[]>([]);
+const userStakesInPool = ref<ProcessedStakeRecord[]>([])
 // 我的ALPHA余额
-const myAlphaBalance = ref('0');
+const myAlphaBalance = ref('0')
 
 // 定时器
-let detailTimer: number | null = null;
-let stakesTimer: number | null = null;
-let balanceTimer: number | null = null;
+let detailTimer: number | null = null
+let stakesTimer: number | null = null
+let balanceTimer: number | null = null
 
 // 格式化输入金额，保留两位小数
 const formatInputAmount = (value: string): string => {
-  const numValue = parseFloat(value);
-  if (isNaN(numValue)) return '0.00';
-  return numValue.toFixed(2);
-};
+  const numValue = parseFloat(value)
+  if (isNaN(numValue)) return '0.00'
+  return numValue.toFixed(2)
+}
 
 // 处理输入变化
 const handleInputChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const value = target.value;
+  const target = event.target as HTMLInputElement
+  const value = target.value
   // 当失去焦点时格式化为两位小数
   if (value) {
-    inputAmount.value = formatInputAmount(value);
+    inputAmount.value = formatInputAmount(value)
   }
-};
+}
 // 格式化数字，保留两位小数但去除尾部的0和小数点
 const formatNumber = (num: string | number): string => {
-  const numValue = typeof num === 'string' ? parseFloat(num) : num;
-  if (isNaN(numValue)) return '0';
+  const numValue = typeof num === 'string' ? parseFloat(num) : num
+  if (isNaN(numValue)) return '0'
 
   // 保留两位小数
-  const formatted = numValue.toFixed(2);
+  const formatted = numValue.toFixed(2)
   // 去除尾部的0和小数点
-  return formatted.replace(/\.?0+$/, '');
-};
+  return formatted.replace(/\.?0+$/, '')
+}
 
 // 更新质押详情数据
 const updateStakingDetail = async (forceUpdate: boolean = false) => {
-  const poolId = route.params.id as string;
+  const poolId = route.params.id as string
 
   if (!poolId) {
-    console.error('缺少池子ID参数');
-    return;
+    console.error('缺少池子ID参数')
+    return
   }
 
   try {
-    isLoading.value = true;
-    console.log(`开始获取池子 ${poolId} 的详情数据...`);
+    isLoading.value = true
+    console.log(`开始获取池子 ${poolId} 的详情数据...`)
 
     // 获取所有质押池信息
-    const allPools = await getAllPoolsInfoWithCache(forceUpdate);
+    const allPools = await getAllPoolsInfoWithCache(forceUpdate)
 
     // 根据ID筛选出对应的池子
-    const targetPool = allPools.find(pool => pool.id.toString() === poolId);
+    const targetPool = allPools.find(pool => pool.id.toString() === poolId)
 
     if (targetPool) {
-      stakingDetail.value = targetPool;
-      console.log('找到目标池子:', targetPool);
+      stakingDetail.value = targetPool
+      console.log('找到目标池子:', targetPool)
     } else {
-      console.error(`未找到ID为 ${poolId} 的质押池`);
-      stakingDetail.value = null;
+      console.error(`未找到ID为 ${poolId} 的质押池`)
+      stakingDetail.value = null
     }
   } catch (error) {
-    console.error('获取质押详情失败:', error);
-    stakingDetail.value = null;
+    console.error('获取质押详情失败:', error)
+    stakingDetail.value = null
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
 // 更新用户在该池子的质押记录
 const updateUserStakesInPool = async (forceUpdate: boolean = false) => {
-  const poolId = route.params.id as string;
+  const poolId = route.params.id as string
 
   if (!walletStore.address || !poolId) {
-    userStakesInPool.value = [];
-    return;
+    userStakesInPool.value = []
+    return
   }
 
   try {
-    console.log(`开始获取用户在池子 ${poolId} 的质押记录...`);
+    console.log(`开始获取用户在池子 ${poolId} 的质押记录...`)
 
     // 获取用户所有质押记录
-    const allUserStakes = await getUserStakesWithCache(forceUpdate);
+    const allUserStakes = await getUserStakesWithCache(forceUpdate)
 
     // 筛选出在当前池子的质押记录
     const stakesInPool = allUserStakes.filter(stake =>
         stake.poolNumber.toString() === poolId
-    );
+    )
 
-    userStakesInPool.value = stakesInPool;
-    console.log(`用户在池子 ${poolId} 的质押记录:`, stakesInPool);
+    userStakesInPool.value = stakesInPool
+    console.log(`用户在池子 ${poolId} 的质押记录:`, stakesInPool)
   } catch (error) {
-    console.error('获取用户质押记录失败:', error);
-    userStakesInPool.value = [];
+    console.error('获取用户质押记录失败:', error)
+    userStakesInPool.value = []
   }
-};
+}
 
 // 更新用户ALPHA余额
 const updateUserBalance = async (forceUpdate: boolean = false) => {
   if (!walletStore.address) {
-    myAlphaBalance.value = '0';
-    return;
+    myAlphaBalance.value = '0'
+    return
   }
 
   try {
-    console.log('开始更新用户ALPHA余额...');
-    const balances = await getTokenBalances(walletStore.address, forceUpdate);
-    myAlphaBalance.value = balances.alphaBalance;
-    console.log('用户ALPHA余额更新完成:', balances.alphaBalance);
+    console.log('开始更新用户ALPHA余额...')
+    const balances = await getTokenBalances(walletStore.address, forceUpdate)
+    myAlphaBalance.value = balances.alphaBalance
+    console.log('用户ALPHA余额更新完成:', balances.alphaBalance)
   } catch (error) {
-    console.error('更新用户ALPHA余额失败:', error);
-    myAlphaBalance.value = '0';
+    console.error('更新用户ALPHA余额失败:', error)
+    myAlphaBalance.value = '0'
   }
-};
+}
 
 // 启动定时器更新质押详情
 const startDetailTimer = () => {
-  if (detailTimer) return;
-  updateStakingDetail(); // 立即执行一次
+  if (detailTimer) return
+  updateStakingDetail() // 立即执行一次
   detailTimer = window.setInterval(() => {
-    updateStakingDetail(); // 每5分钟更新一次
-  }, 5 * 60 * 1000);
-};
+    updateStakingDetail() // 每5分钟更新一次
+  }, 5 * 60 * 1000)
+}
 
 // 启动定时器更新用户质押记录
 const startStakesTimer = () => {
-  if (stakesTimer) return;
-  updateUserStakesInPool(); // 立即执行一次
+  if (stakesTimer) return
+  updateUserStakesInPool() // 立即执行一次
   stakesTimer = window.setInterval(() => {
-    updateUserStakesInPool(); // 每30秒更新一次
-  }, 30000);
-};
+    updateUserStakesInPool() // 每30秒更新一次
+  }, 30000)
+}
 
 // 启动定时器更新用户余额
 const startBalanceTimer = () => {
-  if (balanceTimer) return;
-  updateUserBalance(); // 立即执行一次
+  if (balanceTimer) return
+  updateUserBalance() // 立即执行一次
   balanceTimer = window.setInterval(() => {
-    updateUserBalance(); // 每30秒更新一次余额
-  }, 30000);
-};
+    updateUserBalance() // 每30秒更新一次余额
+  }, 30000)
+}
 
 // 停止定时器
 const stopDetailTimer = () => {
   if (detailTimer) {
-    clearInterval(detailTimer);
-    detailTimer = null;
+    clearInterval(detailTimer)
+    detailTimer = null
   }
-};
+}
 
 const stopStakesTimer = () => {
   if (stakesTimer) {
-    clearInterval(stakesTimer);
-    stakesTimer = null;
+    clearInterval(stakesTimer)
+    stakesTimer = null
   }
-};
+}
 
 const stopBalanceTimer = () => {
   if (balanceTimer) {
-    clearInterval(balanceTimer);
-    balanceTimer = null;
+    clearInterval(balanceTimer)
+    balanceTimer = null
   }
-};
+}
 
 onMounted(() => {
-  startDetailTimer();
-  startStakesTimer();
-  startBalanceTimer();
-});
+  startDetailTimer()
+  startStakesTimer()
+  startBalanceTimer()
+})
 
 onUnmounted(() => {
-  stopDetailTimer();
-  stopStakesTimer();
-  stopBalanceTimer();
-});
+  stopDetailTimer()
+  stopStakesTimer()
+  stopBalanceTimer()
+})
 
 // 返回上一页
 const goBack = () => {
-  router.back();
-};
+  router.back()
+}
 
 // 处理领取按钮
 const handleClaim = () => {
-  console.log('领取奖励');
-};
+  console.log('领取奖励')
+}
 
 // 处理解除按钮
 const handleUnstake = () => {
-  showClaimInterface.value = true;
-};
+  showClaimInterface.value = true
+}
 
 // 处理索赔卡片的索赔按钮
 const handleClaimItem = (stake: ProcessedStakeRecord) => {
-  handleUnstakeAction(stake);
-};
+  handleUnstakeAction(stake)
+}
 
 // 检查质押是否可以解除（锁定期是否已结束）
 const checkStakeUnlockable = (stake: ProcessedStakeRecord): { canUnstake: boolean, message: string } => {
   if (!stakingDetail.value) {
-    return {canUnstake: false, message: '质押池信息未加载'};
+    return { canUnstake: false, message: '质押池信息未加载' }
   }
 
   // 获取质押开始时间（秒）
-  const stakeStartTime = stake.stakeStartTime;
+  const stakeStartTime = stake.stakeStartTime
   // 获取当前时间（秒）
-  const currentTime = Math.floor(Date.now() / 1000);
+  const currentTime = Math.floor(Date.now() / 1000)
   // 获取锁定期（从质押池详情中获取，需要转换为秒）
-  const lockupPeriodText = stakingDetail.value.lockupPeriod;
+  const lockupPeriodText = stakingDetail.value.lockupPeriod
 
   // 解析锁定期文本，转换为秒数
-  let lockupPeriodSeconds = 0;
+  let lockupPeriodSeconds = 0
   if (lockupPeriodText.includes('天')) {
-    const days = parseInt(lockupPeriodText.replace('天', ''));
-    lockupPeriodSeconds = days * 24 * 60 * 60;
+    const days = parseInt(lockupPeriodText.replace('天', ''))
+    lockupPeriodSeconds = days * 24 * 60 * 60
   } else if (lockupPeriodText.includes('小时')) {
-    const hours = parseInt(lockupPeriodText.replace('小时', ''));
-    lockupPeriodSeconds = hours * 60 * 60;
+    const hours = parseInt(lockupPeriodText.replace('小时', ''))
+    lockupPeriodSeconds = hours * 60 * 60
   } else if (lockupPeriodText.includes('秒')) {
-    lockupPeriodSeconds = parseInt(lockupPeriodText.replace('秒', ''));
+    lockupPeriodSeconds = parseInt(lockupPeriodText.replace('秒', ''))
   }
 
   // 计算解锁时间
-  const unlockTime = stakeStartTime + lockupPeriodSeconds;
+  const unlockTime = stakeStartTime + lockupPeriodSeconds
   // 计算剩余锁定时间
-  const remainingTime = unlockTime - currentTime;
+  const remainingTime = unlockTime - currentTime
 
   if (remainingTime > 0) {
     // 还在锁定期内
-    const remainingDays = Math.floor(remainingTime / (24 * 60 * 60));
-    const remainingHours = Math.floor((remainingTime % (24 * 60 * 60)) / (60 * 60));
-    const remainingMinutes = Math.floor((remainingTime % (60 * 60)) / 60);
+    const remainingDays = Math.floor(remainingTime / (24 * 60 * 60))
+    const remainingHours = Math.floor((remainingTime % (24 * 60 * 60)) / (60 * 60))
+    const remainingMinutes = Math.floor((remainingTime % (60 * 60)) / 60)
 
-    let timeMessage = '';
+    let timeMessage = ''
     if (remainingDays > 0) {
-      timeMessage = `${remainingDays}天${remainingHours}小时`;
+      timeMessage = `${remainingDays}天${remainingHours}小时`
     } else if (remainingHours > 0) {
-      timeMessage = `${remainingHours}小时${remainingMinutes}分钟`;
+      timeMessage = `${remainingHours}小时${remainingMinutes}分钟`
     } else {
-      timeMessage = `${remainingMinutes}分钟`;
+      timeMessage = `${remainingMinutes}分钟`
     }
 
     return {
       canUnstake: false,
       message: `质押锁定期未结束，还需等待 ${timeMessage}`
-    };
+    }
   } else {
     // 锁定期已结束，可以解除质押
     return {
       canUnstake: true,
       message: '质押锁定期已结束，可以解除质押'
-    };
+    }
   }
-};
+}
 
 // 处理解除质押操作
 const handleUnstakeAction = async (stake: ProcessedStakeRecord) => {
   if (!walletStore.address) {
-    toast.error(t('common.errors.wallet_not_connected'));
-    return;
+    toast.error(t('common.errors.wallet_not_connected'))
+    return
   }
 
   if (!stakingDetail.value) {
-    toast.error('质押池信息未加载');
-    return;
+    toast.error('质押池信息未加载')
+    return
   }
 
   // 检查质押是否可以解除
-  const {canUnstake, message} = checkStakeUnlockable(stake);
+  const { canUnstake, message } = checkStakeUnlockable(stake)
 
   if (!canUnstake) {
-    toast.error(message);
-    return;
+    toast.error(message)
+    return
   }
 
   try {
-    isUnstaking.value = true;
-    toast.info('开始解除质押，请在钱包中确认交易...');
+    isUnstaking.value = true
+    toast.info('开始解除质押，请在钱包中确认交易...')
 
     // 执行解除质押
     const result = await performUnstaking(
-        stake.poolNumber.toString(),
-        stake.stakeId,
-        t
-    );
+      stake.poolNumber.toString(),
+      stake.stakeId,
+      t
+    )
 
     if (result.status) {
-      toast.success(result.message);
+      toast.success(result.message)
 
       // 解除质押成功后的操作
       // 1. 强制更新所有相关数据
@@ -334,122 +334,122 @@ const handleUnstakeAction = async (stake: ProcessedStakeRecord) => {
         updateUserBalance(true),      // 更新用户余额
         updateStakingDetail(true),    // 更新质押池详情
         updateUserStakesInPool(true)  // 更新用户质押记录
-      ]);
+      ])
 
       // 2. 如果当前池子没有质押记录了，返回到质押详情界面
       if (userStakesInPool.value.length === 0) {
-        showClaimInterface.value = false;
+        showClaimInterface.value = false
       }
 
-      console.log('解除质押成功，所有数据已更新');
+      console.log('解除质押成功，所有数据已更新')
     } else {
-      toast.error(result.message);
+      toast.error(result.message)
     }
 
   } catch (error) {
-    console.error('解除质押操作失败:', error);
-    toast.error('解除质押操作失败，请重试');
+    console.error('解除质押操作失败:', error)
+    toast.error('解除质押操作失败，请重试')
   } finally {
-    isUnstaking.value = false;
+    isUnstaking.value = false
   }
-};
+}
 
 // 返回到质押详情界面
 const backToStakingDetail = () => {
-  showClaimInterface.value = false;
-};
+  showClaimInterface.value = false
+}
 
 // 处理添加按钮
 const handleAdd = () => {
   showClaimInterface.value = false;
-};
+}
 
 // 处理索赔按钮
 const handleClaimButton = () => {
-  showClaimInterface.value = true;
-};
+  showClaimInterface.value = true
+}
 
 // 处理质押操作
 const handleStakeAction = async () => {
   if (!walletStore.address) {
-    toast.error(t('common.errors.wallet_not_connected'));
-    return;
+    toast.error(t('common.errors.wallet_not_connected'))
+    return
   }
 
   if (!stakingDetail.value) {
-    toast.error('质押池信息未加载');
-    return;
+    toast.error('质押池信息未加载')
+    return
   }
 
   // 验证输入金额
-  const amount = parseFloat(inputAmount.value);
+  const amount = parseFloat(inputAmount.value)
   if (isNaN(amount) || amount <= 0) {
-    toast.error('请输入有效的质押数量');
-    return;
+    toast.error('请输入有效的质押数量')
+    return
   }
 
   // 检查余额
-  const userBalance = parseFloat(myAlphaBalance.value);
+  const userBalance = parseFloat(myAlphaBalance.value)
   if (userBalance < amount) {
-    toast.error(`余额不足！您的ALPHA余额为 ${myAlphaBalance.value}，需要 ${inputAmount.value}`);
-    return;
+    toast.error(`余额不足！您的ALPHA余额为 ${myAlphaBalance.value}，需要 ${inputAmount.value}`)
+    return
   }
 
   // 检查质押池容量限制
-  const currentPoolAmount = parseFloat(stakingDetail.value.totalStaked || '0');
-  const maxPoolCapacity = parseFloat(stakingDetail.value.maxStakeAmount || '0');
-  const afterStakeAmount = currentPoolAmount + amount;
+  const currentPoolAmount = parseFloat(stakingDetail.value.totalStaked || '0')
+  const maxPoolCapacity = parseFloat(stakingDetail.value.maxStakeAmount || '0')
+  const afterStakeAmount = currentPoolAmount + amount
 
   if (afterStakeAmount > maxPoolCapacity) {
-    const remainingCapacity = maxPoolCapacity - currentPoolAmount;
+    const remainingCapacity = maxPoolCapacity - currentPoolAmount
     if (remainingCapacity <= 0) {
-      toast.error('质押池已满，无法继续质押');
-      return;
+      toast.error('质押池已满，无法继续质押')
+      return
     } else {
-      toast.error(`质押金额超出池子容量限制！当前池子剩余容量为 ${formatNumber(remainingCapacity.toString())} ALPHA`);
-      return;
+      toast.error(`质押金额超出池子容量限制！当前池子剩余容量为 ${formatNumber(remainingCapacity.toString())} ALPHA`)
+      return
     }
   }
   try {
-    isStaking.value = true;
-    toast.info('开始质押，请在钱包中确认交易...');
+    isStaking.value = true
+    toast.info('开始质押，请在钱包中确认交易...')
 
     // 执行质押
     const result = await performStaking(
         stakingDetail.value.id.toString(),
         inputAmount.value,
         t
-    );
+    )
 
     if (result.status) {
-      toast.success(result.message);
+      toast.success(result.message)
 
       // 质押成功后的操作
       // 1. 重置输入框
-      inputAmount.value = '5000';
+      inputAmount.value = '5000'
 
       // 2. 强制更新所有相关数据
       await Promise.all([
         updateUserBalance(true),      // 更新用户余额
         updateStakingDetail(true),    // 更新质押池详情
         updateUserStakesInPool(true)  // 更新用户质押记录
-      ]);
+      ])
 
       // 3. 返回到质押详情界面（如果当前在索赔界面）
-      showClaimInterface.value = false;
+      showClaimInterface.value = false
 
-      console.log('质押成功，所有数据已更新');
+      console.log('质押成功，所有数据已更新')
     } else {
-      toast.error(result.message);
+      toast.error(result.message)
     }
 
   } catch (error) {
-    console.error('质押操作失败:', error);
-    toast.error('质押操作失败，请重试');
+    console.error('质押操作失败:', error)
+    toast.error('质押操作失败，请重试')
   } finally {
-    isStaking.value = false;
+    isStaking.value = false
   }
-};
+}
 </script>
 
 <template>
