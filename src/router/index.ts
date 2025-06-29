@@ -76,6 +76,7 @@ const router = createRouter({
 
 // Update document title based on route meta
 router.beforeEach((to, from, next) => {
+  console.log(to, from)
   next()
 })
 
