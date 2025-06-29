@@ -5,6 +5,104 @@ import {ref} from 'vue';
 import {getTokenBalances, updateTokenBalances} from './useTokenBalance';
 import {sleep} from './utils';
 
+/**
+ * 执行解除质押操作（索赔）
+ * @param poolId 质押池ID
+ * @param stakeId 质押记录ID
+ * @param t 国际化函数
+ * @returns 解除质押结果
+ */
+export const performUnstaking = async (
+  poolId: string,
+  stakeId: string,
+  t: Function
+): Promise<{status: boolean, message: string, data: any}> => {
+  const walletStore = useWalletStore();
+  
+  // 检查钱包是否连接
+  if (!walletStore.address) {
+    return {
+      status: false,
+      message: t('common.errors.wallet_not_connected'),
+      data: null
+    };
+  }
+  
+  try {
+    const wallet = getEthWallet();
+    
+    if (!wallet) {
+      return {
+        status: false,
+        message: '钱包实例未初始化',
+        data: null
+      };
+    }
+    
+    console.log(`开始解除质押流程: 池子ID=${poolId}, 质押ID=${stakeId}`);
+    
+    // 设置质押合约
+    wallet.setABI(config.shakingContractAbi);
+    wallet.updateTokenContract(config.shakingContractAddress);
+    
+    // 调用unstake方法进行解除质押
+    console.log(`调用unstake方法: poolId=${poolId}, stakeId=${stakeId}`);
+    const unstakeResult = await wallet.contractFn('unstake', poolId, stakeId);
+    
+    console.log('解除质押交易成功:', unstakeResult);
+    
+    // 等待交易确认
+    await sleep(3.5 * 1000);
+    
+    // 强制更新用户代币余额
+    await updateTokenBalances(walletStore.address);
+    
+    // 强制更新质押池数据
+    await getAllPoolsInfoWithCache(true);
+    
+    // 强制更新用户质押数据
+    await getUserStakesWithCache(true);
+    
+    console.log('解除质押流程完成');
+    
+    return {
+      status: true,
+      message: `解除质押成功！已从池子 ${poolId} 中解除质押记录 ${stakeId}`,
+      data: unstakeResult
+    };
+    
+  } catch (error) {
+    console.error('解除质押失败:', error);
+    
+    let message = '解除质押失败';
+    
+    if (error.message.includes('user rejected')) {
+      message = t('common.errors.user_rejected');
+    } else if (error.message.includes('insufficient funds')) {
+      message = '余额不足或gas费不够';
+    } else if (error.message.includes('network')) {
+      message = t('common.errors.network_error');
+    } else if (error.message.includes('execution reverted')) {
+      // 合约执行失败，可能是业务逻辑错误
+      if (error.message.includes('Stake not found')) {
+        message = '质押记录不存在';
+      } else if (error.message.includes('Stake already withdrawn')) {
+        message = '质押已经被解除';
+      } else if (error.message.includes('Lockup period not ended')) {
+        message = '质押锁定期未结束，无法解除质押';
+      } else {
+        message = '合约执行失败，请检查参数或稍后重试';
+      }
+    }
+    
+    return {
+      status: false,
+      message,
+      data: null
+    };
+  }
+};
+
 // 质押池结构体接口定义
 export interface Pool {
   poolId: string;

@@ -17,6 +17,9 @@ import { getTokenBalances } from '../utils/useTokenBalance'
 import toast from '../utils/toast'
 import { performStaking } from '../utils/useStaking';
 
+// 导入解除质押函数
+import { performUnstaking } from '../utils/useStaking'
+
 const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
@@ -30,6 +33,8 @@ const isLoading = ref(false)
 const inputAmount = ref('5000')
 // 质押加载状态
 const isStaking = ref(false)
+// 解除质押加载状态
+const isUnstaking = ref(false)
 
 // 质押详情数据
 const stakingDetail = ref<ProcessedPool | null>(null)
@@ -228,7 +233,125 @@ const handleUnstake = () => {
 
 // 处理索赔卡片的索赔按钮
 const handleClaimItem = (stake: ProcessedStakeRecord) => {
-  console.log('索赔项目:', stake)
+  handleUnstakeAction(stake)
+}
+
+// 检查质押是否可以解除（锁定期是否已结束）
+const checkStakeUnlockable = (stake: ProcessedStakeRecord): { canUnstake: boolean, message: string } => {
+  if (!stakingDetail.value) {
+    return { canUnstake: false, message: '质押池信息未加载' }
+  }
+  
+  // 获取质押开始时间（秒）
+  const stakeStartTime = stake.stakeStartTime
+  // 获取当前时间（秒）
+  const currentTime = Math.floor(Date.now() / 1000)
+  // 获取锁定期（从质押池详情中获取，需要转换为秒）
+  const lockupPeriodText = stakingDetail.value.lockupPeriod
+  
+  // 解析锁定期文本，转换为秒数
+  let lockupPeriodSeconds = 0
+  if (lockupPeriodText.includes('天')) {
+    const days = parseInt(lockupPeriodText.replace('天', ''))
+    lockupPeriodSeconds = days * 24 * 60 * 60
+  } else if (lockupPeriodText.includes('小时')) {
+    const hours = parseInt(lockupPeriodText.replace('小时', ''))
+    lockupPeriodSeconds = hours * 60 * 60
+  } else if (lockupPeriodText.includes('秒')) {
+    lockupPeriodSeconds = parseInt(lockupPeriodText.replace('秒', ''))
+  }
+  
+  // 计算解锁时间
+  const unlockTime = stakeStartTime + lockupPeriodSeconds
+  // 计算剩余锁定时间
+  const remainingTime = unlockTime - currentTime
+  
+  if (remainingTime > 0) {
+    // 还在锁定期内
+    const remainingDays = Math.floor(remainingTime / (24 * 60 * 60))
+    const remainingHours = Math.floor((remainingTime % (24 * 60 * 60)) / (60 * 60))
+    const remainingMinutes = Math.floor((remainingTime % (60 * 60)) / 60)
+    
+    let timeMessage = ''
+    if (remainingDays > 0) {
+      timeMessage = `${remainingDays}天${remainingHours}小时`
+    } else if (remainingHours > 0) {
+      timeMessage = `${remainingHours}小时${remainingMinutes}分钟`
+    } else {
+      timeMessage = `${remainingMinutes}分钟`
+    }
+    
+    return {
+      canUnstake: false,
+      message: `质押锁定期未结束，还需等待 ${timeMessage}`
+    }
+  } else {
+    // 锁定期已结束，可以解除质押
+    return {
+      canUnstake: true,
+      message: '质押锁定期已结束，可以解除质押'
+    }
+  }
+}
+
+// 处理解除质押操作
+const handleUnstakeAction = async (stake: ProcessedStakeRecord) => {
+  if (!walletStore.address) {
+    toast.error(t('common.errors.wallet_not_connected'))
+    return
+  }
+  
+  if (!stakingDetail.value) {
+    toast.error('质押池信息未加载')
+    return
+  }
+  
+  // 检查质押是否可以解除
+  const { canUnstake, message } = checkStakeUnlockable(stake)
+  
+  if (!canUnstake) {
+    toast.error(message)
+    return
+  }
+  
+  try {
+    isUnstaking.value = true
+    toast.info('开始解除质押，请在钱包中确认交易...')
+    
+    // 执行解除质押
+    const result = await performUnstaking(
+      stake.poolNumber.toString(),
+      stake.stakeId,
+      t
+    )
+    
+    if (result.status) {
+      toast.success(result.message)
+      
+      // 解除质押成功后的操作
+      // 1. 强制更新所有相关数据
+      await Promise.all([
+        updateUserBalance(true),      // 更新用户余额
+        updateStakingDetail(true),    // 更新质押池详情
+        updateUserStakesInPool(true)  // 更新用户质押记录
+      ])
+      
+      // 2. 如果当前池子没有质押记录了，返回到质押详情界面
+      if (userStakesInPool.value.length === 0) {
+        showClaimInterface.value = false
+      }
+      
+      console.log('解除质押成功，所有数据已更新')
+    } else {
+      toast.error(result.message)
+    }
+    
+  } catch (error) {
+    console.error('解除质押操作失败:', error)
+    toast.error('解除质押操作失败，请重试')
+  } finally {
+    isUnstaking.value = false
+  }
 }
 
 // 返回到质押详情界面
@@ -526,11 +649,22 @@ const handleStakeAction = async () => {
               <!-- 索赔按钮 -->
               <button
                   @click="handleClaimItem(stake)"
+                  :disabled="isUnstaking"
                   class="w-full py-3 text-black font-bold rounded-full transition-all duration-300"
-                  :class="`bg-gradient-to-r ${stake.poolGradient}`"
+                  :class="[
+                    `bg-gradient-to-r ${stake.poolGradient}`,
+                    isUnstaking ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'
+                  ]"
                   :style="`box-shadow: 0 4px 15px ${stake.poolColor}40`"
               >
-                {{ t('staking.claim_type') }}
+                <span v-if="isUnstaking" class="flex items-center justify-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  解除质押中...
+                </span>
+                <span v-else>{{ t('staking.claim_type') }}</span>
               </button>
             </div>
           </div>
