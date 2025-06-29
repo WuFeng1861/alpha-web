@@ -55,7 +55,23 @@ const updateUserStakes = async (forceUpdate: boolean = false) => {
     isLoading.value = true
     console.log('开始更新用户质押数据...')
     const stakes = await getUserStakesWithCache(forceUpdate)
-    myStakingList.value = stakes
+    const showStakes = [];
+    for (let index = 0; index < stakes.length; index++) {
+      let item = {...stakes[index]};
+      item['stakingAmount'] = Number(item['stakingAmount']);
+      item['stakingReward'] = Number(item['stakingReward']);
+      let findIndex = showStakes.findIndex(it => it.poolNumber === item.poolNumber);
+      let thisItem = null;
+      if (findIndex !== -1) {
+    	thisItem = showStakes[findIndex];
+    	thisItem['stakingAmount'] += item['stakingAmount'];
+    	thisItem['stakingReward'] += item['stakingReward'];
+    	continue;
+      }
+      showStakes.push(item);
+    }
+    console.log(showStakes);
+    myStakingList.value = showStakes;
     console.log('用户质押数据更新完成:', stakes)
   } catch (error) {
     console.error('更新用户质押数据失败:', error)
