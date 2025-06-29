@@ -238,7 +238,7 @@ const backToStakingDetail = () => {
 
 // 处理添加按钮
 const handleAdd = () => {
-  handleStakeAction()
+  showClaimInterface = false;
 }
 
 // 处理索赔按钮
