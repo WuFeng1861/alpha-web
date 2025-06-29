@@ -180,6 +180,7 @@ const stopDividendsTimer = () => {
 }
 
 onMounted(() => {
+  console.log(1);
   startStakingTimer()
   startPoolsTimer()
   startDividendsTimer()
