@@ -103,7 +103,7 @@ const updateClaimableRewards = async (forceUpdate: boolean = false) => {
 // 启动定时器更新NFT质押数据
 const startNFTStakingTimer = () => {
   if (nftStakingTimer) return
-  updateNFTStakingData() // 立即执行一次
+  updateNFTStakingData(true) // 立即执行一次
   nftStakingTimer = window.setInterval(() => {
     updateNFTStakingData() // 每5分钟更新一次
   }, 5 * 60 * 1000)
@@ -112,7 +112,7 @@ const startNFTStakingTimer = () => {
 // 启动定时器更新可领取收益数据
 const startDividendsTimer = () => {
   if (dividendsTimer) return
-  updateClaimableRewards() // 立即执行一次
+  updateClaimableRewards(true) // 立即执行一次
   dividendsTimer = window.setInterval(() => {
     updateClaimableRewards() // 每30秒更新一次收益
   }, 30000)
