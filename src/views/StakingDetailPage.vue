@@ -642,8 +642,52 @@ const handleStakeAction = async () => {
                 </div>
               </div>
 
+              <!-- 质押数量显示区域 -->
+              <div class="relative overflow-hidden rounded-xl p-4 border-2 mb-4"
+                   style="border-color: #5BF655; background: linear-gradient(135deg, #5BF65515 0%, #5BF65508 100%)">
+                <!-- 背景装饰效果 -->
+                <div class="absolute inset-0 opacity-20"
+                     style="background: radial-gradient(circle at 20% 50%, #5BF65540 0%, transparent 50%), radial-gradient(circle at 80% 50%, #5BF65530 0%, transparent 50%)"></div>
+                
+                <!-- 闪烁装饰点 -->
+                <div class="absolute top-2 right-2 w-2 h-2 rounded-full animate-pulse"
+                     style="background: #5BF655; box-shadow: 0 0 10px #5BF655"></div>
+                <div class="absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full animate-pulse"
+                     style="background: #5BF655; box-shadow: 0 0 8px #5BF655; animation-delay: 0.5s"></div>
+                
+                <!-- 内容区域 -->
+                <div class="relative z-10">
+                  <div class="flex items-center justify-between mb-2">
+                    <p class="text-gray-300 text-sm font-medium flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" style="color: #5BF655" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {{ t('staking.staking_amount') }}
+                    </p>
+                    <!-- 质押图标 -->
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 animate-pulse" style="color: #5BF655" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  <!-- 质押数量显示 -->
+                  <div class="flex items-baseline">
+                    <p class="text-white font-black text-xl break-all mr-2"
+                       style="text-shadow: 0 0 20px #5BF65580, 0 0 40px #5BF65540">
+                      {{ formatNumber(stake.stakingAmount) }}
+                    </p>
+                    <span class="text-gray-400 text-sm font-medium">ALPHA</span>
+                  </div>
+                  
+                  <!-- 底部装饰线 -->
+                  <div class="mt-2 h-0.5 rounded-full opacity-60"
+                       style="background: linear-gradient(90deg, #5BF655 0%, transparent 100%)"></div>
+                </div>
+              </div>
               <!-- 详细信息网格 -->
-              <div class="grid grid-cols-3 gap-3 mb-4">
+              <div class="grid grid-cols-2 gap-3 mb-4">
                 <!-- 年化率 -->
                 <div class="bg-alpha-surface rounded-lg p-3 border border-gray-600">
                   <p class="text-gray-400 text-sm mb-1">{{ t('staking.annual_rate') }}</p>
@@ -656,12 +700,6 @@ const handleStakeAction = async () => {
                   <p class="text-white font-bold text-base">{{ stakingDetail?.lockupPeriod || '-' }}</p>
                 </div>
 
-                <!-- 质押开始 -->
-                <div class="bg-alpha-surface rounded-lg p-3 border border-gray-600">
-                  <p class="text-gray-400 text-sm mb-1">{{ t('staking.staking_start') }}</p>
-                  <p class="text-white font-bold text-base">
-                    {{ new Date(stake.stakeStartTime * 1000).toLocaleDateString() }}</p>
-                </div>
               </div>
 
               <!-- 索赔按钮 -->
