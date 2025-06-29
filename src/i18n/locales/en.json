@@ -77,7 +77,6 @@
     "errors": {
       "wallet_not_connected": "Please connect wallet first",
       "invalid_address": "Invalid inviter address",
-      "invalid_amount": "Please enter a valid amount",
       "not_bound": "Please bind inviter first",
       "inviter_not_bound": "This address cannot be used as inviter because it has no upline",
       "binding_failed": "Failed to bind inviter",
@@ -86,9 +85,7 @@
       "no_contribution": "No contribution points available",
       "network_error": "Network error, please try again",
       "purchase_too_frequent": "Sign in Alpha tokens too frequent, please try again later",
-      "no_pending_tokens": "No tokens available to claim",
-      "no_stake_to_unstake": "No stake available to unstake",
-      "no_pool_found": "Pool not found"
+      "no_pending_tokens": "No tokens available to claim"
     }
   },
   "staking": {
