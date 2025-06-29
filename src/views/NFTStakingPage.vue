@@ -220,7 +220,9 @@ const handleNFTCardClick = (nft: any) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-alpha-surface pb-16 relative">
+  <!-- 确保组件有单一根元素 -->
+  <div>
+    <div class="min-h-screen bg-alpha-surface pb-16 relative">
     <!-- 背景图片 -->
     <div
       class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
@@ -483,16 +485,16 @@ const handleNFTCardClick = (nft: any) => {
 
       </div>
     </div>
-  </div>
 
-  <!-- 地址输入弹窗 -->
-  <AddressInputModal
-    :show="showAddressModal"
-    title="转移分红地址"
-    placeholder="请输入新的分红接收地址 (0x...)"
-    @close="closeAddressModal"
-    @confirm="confirmTransfer"
-  />
+    <!-- 地址输入弹窗 -->
+    <AddressInputModal
+      :show="showAddressModal"
+      title="转移分红地址"
+      placeholder="请输入新的分红接收地址 (0x...)"
+      @close="closeAddressModal"
+      @confirm="confirmTransfer"
+    />
+  </div>
 </template>
 
 <style scoped>
