@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import AlphaLogo from '../components/AlphaLogo.vue'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import NodeExchangeModal from '../components/NodeExchangeModal.vue'
 import config from '../assets/config'
 import { useRouter } from 'vue-router'
 import toast from '../utils/toast'
+import {getNodeMessage} from '../utils/useStaking';
 
 const { t } = useI18n()
 const router = useRouter()
@@ -80,15 +81,15 @@ const confirmExchange = (type: string, amount: string) => {
     type,
     amount
   })
-  
+
   // 显示成功提示
   const exchangeTypeName = type === 'token' ? t('node.alpha_tokens') : t('node.u_tokens')
   const nodeTypeName = t(`node.${selectedNode.value?.type}`)
   toast.success(t('node.purchase_success', { amount, tokenType: exchangeTypeName, nodeType: nodeTypeName }))
-  
+
   // 这里可以添加实际的购买逻辑
   // 比如调用合约方法、更新用户余额等
-  
+
   // 关闭弹窗
   closeExchangeModal()
 }
@@ -103,6 +104,10 @@ const handleNodeClick = (node: any) => {
   }
   router.push(`/node/${nodeType}`)
 }
+
+onMounted(() => {
+  getNodeMessage(t);
+})
 </script>
 
 <template>
@@ -127,8 +132,8 @@ const handleNodeClick = (node: any) => {
       <div class="px-4 py-6">
         <!-- 节点列表 -->
         <div class="space-y-4">
-          <div 
-            v-for="node in nodeList" 
+          <div
+            v-for="node in nodeList"
             :key="node.id"
             @click="handleNodeClick(node)"
             class="rounded-2xl p-6 shadow-lg relative overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
@@ -152,7 +157,7 @@ const handleNodeClick = (node: any) => {
             <!-- 进度条 -->
             <div class="mb-4">
               <div class="w-full bg-white bg-opacity-20 rounded-full h-2">
-                <div 
+                <div
                   class="bg-white h-2 rounded-full transition-all duration-300"
                   :style="`width: ${node.progress}%`"
                 ></div>
@@ -183,7 +188,7 @@ const handleNodeClick = (node: any) => {
             </div>
 
             <!-- 兑换按钮 -->
-            <button 
+            <button
               @click.stop="handleExchange(node)"
               :disabled="node.buttonDisabled"
               class="w-full py-3 text-black font-bold rounded-full transition-all duration-300 bg-white bg-opacity-90 hover:bg-opacity-100"
@@ -199,7 +204,7 @@ const handleNodeClick = (node: any) => {
         </div>
       </div>
     </div>
-    
+
     <!-- 兑换弹窗 -->
     <NodeExchangeModal
       :show="showExchangeModal"

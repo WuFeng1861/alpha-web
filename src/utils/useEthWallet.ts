@@ -413,7 +413,7 @@ export const getDirectRefsList = async (forceUpdate: boolean = false): Promise<A
 
 // 获取当前钱包实例
 export const getEthWallet = () => {
-  if(EthWallet.walletList.length === 0 || !etherWallet) {
+  if(!etherWallet) {
     return null;
   }
   return etherWallet;

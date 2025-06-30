@@ -11,7 +11,7 @@ import shakingContractAbi from "./shakingContractAbi"
 export default {
   // contract configuration
   contractAddress: "0xb63214B454c08eBD7bb025F51E2278F0c10B113A",
-  shakingContractAddress: '0xc148F82bf0dB2C21E3349A5A3a7f925a4116F3c8',
+  shakingContractAddress: '0x6eebd8db09b0f460f39bef5c8ca35511c519ced8',
   USDTAddress: '0x55d398326f99059fF775485246999027B3197955',
   contractAbi: contractAbi,
   shakingContractAbi: shakingContractAbi,

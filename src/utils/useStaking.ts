@@ -1001,3 +1001,39 @@ export const transferPoolOwner = async (poolId: string, newAddress: string,t: Fu
     };
   }
 };
+
+// 获取质押节点信息
+export const getNodeMessage = async (t: Function) => {
+  try {
+    const wallet = getEthWallet();
+  
+    if (!wallet) {
+      return {
+        status: false,
+        message: '钱包实例未初始化',
+        data: null
+      };
+    }
+    if (!wallet.signer) {
+      await wallet.initBSCWithoutAddress();
+    }
+    
+    // 设置质押合约
+    wallet.setABI(config.shakingContractAbi);
+    wallet.updateTokenContract(config.shakingContractAddress);
+    
+    // 调用获取质押节点信息方法
+    const nodeList = await wallet.contractFn('getAllTiers');
+    const tokenURate = Number(await wallet.contractFn('tokenURate'));
+    
+  } catch (error) {
+    console.error('获取质押节点信息失败:', error);
+  
+    let message = '获取质押节点信息失败';
+    return {
+      status: false,
+      message,
+      data: null
+    };
+  }
+}

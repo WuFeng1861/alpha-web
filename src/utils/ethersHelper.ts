@@ -643,6 +643,35 @@ export default class EthWallet {
     };
   }
   
+  // 初始化BSC
+  async initBSCWithoutAddress() : Promise<{status: boolean, message: string, data: any}> {
+    const ethereum = (window as any).ethereum;
+    const chainId: string = await ethereum.request({method: 'eth_chainId'});
+    if (!ethereum) {
+      this.walletError = "Please install MetaMask";
+      return {
+        status: false,
+        message: this.walletError,
+        data: null,
+      };
+    } else if (chainId !== '0x38') {
+      await this.toSwitch(56);
+      return {
+        status: true,
+        message: 'switch chain success',
+        data: null,
+      };
+    } else {
+      this.walletError = "";
+    }
+    await this.initProviderAndSigner();
+    return {
+      status: true,
+      message: 'init success',
+      data: null,
+    };
+  }
+  
   // 初始化任意链
   async initAnyChain() : Promise<{status: boolean, message: string, data: any}> {
     const ethereum = (window as any).ethereum;
