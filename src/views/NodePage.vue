@@ -7,7 +7,7 @@ import NodeExchangeModal from '../components/NodeExchangeModal.vue'
 import config from '../assets/config'
 import { useRouter } from 'vue-router'
 import toast from '../utils/toast'
-import {getNodeMessage} from '../utils/useStaking';
+import {buyNode, getNodeMessage} from '../utils/useStaking';
 
 const { t } = useI18n()
 const router = useRouter()
@@ -78,7 +78,14 @@ const closeExchangeModal = () => {
 }
 
 // 确认兑换
-const confirmExchange = (type: string, amount: string) => {
+const confirmExchange = async (type: string, amount: string) => {
+  // 验证兑换数量
+  if (!amount || parseFloat(amount) <= 0) {
+    return
+  }
+  if(!selectedNode.value) {
+    return
+  }
   console.log('兑换确认:', {
     node: t(`node.${selectedNode.value?.type}`),
     type,
@@ -88,10 +95,10 @@ const confirmExchange = (type: string, amount: string) => {
   // 显示成功提示
   const exchangeTypeName = type === 'token' ? t('node.alpha_tokens') : t('node.u_tokens')
   const nodeTypeName = t(`node.${selectedNode.value?.type}`)
-  toast.success(t('node.purchase_success', { amount, tokenType: exchangeTypeName, nodeType: nodeTypeName }))
-
+  toast.success(t('node.purchase_success', {amount, tokenType: exchangeTypeName, nodeType: nodeTypeName}))
   // 这里可以添加实际的购买逻辑
   // 比如调用合约方法、更新用户余额等
+  await buyNode(selectedNode.value?.id, selectedNode.value?.type, amount, t);
 
   // 关闭弹窗
   closeExchangeModal()
@@ -175,7 +182,7 @@ onMounted(async () => {
                 <!-- 代币数量 -->
                 <div class="flex items-center">
                   <div class="w-4 h-4 rounded-full bg-white mr-2"></div>
-                  <span class="text-white font-medium">{{ node.tokens / 10000 }}{{ t('node.million') }}</span>
+                  <span class="text-white font-medium">{{ node.tokens }}{{ t('node.million') }}</span>
                 </div>
                 <!-- U代币数量 -->
                 <div class="flex items-center">

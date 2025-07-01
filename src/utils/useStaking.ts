@@ -1035,7 +1035,7 @@ export const getNodeMessage = async (t: Function) => {
       'gold': 'from-yellow-400 to-yellow-600',
       'silver': 'from-gray-300 to-gray-500',
       'bronze': 'from-orange-400 to-orange-600',
-    }
+    };
     for (let i = 0; i < nodeList.length; i++) {
       const node = nodeList[i];
       let nodeType = getPoolInfo({apr: node.apr}).poolType;
@@ -1047,7 +1047,7 @@ export const getNodeMessage = async (t: Function) => {
       result['totalPoints'] = Number(nodePoints[nodeType]);
       result['pointsNow'] = Number(payNumber);
       result['progress'] = Number(payNumber) / Number(nodePoints[nodeType]);
-      result['tokens'] = Number(wallet.weiToEth(node.paymentAmount)) * tokenURate;
+      result['tokens'] = Number(wallet.weiToEth(node.paymentAmount)) * tokenURate / 10000;
       result['uTokens'] = Number(wallet.weiToEth(node.paymentAmount));
       result['members'] = Number(wallet.weiToEth(node.paymentAmount));
       result['color'] = nodeColor[nodeType];
@@ -1061,11 +1061,145 @@ export const getNodeMessage = async (t: Function) => {
       status: true,
       message: '获取质押节点信息成功',
       data: resultList
-    }
+    };
   } catch (error) {
     console.error('获取质押节点信息失败:', error);
     
     let message = '获取质押节点信息失败';
+    
+    if (error.message.includes('user rejected')) {
+      message = t('common.errors.user_rejected');
+    } else if (error.message.includes('insufficient funds')) {
+      message = '余额不足或gas费不够';
+    } else if (error.message.includes('network')) {
+      message = t('common.errors.network_error');
+    } else if (error.message.includes('execution reverted')) {
+      message = '合约执行失败，请检查参数或稍后重试';
+    }
+    return {
+      status: false,
+      message,
+      data: null
+    };
+  }
+};
+
+// 购买质押节点
+export const buyNode = async (id: string | number, type: 'token'|'u', amount: string, t: Function): Promise<{ status: boolean, message: string, data: any }> => {
+  const walletStore = useWalletStore();
+  
+  // 检查钱包是否连接
+  if (!walletStore.address) {
+    return {
+      status: false,
+      message: t('common.errors.wallet_not_connected'),
+      data: null
+    };
+  }
+  
+  if (isNaN(Number(amount)) || Number(amount) <= 0) {
+    return {
+      status: false,
+      message: '节点购买错误',
+      data: null
+    };
+  }
+  
+  try {
+    const wallet = getEthWallet();
+    
+    if (!wallet) {
+      return {
+        status: false,
+        message: '钱包实例未初始化',
+        data: null
+      };
+    }
+    
+    let newAmount = type === 'token' ? Number(amount) * 10000 : Number(amount);
+    let tokenAddress = type === 'token' ? config.contractAddress : config.USDTAddress;
+    console.log('第一步：检查用户ALPHA或者U余额...');
+    const balances = await getTokenBalances(walletStore.address, true);
+    if (type === 'token') {
+      const userAlphaBalance = parseFloat(balances.alphaBalance);
+      if (userAlphaBalance < newAmount) {
+        return {
+          status: false,
+          message: `余额不足！您的ALPHA余额为 ${balances.alphaBalance}，需要 ${amount}`,
+          data: null
+        };
+      }
+    }
+    if (type === 'u') {
+      const userUsdtBalance = parseFloat(balances.usdtBalance);
+      if (userUsdtBalance < newAmount) {
+        return {
+          status: false,
+          message: `余额不足！您的USDT余额为 ${balances.usdtBalance}，需要 ${newAmount}`,
+          data: null
+        };
+      }
+    }
+    
+    // 将数量转换为wei格式
+    const amountInWei = wallet.ethToWei(newAmount);
+    
+    // 检查用户地址允许合约使用代币的数量
+    let ownerAllowance = await wallet.contractFn('allowance', walletStore.address, tokenAddress);
+    ownerAllowance = wallet.weiToEth(ownerAllowance);
+    console.log(ownerAllowance, '检查用户地址允许合约使用代币的数量');
+    
+    if (Number(ownerAllowance) < Number(newAmount)) {
+      // 调用approve方法授权质押合约使用代币
+      console.log(`授权质押合约 ${tokenAddress} 使用 ${newAmount} ${type}...`);
+      await wallet.contractFn('approve', tokenAddress, amountInWei);
+      await sleep(3.5 * 1000);
+    }
+    
+    console.log('授权成功，等待确认...');
+    
+    // 设置质押合约
+    wallet.setABI(config.shakingContractAbi);
+    wallet.updateTokenContract(config.shakingContractAddress);
+    
+    // 调用购买节点函数
+    const funcName = type === 'token' ? 'createPoolWithStakeToken' : 'createPoolWithUSDT';
+    console.log(`调用${funcName}方法: amount=${amountInWei.toString()}`);
+    const createPoolResult = await wallet.contractFn(funcName, id, config.contractAddress);
+    
+    console.log('购买节点成功:', createPoolResult);
+    
+    // 第四步：更新缓存数据
+    console.log('第四步：更新缓存数据...');
+    await sleep(3.5 * 1000);
+    
+    // 强制更新用户代币余额
+    await updateTokenBalances(walletStore.address);
+    
+    // 强制更新质押池数据
+    await getAllPoolsInfoWithCache(true);
+    
+    // 强制更新用户质押数据
+    await getUserStakesWithCache(true);
+    
+    console.log('购买节点流程完成');
+    
+    // approve
+  } catch (error) {
+    console.error('购买质押节点失败:', error);
+    
+    let message = '购买质押节点失败';
+    
+    if (error.message.includes('user rejected')) {
+      message = t('common.errors.user_rejected');
+    } else if (error.message.includes('insufficient funds')) {
+      message = '余额不足或gas费不够';
+    } else if (error.message.includes('network')) {
+      message = t('common.errors.network_error');
+    } else if (error.message.includes('execution reverted')) {
+      message = '合约执行失败，请检查参数或稍后重试';
+    }
+    
     return {
       status: false,
       message,
