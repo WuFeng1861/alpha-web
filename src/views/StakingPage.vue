@@ -110,19 +110,39 @@ const updateStakingDividends = async (forceUpdate: boolean = false) => {
   try {
     console.log('开始更新质押收益数据...')
 
+    const stakes = await getUserStakesWithCache(forceUpdate)
+
     // 获取所有质押记录的stakeId
-    const stakeIds = myStakingList.value.map(stake => stake.stakeId)
+    const stakeIds = stakes.map(stake => stake.stakeId)
 
     // 批量获取收益数据
     const dividendsMap = await getBatchStakeDividendsWithCache(stakeIds, forceUpdate)
-
-    // 更新质押列表中的收益数据
-    myStakingList.value.forEach(stake => {
-      const newDividends = dividendsMap.get(stake.stakeId)
-      if (newDividends !== undefined) {
-        stake.stakingReward = newDividends
+    console.log(dividendsMap, '更新质押收益');
+    const showStakes = [];
+    for (let index = 0; index < stakes.length; index++) {
+      let item = {...stakes[index]};
+      item['stakingAmount'] = Number(item['stakingAmount']);
+      item['stakingReward'] = Number(dividendsMap.get(item.stakeId));
+      let findIndex = showStakes.findIndex(it => it.poolNumber === item.poolNumber);
+      let thisItem = null;
+      if (findIndex !== -1) {
+        thisItem = showStakes[findIndex];
+        thisItem['stakingAmount'] += item['stakingAmount'];
+        thisItem['stakingReward'] += item['stakingReward'];
+        continue;
       }
-    })
+      showStakes.push(item);
+    }
+    console.log(showStakes);
+    myStakingList.value = showStakes;
+    // // 更新质押列表中的收益数据
+    // myStakingList.value.forEach(stake => {
+    //   let poolNumber = stake.poolNumber;
+    //   const newDividends = dividendsMap.get(stake.stakeId)
+    //   if (newDividends !== undefined) {
+    //     stake.stakingReward = newDividends
+    //   }
+    // })
 
     console.log('质押收益数据更新完成')
   } catch (error) {
@@ -154,7 +174,7 @@ const startDividendsTimer = () => {
   updateStakingDividends(true) // 立即执行一次
   dividendsTimer = window.setInterval(() => {
     updateStakingDividends() // 每30秒更新一次收益
-  }, 30000)
+  }, 10000)
 }
 
 // 停止定时器

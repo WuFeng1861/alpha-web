@@ -21,12 +21,13 @@ const nodeList = ref([
   {
     id: 1,
     type: 'gold_node',
-    points: 10,
-    totalPoints: 5000,
+    points: 20,
+    totalPoints: 20,
+    pointsNow: 0,
     progress: 0.2, // 进度百分比
     tokens: 2000,
-    uTokens: 1888,
-    members: 31543,
+    uTokens: 2000,
+    members: 2000,
     color: '#FFD700', // 金色
     bgGradient: 'from-yellow-400 to-yellow-600',
     buttonText: 'click_exchange',
@@ -35,12 +36,13 @@ const nodeList = ref([
   {
     id: 2,
     type: 'silver_node',
-    points: 100,
-    totalPoints: 5000,
+    points: 300,
+    totalPoints: 300,
+    pointsNow: 0,
     progress: 2, // 进度百分比
     tokens: 500,
     uTokens: 500,
-    members: 71543,
+    members: 500,
     color: '#C0C0C0', // 银色
     bgGradient: 'from-gray-300 to-gray-500',
     buttonText: 'click_exchange',
@@ -49,18 +51,19 @@ const nodeList = ref([
   {
     id: 3,
     type: 'bronze_node',
-    points: 500,
-    totalPoints: 5000,
+    points: 1000,
+    totalPoints: 1000,
+    pointsNow: 0,
     progress: 10, // 进度百分比
     tokens: 100,
     uTokens: 100,
-    members: 115688,
+    members: 100,
     color: '#CD7F32', // 铜色
     bgGradient: 'from-orange-400 to-orange-600',
     buttonText: 'click_exchange',
     buttonDisabled: false
   }
-])
+].reverse())
 
 // 处理兑换按钮点击
 const handleExchange = (node: any) => {
@@ -105,8 +108,10 @@ const handleNodeClick = (node: any) => {
   router.push(`/node/${nodeType}`)
 }
 
-onMounted(() => {
-  getNodeMessage(t);
+onMounted(async () => {
+  let dataTemp = await getNodeMessage(t);
+  nodeList.value = dataTemp.data;
+  console.log('nodeList:', nodeList.value);
 })
 </script>
 
@@ -150,7 +155,7 @@ onMounted(() => {
               <h3 class="text-xl font-bold text-white">{{ t(`node.${node.type}`) }}</h3>
               <div class="ml-auto text-right">
                 <p class="text-white font-bold text-lg">{{ node.points }}份</p>
-                <p class="text-white text-sm opacity-80">{{ node.totalPoints }}/5000</p>
+                <p class="text-white text-sm opacity-80">{{ node.pointsNow }}/{{ node.totalPoints }}</p>
               </div>
             </div>
 
@@ -170,7 +175,7 @@ onMounted(() => {
                 <!-- 代币数量 -->
                 <div class="flex items-center">
                   <div class="w-4 h-4 rounded-full bg-white mr-2"></div>
-                  <span class="text-white font-medium">{{ node.tokens }}{{ t('node.million') }}</span>
+                  <span class="text-white font-medium">{{ node.tokens / 10000 }}{{ t('node.million') }}</span>
                 </div>
                 <!-- U代币数量 -->
                 <div class="flex items-center">

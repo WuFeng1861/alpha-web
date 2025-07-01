@@ -164,22 +164,16 @@ export interface ProcessedStakeRecord {
 }
 
 // 根据poolId获取池子信息
-const getPoolInfo = (poolId: string) => {
-  const id = parseInt(poolId);
-  
-  // 定义池子分类数组
-  const goldPools = [1, 5]; // 金池
-  const silverPools = [2, 3, 4, 6]; // 银池
-  // 其他的为铜池
-  
-  if (goldPools.includes(id)) {
+const getPoolInfo = (pool: any) => {
+  let apr = Number(pool.apr);
+  if (apr >= 700) {
     return {
       poolType: 'gold' as const,
       poolName: '金池',
       poolColor: '#FFD700',
       poolGradient: 'from-yellow-400 to-yellow-600'
     };
-  } else if (silverPools.includes(id)) {
+  } else if (apr >= 500) {
     return {
       poolType: 'silver' as const,
       poolName: '银池',
@@ -500,7 +494,7 @@ export const getAllPoolsInfo = async (forceUpdate: boolean = false): Promise<Pro
     const processedPools: ProcessedPool[] = pools.map((pool: any) => {
       console.log(pool);
       const poolId = pool.poolId.toString();
-      const poolInfo = getPoolInfo(poolId);
+      const poolInfo = getPoolInfo(pool);
       
       // 格式化数据
       const totalAmount = wallet.weiToEth(pool.totalStaked);
@@ -727,7 +721,7 @@ export const getNFTStakingData = async (forceUpdate: boolean = false): Promise<N
     const nftStakingData: NFTStakingData[] = await Promise.all(
       matchingPools.map(async (pool: any, index: number) => {
         const poolId = pool.poolId.toString();
-        const poolInfo = getPoolInfo(poolId);
+        const poolInfo = getPoolInfo(pool);
         
         // 获取池子的可领取收益
         const claimableReward = await getPoolDividends(poolId, forceUpdate);
@@ -939,7 +933,7 @@ export const claimPoolDividends = async (poolId: string, t: Function): Promise<{
 };
 
 // 转移质押池分红地址
-export const transferPoolOwner = async (poolId: string, newAddress: string,t: Function): Promise<{ status: boolean, message: string, data: any }> => {
+export const transferPoolOwner = async (poolId: string, newAddress: string, t: Function): Promise<{ status: boolean, message: string, data: any }> => {
   const walletStore = useWalletStore();
   // 检查钱包是否连接
   if (!walletStore.address) {
@@ -966,7 +960,7 @@ export const transferPoolOwner = async (poolId: string, newAddress: string,t: Fu
     // 调用更新分红地址方法
     console.log(`调用更新分红地址方法: poolId=${poolId}, newAddress=${newAddress}`);
     const updateResult = await wallet.contractFn('updateDividendAddress', poolId, newAddress);
-  
+    
     // 更新缓存数据
     console.log('更新缓存数据...');
     await sleep(3.5 * 1000);
@@ -1006,7 +1000,7 @@ export const transferPoolOwner = async (poolId: string, newAddress: string,t: Fu
 export const getNodeMessage = async (t: Function) => {
   try {
     const wallet = getEthWallet();
-  
+    
     if (!wallet) {
       return {
         status: false,
@@ -1025,10 +1019,52 @@ export const getNodeMessage = async (t: Function) => {
     // 调用获取质押节点信息方法
     const nodeList = await wallet.contractFn('getAllTiers');
     const tokenURate = Number(await wallet.contractFn('tokenURate'));
-    
+    console.log('获取质押节点信息成功', nodeList, tokenURate);
+    let resultList = [];
+    const nodePoints = {
+      'gold': 20,
+      'silver': 300,
+      'bronze': 1000,
+    };
+    const nodeColor = {
+      'gold': '#FFD700',
+      'silver': '#C0C0C0',
+      'bronze': '#CD7F32',
+    };
+    const nodeBgGradient = {
+      'gold': 'from-yellow-400 to-yellow-600',
+      'silver': 'from-gray-300 to-gray-500',
+      'bronze': 'from-orange-400 to-orange-600',
+    }
+    for (let i = 0; i < nodeList.length; i++) {
+      const node = nodeList[i];
+      let nodeType = getPoolInfo({apr: node.apr}).poolType;
+      const result = {};
+      const payNumber = Number(node.payNumber) > nodePoints[nodeType] ? nodePoints[nodeType] : Number(node.payNumber);
+      result['id'] = i + 1;
+      result['type'] = nodeType + '_node';
+      result['points'] = Number(nodePoints[nodeType]);
+      result['totalPoints'] = Number(nodePoints[nodeType]);
+      result['pointsNow'] = Number(payNumber);
+      result['progress'] = Number(payNumber) / Number(nodePoints[nodeType]);
+      result['tokens'] = Number(wallet.weiToEth(node.paymentAmount)) * tokenURate;
+      result['uTokens'] = Number(wallet.weiToEth(node.paymentAmount));
+      result['members'] = Number(wallet.weiToEth(node.paymentAmount));
+      result['color'] = nodeColor[nodeType];
+      result['buttonDisabled'] = payNumber >= nodePoints[nodeType];
+      result['bgGradient'] = nodeBgGradient[nodeType];
+      result['buttonText'] = payNumber >= nodePoints[nodeType] ? 'click_exchange_over' : 'click_exchange';
+      resultList.push(result);
+    }
+    console.log('处理后质押节点信息：', resultList);
+    return {
+      status: true,
+      message: '获取质押节点信息成功',
+      data: resultList
+    }
   } catch (error) {
     console.error('获取质押节点信息失败:', error);
-  
+    
     let message = '获取质押节点信息失败';
     return {
       status: false,
@@ -1036,4 +1072,4 @@ export const getNodeMessage = async (t: Function) => {
       data: null
     };
   }
-}
+};

@@ -128,6 +128,7 @@
     "silver_node": "银节点",
     "bronze_node": "铜节点",
     "click_exchange": "点击兑换",
+    "click_exchange_over": "暂停兑换",
     "exchange": "兑换",
     "node_exchange": "节点兑换",
     "exchange_type": "兑换类型",
