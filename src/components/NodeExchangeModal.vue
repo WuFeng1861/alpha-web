@@ -283,7 +283,7 @@ watch(exchangeType, () => {
                     <span class="mr-2">🎁</span>
                     {{ t('node.will_receive') }}
                   </span>
-                  <span class="text-green-300 font-bold">1个 {{ nodeConfig.name }}</span>
+                  <span class="text-green-300 font-bold">1 {{ nodeConfig.name }}</span>
                 </div>
               </div>
             </div>
