@@ -80,17 +80,17 @@ const isAddressValid = computed(() => {
         <!-- 说明文字 -->
         <div class="mb-4">
           <p class="text-gray-300 text-sm text-center mb-2">
-            请输入要转移到的钱包地址
+            {{t('transfer.transfer_description')}}
           </p>
           <p class="text-gray-400 text-xs text-center">
-            转移后，该地址将成为此质押池的新分红接收地址
+            {{t('transfer.transfer_note')}}
           </p>
         </div>
 
         <!-- 地址输入框 -->
         <div class="mb-6">
           <label class="block text-gray-300 text-sm font-medium mb-2">
-            钱包地址
+            {{t('transfer.wallet_address')}}
           </label>
           <input
             v-model="inputAddress"
@@ -98,18 +98,18 @@ const isAddressValid = computed(() => {
             :placeholder="placeholder || '请输入钱包地址 (0x...)'"
             class="w-full bg-alpha-surface text-gray-300 rounded-lg px-4 py-3 border transition-colors duration-300 focus:outline-none"
             :class="[
-              isAddressValid 
-                ? 'border-gray-700 focus:border-alpha-primary' 
+              isAddressValid
+                ? 'border-gray-700 focus:border-alpha-primary'
                 : 'border-red-500 focus:border-red-400'
             ]"
           />
           <!-- 地址格式错误提示 -->
           <div v-if="!isAddressValid" class="mt-2 text-red-400 text-xs">
-            请输入有效的以太坊地址格式
+            {{t('transfer.invalid_address_format')}}
           </div>
           <!-- 地址格式说明 -->
           <div v-else class="mt-2 text-gray-500 text-xs">
-            地址格式：0x + 40位十六进制字符
+            {{t('transfer.address_format_note')}}
           </div>
         </div>
 

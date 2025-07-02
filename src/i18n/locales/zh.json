@@ -74,6 +74,7 @@
     "stake": "质押",
     "unstake": "解除质押",
     "back": "返回",
+    "processing": "进行中...",
     "errors": {
       "wallet_not_connected": "请先连接钱包",
       "invalid_address": "无效的邀请人地址",
@@ -89,6 +90,7 @@
     }
   },
   "staking": {
+    "total_amount": "总金额",
     "title": "NFT分红卡片",
     "my_staking_pool": "我的质押池",
     "my_staking_pool_nft": "我的质押池(NFT)",
@@ -120,7 +122,55 @@
     "claim_type": "索赔",
     "staking_claim": "质押索赔",
     "hours_24": "24小时",
-    "cards_count": "张"
+    "cards_count": "张",
+    "stake_success": "质押成功！已质押 {amount} ALPHA 到池子 {poolId}",
+    "unstake_success": "解除质押成功！已从池子 {poolId} 中解除质押记录 {stakeId}",
+    "claim_pool_dividends_success": "领取质押池{poolId}收益成功",
+    "transfer_pool_owner_success": "更新质押池{poolId}分红地址为{newAddress}成功",
+    "no_staking_records": "暂无质押记录",
+    "no_staking_records_desc": "您还没有进行任何质押，快去下方选择质押合约开始赚取收益吧！",
+    "no_nft_staking_records": "暂无NFT质押记录",
+    "no_nft_staking_records_desc": "您的地址不是任何质押池的分红地址，无法查看NFT质押数据",
+    "no_nft_staking_note": "只有当您的地址与质押池的dividendAddress相同时，才能查看对应的NFT质押信息",
+    "no_available_pools": "暂无可用质押池",
+    "no_available_pools_desc": "当前没有可用的质押池，请稍后再试",
+    "pool_not_found": "未找到质押池",
+    "pool_not_found_desc": "指定的质押池不存在或已被删除",
+    "connect_wallet_to_view": "请先连接钱包",
+    "connect_wallet_to_view_desc": "连接钱包后即可查看您的质押记录",
+    "connect_wallet_to_view_nft": "连接钱包后即可查看您的NFT质押记录",
+    "lockup_period_remaining": "质押锁定期未结束，还需等待 {time}",
+    "lockup_period_ended": "质押锁定期已结束，可以解除质押",
+    "unstaking_in_progress": "解除质押中...",
+    "staking_in_progress": "质押中...",
+    "pool_capacity_full": "质押池已满，无法继续质押",
+    "pool_capacity_exceeded": "质押金额超出池子容量限制！当前池子剩余容量为 {remaining} ALPHA",
+    "errors": {
+      "wallet_not_initialized": "钱包实例未初始化",
+      "invalid_stake_amount": "请输入有效的质押数量",
+      "insufficient_balance": "余额不足！您的ALPHA余额为 {balance}，需要 {required}",
+      "insufficient_funds_or_gas": "余额不足或gas费不够",
+      "alpha_balance_insufficient": "ALPHA代币余额不足",
+      "allowance_insufficient": "授权额度不足，请重试",
+      "contract_execution_failed": "合约执行失败，请检查参数或稍后重试",
+      "stake_failed": "质押失败",
+      "unstake_failed": "解除质押失败",
+      "stake_not_found": "质押记录不存在",
+      "stake_already_withdrawn": "质押已经被解除",
+      "lockup_period_not_ended": "质押锁定期未结束，无法解除质押",
+      "claim_pool_dividends_failed": "领取质押池收益失败",
+      "transfer_pool_owner_failed": "更新分红失败"
+    },
+    "time_units": {
+      "days": "天",
+      "hours": "小时",
+      "seconds": "秒",
+      "day": "天",
+      "hour": "小时",
+      "second": "秒",
+      "minutes": "分钟",
+      "minute": "分钟"
+    }
   },
   "node": {
     "title": "节点",
@@ -192,6 +242,25 @@
     ],
     "exchange_description_alpha": "使用 {amount}万 ALPHA代币购买一个{nodeType}",
     "exchange_description_u": "使用 {amount} U代币购买一个{nodeType}",
-    "purchase_success": "成功使用 {amount} {tokenType} 购买 1个 {nodeType}"
+    "purchase_success": "成功使用 {amount} {tokenType} 购买 1个 {nodeType}",
+    "get_node_info_success": "获取质押节点信息成功",
+    "buy_node_success": "购买节点成功！使用 {nodeType}",
+    "errors": {
+      "get_node_info_failed": "获取质押节点信息失败",
+      "buy_node_failed": "购买质押节点失败",
+      "invalid_purchase_amount": "节点购买错误",
+      "insufficient_usdt_balance": "余额不足！您的USDT余额为 {balance}，需要 {required}"
+    }
+  },
+  "transfer": {
+    "dividend_address": "转移分红地址",
+    "enter_dividend_address": "请输入新的分红接收地址 (0x...)",
+    "transfer_address_title": "输入转移地址",
+    "transfer_description": "请输入要转移到的钱包地址",
+    "transfer_note": "转移后，该地址将成为此质押池的新分红接收地址",
+    "wallet_address": "钱包地址",
+    "address_placeholder": "请输入钱包地址 (0x...)",
+    "invalid_address_format": "请输入有效的以太坊地址格式",
+    "address_format_note": "地址格式：0x + 40位十六进制字符"
   }
 }

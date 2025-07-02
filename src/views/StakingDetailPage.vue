@@ -89,7 +89,7 @@ const updateStakingDetail = async (forceUpdate: boolean = false) => {
     console.log(`开始获取池子 ${poolId} 的详情数据...`);
 
     // 获取所有质押池信息
-    const allPools = await getAllPoolsInfoWithCache(forceUpdate);
+    const allPools = await getAllPoolsInfoWithCache(forceUpdate, t);
 
     // 根据ID筛选出对应的池子
     const targetPool = allPools.find(pool => pool.id.toString() === poolId);
@@ -110,7 +110,7 @@ const updateStakingDetail = async (forceUpdate: boolean = false) => {
 };
 
 // 更新用户在该池子的质押记录
-const updateUserStakesInPool = async (forceUpdate: boolean = false) => {
+const updateUserStakesInPool = async (forceUpdate: boolean = false, t?: Function) => {
   const poolId = route.params.id as string;
 
   if (!walletStore.address || !poolId) {
@@ -122,7 +122,7 @@ const updateUserStakesInPool = async (forceUpdate: boolean = false) => {
     console.log(`开始获取用户在池子 ${poolId} 的质押记录...`);
 
     // 获取用户所有质押记录
-    const allUserStakes = await getUserStakesWithCache(forceUpdate);
+    const allUserStakes = await getUserStakesWithCache(forceUpdate, t);
 
     // 筛选出在当前池子的质押记录
     const stakesInPool = allUserStakes.filter(stake =>
@@ -167,9 +167,9 @@ const startDetailTimer = () => {
 // 启动定时器更新用户质押记录
 const startStakesTimer = () => {
   if (stakesTimer) return;
-  updateUserStakesInPool(); // 立即执行一次
+  updateUserStakesInPool(false, t); // 立即执行一次
   stakesTimer = window.setInterval(() => {
-    updateUserStakesInPool(); // 每30秒更新一次
+    updateUserStakesInPool(false, t); // 每30秒更新一次
   }, 30000);
 };
 
@@ -251,14 +251,22 @@ const checkStakeUnlockable = (stake: ProcessedStakeRecord): { canUnstake: boolea
 
   // 解析锁定期文本，转换为秒数
   let lockupPeriodSeconds = 0;
-  if (lockupPeriodText.includes('天')) {
-    const days = parseInt(lockupPeriodText.replace('天', ''));
+
+  // Use international translation for parsing / 使用国际化翻译进行解析
+  const timeUnits = {
+    days: t('staking.time_units.days'),
+    hours: t('staking.time_units.hours'),
+    seconds: t('staking.time_units.seconds')
+  };
+
+  if (lockupPeriodText.includes(timeUnits.days)) {
+    const days = parseInt(lockupPeriodText.replace(timeUnits.days, ''));
     lockupPeriodSeconds = days * 24 * 60 * 60;
-  } else if (lockupPeriodText.includes('小时')) {
-    const hours = parseInt(lockupPeriodText.replace('小时', ''));
+  } else if (lockupPeriodText.includes(timeUnits.hours)) {
+    const hours = parseInt(lockupPeriodText.replace(timeUnits.hours, ''));
     lockupPeriodSeconds = hours * 60 * 60;
-  } else if (lockupPeriodText.includes('秒')) {
-    lockupPeriodSeconds = parseInt(lockupPeriodText.replace('秒', ''));
+  } else if (lockupPeriodText.includes(timeUnits.seconds)) {
+    lockupPeriodSeconds = parseInt(lockupPeriodText.replace(timeUnits.seconds, ''));
   }
 
   // 计算解锁时间
@@ -274,22 +282,22 @@ const checkStakeUnlockable = (stake: ProcessedStakeRecord): { canUnstake: boolea
 
     let timeMessage = '';
     if (remainingDays > 0) {
-      timeMessage = `${remainingDays}天${remainingHours}小时`;
+      timeMessage = `${remainingDays}${t('staking.time_units.days')}${remainingHours}${t('staking.time_units.hours')}`;
     } else if (remainingHours > 0) {
-      timeMessage = `${remainingHours}小时${remainingMinutes}分钟`;
+      timeMessage = `${remainingHours}${t('staking.time_units.hours')}${remainingMinutes}${t('staking.time_units.minutes')}`;
     } else {
-      timeMessage = `${remainingMinutes}分钟`;
+      timeMessage = `${remainingMinutes}${t('staking.time_units.minutes')}`;
     }
 
     return {
       canUnstake: false,
-      message: `质押锁定期未结束，还需等待 ${timeMessage}`
+      message: t('staking.lockup_period_remaining', { time: timeMessage })
     };
   } else {
     // 锁定期已结束，可以解除质押
     return {
       canUnstake: true,
-      message: '质押锁定期已结束，可以解除质押'
+      message: t('staking.lockup_period_ended')
     };
   }
 };
@@ -302,7 +310,7 @@ const handleUnstakeAction = async (stake: ProcessedStakeRecord) => {
   }
 
   if (!stakingDetail.value) {
-    toast.error('质押池信息未加载');
+    toast.error(t('staking.pool_not_found'));
     return;
   }
 
@@ -333,7 +341,7 @@ const handleUnstakeAction = async (stake: ProcessedStakeRecord) => {
       await Promise.all([
         updateUserBalance(true),      // 更新用户余额
         updateStakingDetail(true),    // 更新质押池详情
-        updateUserStakesInPool(true)  // 更新用户质押记录
+        updateUserStakesInPool(true, t)  // 更新用户质押记录
       ]);
 
       // 2. 如果当前池子没有质押记录了，返回到质押详情界面
@@ -377,21 +385,24 @@ const handleStakeAction = async () => {
   }
 
   if (!stakingDetail.value) {
-    toast.error('质押池信息未加载');
+    toast.error(t('staking.pool_not_found'));
     return;
   }
 
   // 验证输入金额
   const amount = parseFloat(inputAmount.value);
   if (isNaN(amount) || amount <= 0) {
-    toast.error('请输入有效的质押数量');
+    toast.error(t('staking.errors.invalid_stake_amount'));
     return;
   }
 
   // 检查余额
   const userBalance = parseFloat(myAlphaBalance.value);
   if (userBalance < amount) {
-    toast.error(`余额不足！您的ALPHA余额为 ${myAlphaBalance.value}，需要 ${inputAmount.value}`);
+    toast.error(t('staking.errors.insufficient_balance', {
+      balance: myAlphaBalance.value,
+      required: inputAmount.value
+    }));
     return;
   }
 
@@ -403,10 +414,12 @@ const handleStakeAction = async () => {
   if (afterStakeAmount > maxPoolCapacity) {
     const remainingCapacity = maxPoolCapacity - currentPoolAmount;
     if (remainingCapacity <= 0) {
-      toast.error('质押池已满，无法继续质押');
+      toast.error(t('staking.pool_capacity_full'));
       return;
     } else {
-      toast.error(`质押金额超出池子容量限制！当前池子剩余容量为 ${formatNumber(remainingCapacity.toString())} ALPHA`);
+      toast.error(t('staking.pool_capacity_exceeded', {
+        remaining: formatNumber(remainingCapacity.toString())
+      }));
       return;
     }
   }
@@ -432,7 +445,7 @@ const handleStakeAction = async () => {
       await Promise.all([
         updateUserBalance(true),      // 更新用户余额
         updateStakingDetail(true),    // 更新质押池详情
-        updateUserStakesInPool(true)  // 更新用户质押记录
+        updateUserStakesInPool(true, t)  // 更新用户质押记录
       ]);
 
       // 3. 返回到质押详情界面（如果当前在索赔界面）
@@ -506,8 +519,8 @@ const handleStakeAction = async () => {
                       d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
               </svg>
             </div>
-            <h3 class="text-lg font-medium text-white mb-2">未找到质押池</h3>
-            <p class="text-gray-400 text-sm">指定的质押池不存在或已被删除</p>
+            <h3 class="text-lg font-medium text-white mb-2">{{ t('staking.pool_not_found') }}</h3>
+            <p class="text-gray-400 text-sm">{{ t('staking.pool_not_found_desc') }}</p>
           </div>
         </div>
 
@@ -543,8 +556,8 @@ const handleStakeAction = async () => {
                       alt="质押"
                   />
                 </div>
-                <h3 class="text-lg font-medium text-white mb-2">暂无质押记录</h3>
-                <p class="text-gray-400 text-sm">您在此池子中还没有质押记录</p>
+                <h3 class="text-lg font-medium text-white mb-2">{{ t('staking.no_staking_records') }}</h3>
+                <p class="text-gray-400 text-sm">{{t('staking.no_staking_records_desc')}}</p>
               </div>
             </div>
 
@@ -690,7 +703,7 @@ const handleStakeAction = async () => {
                     <path class="opacity-75" fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  解除质押中...
+                  {{ t('common.processing') }}
                 </span>
                 <span v-else>{{ t('staking.claim_type') }}</span>
               </button>
@@ -844,7 +857,7 @@ const handleStakeAction = async () => {
                 <path class="opacity-75" fill="currentColor"
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              质押中...
+              {{ t('common.processing') }}
             </span>
             <span v-else>{{ t('common.stake') }}</span>
           </button>

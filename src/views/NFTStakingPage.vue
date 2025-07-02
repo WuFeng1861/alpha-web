@@ -58,7 +58,7 @@ const updateNFTStakingData = async (forceUpdate: boolean = false) => {
   try {
     isLoading.value = true;
     console.log('开始更新NFT质押数据...');
-    const data = await getNFTStakingDataWithCache(forceUpdate);
+    const data = await getNFTStakingDataWithCache(forceUpdate, t);
     nftStakingList.value = data;
     console.log('NFT质押数据更新完成:', data);
   } catch (error) {
@@ -295,8 +295,8 @@ const handleNFTCardClick = (nft: any) => {
                         d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                 </svg>
               </div>
-              <h3 class="text-lg font-medium text-white mb-2">请先连接钱包</h3>
-              <p class="text-gray-400 text-sm">连接钱包后即可查看您的NFT质押记录</p>
+              <h3 class="text-lg font-medium text-white mb-2">{{ t('staking.connect_wallet_to_view') }}</h3>
+              <p class="text-gray-400 text-sm">{{ t('staking.connect_wallet_to_view_nft') }}</p>
             </div>
           </div>
 
@@ -313,10 +313,10 @@ const handleNFTCardClick = (nft: any) => {
                         d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                 </svg>
               </div>
-              <h3 class="text-lg font-medium text-white mb-2">暂无NFT质押记录</h3>
-              <p class="text-gray-400 text-sm mb-4">您的地址不是任何质押池的分红地址，无法查看NFT质押数据</p>
+              <h3 class="text-lg font-medium text-white mb-2">{{ t('staking.no_nft_staking_records') }}</h3>
+              <p class="text-gray-400 text-sm mb-4">{{ t('staking.no_nft_staking_records_desc') }}</p>
               <p class="text-gray-400 text-xs">
-                只有当您的地址与质押池的dividendAddress相同时，才能查看对应的NFT质押信息</p>
+                {{ t('staking.no_nft_staking_note') }}</p>
             </div>
           </div>
 
@@ -520,8 +520,8 @@ const handleNFTCardClick = (nft: any) => {
     <!-- 地址输入弹窗 -->
     <AddressInputModal
         :show="showAddressModal"
-        title="转移分红地址"
-        placeholder="请输入新的分红接收地址 (0x...)"
+        :title="t('transfer.dividend_address')"
+        :placeholder="t('transfer.enter_dividend_address')"
         @close="closeAddressModal"
         @confirm="confirmTransfer"
     />

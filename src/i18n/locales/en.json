@@ -74,6 +74,7 @@
     "stake": "Stake",
     "unstake": "Unstake",
     "back": "Back",
+    "processing": "Processing...",
     "errors": {
       "wallet_not_connected": "Please connect wallet first",
       "invalid_address": "Invalid inviter address",
@@ -89,12 +90,13 @@
     }
   },
   "staking": {
+    "total_amount": "Total Amount",
     "title": "NFT Dividend Cards",
     "my_staking_pool": "My Staking Pool",
     "my_staking_pool_nft": "My Staking Pool (NFT)",
     "my_staking": "My Staking",
     "staking_contracts": "Staking Contracts",
-    "staking_amount": "Staking Amount",
+    "staking_amount": "Staking",
     "staking_reward": "Staking Reward",
     "claimable_reward": "Claimable Reward",
     "annual_rate": "Annual Rate",
@@ -120,7 +122,55 @@
     "claim_type": "Claim",
     "staking_claim": "Staking Claim",
     "hours_24": "24 Hours",
-    "cards_count": "Cards"
+    "cards_count": "Cards",
+    "stake_success": "Staking successful! Staked {amount} ALPHA to pool {poolId}",
+    "unstake_success": "Unstaking successful! Removed stake record {stakeId} from pool {poolId}",
+    "claim_pool_dividends_success": "Successfully claimed dividends from staking pool {poolId}",
+    "transfer_pool_owner_success": "Successfully updated dividend address of staking pool {poolId} to {newAddress}",
+    "no_staking_records": "No Staking Records",
+    "no_staking_records_desc": "You haven't made any stakes yet. Choose a staking contract below to start earning rewards!",
+    "no_nft_staking_records": "No NFT Staking Records",
+    "no_nft_staking_records_desc": "Your address is not a dividend address for any staking pool, unable to view NFT staking data",
+    "no_nft_staking_note": "You can only view NFT staking information when your address matches the pool's dividendAddress",
+    "no_available_pools": "No Available Staking Pools",
+    "no_available_pools_desc": "There are currently no available staking pools, please try again later",
+    "pool_not_found": "Staking Pool Not Found",
+    "pool_not_found_desc": "The specified staking pool does not exist or has been deleted",
+    "connect_wallet_to_view": "Please Connect Wallet First",
+    "connect_wallet_to_view_desc": "Connect your wallet to view your staking records",
+    "connect_wallet_to_view_nft": "Connect your wallet to view your NFT staking records",
+    "lockup_period_remaining": "Staking lockup period not ended, need to wait {time} more",
+    "lockup_period_ended": "Staking lockup period has ended, can unstake",
+    "unstaking_in_progress": "Unstaking in progress...",
+    "staking_in_progress": "Staking in progress...",
+    "pool_capacity_full": "Staking pool is full, cannot continue staking",
+    "pool_capacity_exceeded": "Staking amount exceeds pool capacity limit! Current pool remaining capacity is {remaining} ALPHA",
+    "errors": {
+      "wallet_not_initialized": "Wallet instance not initialized",
+      "invalid_stake_amount": "Please enter a valid staking amount",
+      "insufficient_balance": "Insufficient balance! Your ALPHA balance is {balance}, need {required}",
+      "insufficient_funds_or_gas": "Insufficient balance or gas fee",
+      "alpha_balance_insufficient": "Insufficient ALPHA token balance",
+      "allowance_insufficient": "Insufficient allowance, please try again",
+      "contract_execution_failed": "Contract execution failed, please check parameters or try again later",
+      "stake_failed": "Staking failed",
+      "unstake_failed": "Unstaking failed",
+      "stake_not_found": "Stake record not found",
+      "stake_already_withdrawn": "Stake has already been withdrawn",
+      "lockup_period_not_ended": "Staking lockup period not ended, cannot unstake",
+      "claim_pool_dividends_failed": "Failed to claim staking pool dividends",
+      "transfer_pool_owner_failed": "Failed to update dividend address"
+    },
+    "time_units": {
+      "days": " days",
+      "hours": " hours",
+      "seconds": " seconds",
+      "day": " day",
+      "hour": " hour",
+      "second": " second",
+      "minutes": " minutes",
+      "minute": " minute"
+    }
   },
   "node": {
     "title": "Node",
@@ -133,8 +183,8 @@
     "node_exchange": "Node Exchange",
     "exchange_type": "Exchange Type",
     "available_balance": "Available Balance",
-    "required_amount": "Required Amount",
-    "will_receive": "Will Receive",
+    "required_amount": "Required",
+    "will_receive": "Receive",
     "confirm_purchase": "Confirm Purchase",
     "alpha_tokens": "ALPHA Tokens",
     "u_tokens": "U Tokens",
@@ -192,6 +242,25 @@
     ],
     "exchange_description_alpha": "Use {amount} million ALPHA tokens to purchase one {nodeType}",
     "exchange_description_u": "Use {amount} U tokens to purchase one {nodeType}",
-    "purchase_success": "Successfully purchased 1 {nodeType} with {amount} {tokenType}"
+    "purchase_success": "Successfully purchased 1 {nodeType} with {amount} {tokenType}",
+    "get_node_info_success": "Successfully retrieved node information",
+    "buy_node_success": "Node purchase successful! Used {nodeType}",
+    "errors": {
+      "get_node_info_failed": "Failed to retrieve node information",
+      "buy_node_failed": "Failed to purchase node",
+      "invalid_purchase_amount": "Invalid node purchase amount",
+      "insufficient_usdt_balance": "Insufficient balance! Your USDT balance is {balance}, need {required}"
+    }
+  },
+  "transfer": {
+    "dividend_address": "Transfer Dividend Address",
+    "enter_dividend_address": "Please enter new dividend receiving address (0x...)",
+    "transfer_address_title": "Enter Transfer Address",
+    "transfer_description": "Please enter the wallet address to transfer to",
+    "transfer_note": "After transfer, this address will become the new dividend receiving address for this staking pool",
+    "wallet_address": "Wallet Address",
+    "address_placeholder": "Please enter wallet address (0x...)",
+    "invalid_address_format": "Please enter a valid Ethereum address format",
+    "address_format_note": "Address format: 0x + 40 hexadecimal characters"
   }
 }

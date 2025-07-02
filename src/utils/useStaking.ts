@@ -34,7 +34,7 @@ export const performUnstaking = async (
     if (!wallet) {
       return {
         status: false,
-        message: '钱包实例未初始化',
+        message: t('staking.errors.wallet_not_initialized'),
         data: null
       };
     }
@@ -61,37 +61,37 @@ export const performUnstaking = async (
     await getAllPoolsInfoWithCache(true);
     
     // 强制更新用户质押数据
-    await getUserStakesWithCache(true);
+    await getUserStakesWithCache(true, t);
     
     console.log('解除质押流程完成');
     
     return {
       status: true,
-      message: `解除质押成功！已从池子 ${poolId} 中解除质押记录 ${stakeId}`,
+      message: t('staking.unstake_success', { poolId, stakeId }),
       data: unstakeResult
     };
     
   } catch (error) {
     console.error('解除质押失败:', error);
     
-    let message = '解除质押失败';
+    let message = t('staking.errors.unstake_failed');
     
     if (error.message.includes('user rejected')) {
       message = t('common.errors.user_rejected');
     } else if (error.message.includes('insufficient funds')) {
-      message = '余额不足或gas费不够';
+      message = t('staking.errors.insufficient_funds_or_gas');
     } else if (error.message.includes('network')) {
       message = t('common.errors.network_error');
     } else if (error.message.includes('execution reverted')) {
       // 合约执行失败，可能是业务逻辑错误
       if (error.message.includes('Stake not found')) {
-        message = '质押记录不存在';
+        message = t('staking.errors.stake_not_found');
       } else if (error.message.includes('Stake already withdrawn')) {
-        message = '质押已经被解除';
+        message = t('staking.errors.stake_already_withdrawn');
       } else if (error.message.includes('Lockup period not ended')) {
-        message = '质押锁定期未结束，无法解除质押';
+        message = t('staking.errors.lockup_period_not_ended');
       } else {
-        message = '合约执行失败，请检查参数或稍后重试';
+        message = t('staking.errors.contract_execution_failed');
       }
     }
     
@@ -164,19 +164,19 @@ export interface ProcessedStakeRecord {
 }
 
 // 根据poolId获取池子信息
-const getPoolInfo = (pool: any) => {
+const getPoolInfo = (pool: any, t?: Function) => {
   let apr = Number(pool.apr);
   if (apr >= 700) {
     return {
       poolType: 'gold' as const,
-      poolName: '金池',
+      poolName: t?t('staking.gold_pool'): '金池',
       poolColor: '#FFD700',
       poolGradient: 'from-yellow-400 to-yellow-600'
     };
   } else if (apr >= 500) {
     return {
       poolType: 'silver' as const,
-      poolName: '银池',
+      poolName: t?t('staking.sliver_pool'): '银池',
       poolColor: '#C0C0C0',
       poolGradient: 'from-gray-300 to-gray-500'
     };
@@ -184,7 +184,7 @@ const getPoolInfo = (pool: any) => {
     // 其他所有id都归类为铜池
     return {
       poolType: 'bronze' as const,
-      poolName: '铜池',
+      poolName: t?t('staking.bronze_pool'): '铜池',
       poolColor: '#CD7F32',
       poolGradient: 'from-orange-400 to-orange-600'
     };
@@ -192,7 +192,7 @@ const getPoolInfo = (pool: any) => {
 };
 
 // 获取用户所有质押记录
-export const getUserStakes = async (forceUpdate: boolean = false): Promise<ProcessedStakeRecord[]> => {
+export const getUserStakes = async (forceUpdate: boolean = false, t?: Function): Promise<ProcessedStakeRecord[]> => {
   const walletStore = useWalletStore();
   
   if (!walletStore.address) {
@@ -232,7 +232,7 @@ export const getUserStakes = async (forceUpdate: boolean = false): Promise<Proce
     // 处理质押数据
     const processedStakes: ProcessedStakeRecord[] = filteredStakes
       .map((stake: any, index: number) => {
-        const poolInfo = getPoolInfo(stake.poolId.toString());
+        const poolInfo = getPoolInfo(stake.poolId.toString(), t);
         const amount = wallet.weiToEth(stake.amount);
         const apr = (Number(stake.lockedAPR)).toString();
         const stakeStartTime = Number(stake.stakeStartTime);
@@ -247,7 +247,7 @@ export const getUserStakes = async (forceUpdate: boolean = false): Promise<Proce
           ...poolInfo,
           stakingAmount: amount,
           yearRate: `${apr}%`,
-          status: '进行中',
+          status: t ? t('staking.status_active') : '进行中',
           statusColor: '#5BF655',
           stakingReward,
           stakeStartTime,
@@ -292,7 +292,7 @@ export const performStaking = async (
   if (isNaN(stakeAmount) || stakeAmount <= 0) {
     return {
       status: false,
-      message: '请输入有效的质押数量',
+      message: t('staking.errors.invalid_stake_amount'),
       data: null
     };
   }
@@ -303,7 +303,7 @@ export const performStaking = async (
     if (!wallet) {
       return {
         status: false,
-        message: '钱包实例未初始化',
+        message: t('staking.errors.wallet_not_initialized'),
         data: null
       };
     }
@@ -318,7 +318,10 @@ export const performStaking = async (
     if (userAlphaBalance < stakeAmount) {
       return {
         status: false,
-        message: `余额不足！您的ALPHA余额为 ${balances.alphaBalance}，需要 ${amount}`,
+        message: t('staking.errors.insufficient_balance', {
+          balance: balances.alphaBalance,
+          required: amount
+        }),
         data: null
       };
     }
@@ -374,35 +377,35 @@ export const performStaking = async (
     await getAllPoolsInfoWithCache(true);
     
     // 强制更新用户质押数据
-    await getUserStakesWithCache(true);
+    await getUserStakesWithCache(true, t);
     
     console.log('质押流程完成');
     
     return {
       status: true,
-      message: `质押成功！已质押 ${amount} ALPHA 到池子 ${poolId}`,
+      message: t('staking.stake_success', { amount, poolId }),
       data: stakeResult
     };
     
   } catch (error) {
     console.error('质押失败:', error);
     
-    let message = '质押失败';
+    let message = t('staking.errors.stake_failed');
     
     if (error.message.includes('user rejected')) {
       message = t('common.errors.user_rejected');
     } else if (error.message.includes('insufficient funds')) {
-      message = '余额不足或gas费不够';
+      message = t('staking.errors.insufficient_funds_or_gas');
     } else if (error.message.includes('network')) {
       message = t('common.errors.network_error');
     } else if (error.message.includes('execution reverted')) {
       // 合约执行失败，可能是业务逻辑错误
       if (error.message.includes('ERC20: transfer amount exceeds balance')) {
-        message = 'ALPHA代币余额不足';
+        message = t('staking.errors.alpha_balance_insufficient');
       } else if (error.message.includes('ERC20: transfer amount exceeds allowance')) {
-        message = '授权额度不足，请重试';
+        message = t('staking.errors.allowance_insufficient');
       } else {
-        message = '合约执行失败，请检查参数或稍后重试';
+        message = t('staking.errors.contract_execution_failed');
       }
     }
     
@@ -422,7 +425,7 @@ const userStakesCache = ref<{
 } | null>(null);
 
 // 获取用户质押数据（带缓存）
-export const getUserStakesWithCache = async (forceUpdate: boolean = false): Promise<ProcessedStakeRecord[]> => {
+export const getUserStakesWithCache = async (forceUpdate: boolean = false, t?: Function): Promise<ProcessedStakeRecord[]> => {
   const walletStore = useWalletStore();
   
   if (!walletStore.address) {
@@ -442,7 +445,7 @@ export const getUserStakesWithCache = async (forceUpdate: boolean = false): Prom
   }
   
   // 获取新数据
-  const stakes = await getUserStakes(forceUpdate);
+  const stakes = await getUserStakes(forceUpdate, t);
   
   // 更新缓存
   userStakesCache.value = {
@@ -455,22 +458,22 @@ export const getUserStakesWithCache = async (forceUpdate: boolean = false): Prom
 };
 
 // 格式化锁定时间
-const formatLockupPeriod = (seconds: string): string => {
+const formatLockupPeriod = (seconds: string, t: Function): string => {
   const sec = parseInt(seconds);
   const hours = Math.floor(sec / 3600);
   const days = Math.floor(hours / 24);
   
   if (days > 0) {
-    return `${days}天`;
+    return `${days}${t('staking.time_units.days')}`;
   } else if (hours > 0) {
-    return `${hours}小时`;
+    return `${hours}${t('staking.time_units.hours')}`;
   } else {
-    return `${sec}秒`;
+    return `${sec}${t('staking.time_units.seconds')}`;
   }
 };
 
 // 获取所有质押池信息
-export const getAllPoolsInfo = async (forceUpdate: boolean = false): Promise<ProcessedPool[]> => {
+export const getAllPoolsInfo = async (forceUpdate: boolean = false, t?: Function): Promise<ProcessedPool[]> => {
   try {
     const wallet = getEthWallet();
     
@@ -494,13 +497,13 @@ export const getAllPoolsInfo = async (forceUpdate: boolean = false): Promise<Pro
     const processedPools: ProcessedPool[] = pools.map((pool: any) => {
       console.log(pool);
       const poolId = pool.poolId.toString();
-      const poolInfo = getPoolInfo(pool);
+      const poolInfo = getPoolInfo(pool, t);
       
       // 格式化数据
       const totalAmount = wallet.weiToEth(pool.totalStaked);
       const maxAmount = wallet.weiToEth(pool.maxStakeAmount);
       const apr = (Number(pool.apr)).toString();
-      const lockupPeriod = formatLockupPeriod(pool.lockupPeriod.toString());
+      const lockupPeriod = t ? formatLockupPeriod(pool.lockupPeriod.toString(), t) : pool.lockupPeriod.toString();
       const dividendRate = (Number(pool.dividendRate)).toString();
       console.log(totalAmount, maxAmount, pool.totalStaked, pool.maxStakeAmount, '获取所有质押池信息');
       return {
@@ -508,7 +511,7 @@ export const getAllPoolsInfo = async (forceUpdate: boolean = false): Promise<Pro
         ...poolInfo,
         totalAmount,
         yearRate: `${apr}%`,
-        status: '进行中',
+        status: t ? t('staking.status_active') : '进行中',
         statusColor: '#5BF655',
         contractId: Number(poolId), // 生成合约ID
         lockupPeriod,
@@ -541,7 +544,7 @@ const stakeDividendsCache = ref<{
 } | null>(null);
 
 // 获取质押池数据（带缓存）
-export const getAllPoolsInfoWithCache = async (forceUpdate: boolean = false): Promise<ProcessedPool[]> => {
+export const getAllPoolsInfoWithCache = async (forceUpdate: boolean = false, t?: Function): Promise<ProcessedPool[]> => {
   // 如果不是强制更新且缓存存在且未过期（10分钟），直接返回缓存数据
   const now = Date.now();
   const cacheExpiry = 10 * 60 * 1000; // 10分钟缓存（质押池信息变化较少）
@@ -554,7 +557,7 @@ export const getAllPoolsInfoWithCache = async (forceUpdate: boolean = false): Pr
   }
   
   // 获取新数据
-  const pools = await getAllPoolsInfo(forceUpdate);
+  const pools = await getAllPoolsInfo(forceUpdate, t);
   
   // 更新缓存
   poolsInfoCache.value = {
@@ -678,7 +681,7 @@ export interface NFTStakingData {
 }
 
 // 获取用户的NFT质押数据（当前地址和质押池dividendAddress一样的池子）
-export const getNFTStakingData = async (forceUpdate: boolean = false): Promise<NFTStakingData[]> => {
+export const getNFTStakingData = async (forceUpdate: boolean = false, t?: Function): Promise<NFTStakingData[]> => {
   const walletStore = useWalletStore();
   
   if (!walletStore.address) {
@@ -721,7 +724,7 @@ export const getNFTStakingData = async (forceUpdate: boolean = false): Promise<N
     const nftStakingData: NFTStakingData[] = await Promise.all(
       matchingPools.map(async (pool: any, index: number) => {
         const poolId = pool.poolId.toString();
-        const poolInfo = getPoolInfo(pool);
+        const poolInfo = getPoolInfo(pool, t);
         
         // 获取池子的可领取收益
         const claimableReward = await getPoolDividends(poolId, forceUpdate);
@@ -741,7 +744,7 @@ export const getNFTStakingData = async (forceUpdate: boolean = false): Promise<N
           levelGradient: poolInfo.poolGradient,
           yearRate: `${apr}%`,
           stakingRate: `${dividendRate}%`,
-          status: '进行中',
+          status: t ? t('staking.status_active') : '进行中',
           statusColor: '#5BF655',
           poolId
         };
@@ -765,7 +768,7 @@ const nftStakingCache = ref<{
 } | null>(null);
 
 // 获取NFT质押数据（带缓存）
-export const getNFTStakingDataWithCache = async (forceUpdate: boolean = false): Promise<NFTStakingData[]> => {
+export const getNFTStakingDataWithCache = async (forceUpdate: boolean = false, t?: Function): Promise<NFTStakingData[]> => {
   const walletStore = useWalletStore();
   
   if (!walletStore.address) {
@@ -785,7 +788,7 @@ export const getNFTStakingDataWithCache = async (forceUpdate: boolean = false): 
   }
   
   // 获取新数据
-  const data = await getNFTStakingData(forceUpdate);
+  const data = await getNFTStakingData(forceUpdate, t);
   
   // 更新缓存
   nftStakingCache.value = {
@@ -882,7 +885,7 @@ export const claimPoolDividends = async (poolId: string, t: Function): Promise<{
     if (!wallet) {
       return {
         status: false,
-        message: '钱包实例未初始化',
+        message: t('staking.errors.wallet_not_initialized'),
         data: null
       };
     }
@@ -905,23 +908,23 @@ export const claimPoolDividends = async (poolId: string, t: Function): Promise<{
     
     return {
       status: true,
-      message: `领取质押池${poolId}收益成功`,
+      message: t('staking.claim_pool_dividends_success', { poolId }),
       data: stakeResult
     };
     
   } catch (error) {
     console.error('领取质押池收益失败:', error);
     
-    let message = '领取质押池收益失败';
+    let message = t('staking.errors.claim_pool_dividends_failed');
     
     if (error.message.includes('user rejected')) {
       message = t('common.errors.user_rejected');
     } else if (error.message.includes('insufficient funds')) {
-      message = '余额不足或gas费不够';
+      message = t('staking.errors.insufficient_funds_or_gas');
     } else if (error.message.includes('network')) {
       message = t('common.errors.network_error');
     } else if (error.message.includes('execution reverted')) {
-      message = '合约执行失败，请检查参数或稍后重试';
+      message = t('staking.errors.contract_execution_failed');
     }
     
     return {
@@ -949,7 +952,7 @@ export const transferPoolOwner = async (poolId: string, newAddress: string, t: F
     if (!wallet) {
       return {
         status: false,
-        message: '钱包实例未初始化',
+        message: t('staking.errors.wallet_not_initialized'),
         data: null
       };
     }
@@ -969,23 +972,23 @@ export const transferPoolOwner = async (poolId: string, newAddress: string, t: F
     
     return {
       status: true,
-      message: `更新质押池${poolId}分红地址为${newAddress}成功`,
+      message: t('staking.transfer_pool_owner_success', { poolId, newAddress }),
       data: updateResult
     };
     
   } catch (error) {
     console.error('更新分红失败:', error);
     
-    let message = '更新分红失败';
+    let message = t('staking.errors.transfer_pool_owner_failed');
     
     if (error.message.includes('user rejected')) {
       message = t('common.errors.user_rejected');
     } else if (error.message.includes('insufficient funds')) {
-      message = '余额不足或gas费不够';
+      message = t('staking.errors.insufficient_funds_or_gas');
     } else if (error.message.includes('network')) {
       message = t('common.errors.network_error');
     } else if (error.message.includes('execution reverted')) {
-      message = '合约执行失败，请检查参数或稍后重试';
+      message = t('staking.errors.contract_execution_failed');
     }
     
     return {
@@ -1004,7 +1007,7 @@ export const getNodeMessage = async (t: Function) => {
     if (!wallet) {
       return {
         status: false,
-        message: '钱包实例未初始化',
+        message: t('staking.errors.wallet_not_initialized'),
         data: null
       };
     }
@@ -1038,7 +1041,7 @@ export const getNodeMessage = async (t: Function) => {
     };
     for (let i = 0; i < nodeList.length; i++) {
       const node = nodeList[i];
-      let nodeType = getPoolInfo({apr: node.apr}).poolType;
+      let nodeType = getPoolInfo({apr: node.apr}, t).poolType;
       const result = {};
       const payNumber = Number(node.payNumber) > nodePoints[nodeType] ? nodePoints[nodeType] : Number(node.payNumber);
       result['id'] = i + 1;
@@ -1059,22 +1062,22 @@ export const getNodeMessage = async (t: Function) => {
     console.log('处理后质押节点信息：', resultList);
     return {
       status: true,
-      message: '获取质押节点信息成功',
+      message: t('node.get_node_info_success'),
       data: resultList
     };
   } catch (error) {
     console.error('获取质押节点信息失败:', error);
     
-    let message = '获取质押节点信息失败';
+    let message = t('node.errors.get_node_info_failed');
     
     if (error.message.includes('user rejected')) {
       message = t('common.errors.user_rejected');
     } else if (error.message.includes('insufficient funds')) {
-      message = '余额不足或gas费不够';
+      message = t('staking.errors.insufficient_funds_or_gas');
     } else if (error.message.includes('network')) {
       message = t('common.errors.network_error');
     } else if (error.message.includes('execution reverted')) {
-      message = '合约执行失败，请检查参数或稍后重试';
+      message = t('staking.errors.contract_execution_failed');
     }
     return {
       status: false,
@@ -1100,7 +1103,7 @@ export const buyNode = async (id: string | number, type: 'token'|'u', amount: st
   if (isNaN(Number(amount)) || Number(amount) <= 0) {
     return {
       status: false,
-      message: '节点购买错误',
+      message: t('node.errors.invalid_purchase_amount'),
       data: null
     };
   }
@@ -1111,7 +1114,7 @@ export const buyNode = async (id: string | number, type: 'token'|'u', amount: st
     if (!wallet) {
       return {
         status: false,
-        message: '钱包实例未初始化',
+        message: t('staking.errors.wallet_not_initialized'),
         data: null
       };
     }
@@ -1125,7 +1128,10 @@ export const buyNode = async (id: string | number, type: 'token'|'u', amount: st
       if (userAlphaBalance < newAmount) {
         return {
           status: false,
-          message: `余额不足！您的ALPHA余额为 ${balances.alphaBalance}，需要 ${amount}`,
+          message: t('staking.errors.insufficient_balance', {
+            balance: balances.alphaBalance,
+            required: newAmount
+          }),
           data: null
         };
       }
@@ -1135,7 +1141,10 @@ export const buyNode = async (id: string | number, type: 'token'|'u', amount: st
       if (userUsdtBalance < newAmount) {
         return {
           status: false,
-          message: `余额不足！您的USDT余额为 ${balances.usdtBalance}，需要 ${newAmount}`,
+          message: t('node.errors.insufficient_usdt_balance', {
+            balance: balances.usdtBalance,
+            required: newAmount
+          }),
           data: null
         };
       }
@@ -1180,24 +1189,29 @@ export const buyNode = async (id: string | number, type: 'token'|'u', amount: st
     await getAllPoolsInfoWithCache(true);
     
     // 强制更新用户质押数据
-    await getUserStakesWithCache(true);
+    await getUserStakesWithCache(true, t);
     
     console.log('购买节点流程完成');
     
-    // approve
+    return {
+      status: true,
+      message: t('node.buy_node_success', { nodeType: t(`node.${type === 'token' ? 'alpha_tokens' : 'u_tokens'}`) }),
+      data: createPoolResult
+    };
+    
   } catch (error) {
     console.error('购买质押节点失败:', error);
     
-    let message = '购买质押节点失败';
+    let message = t('node.errors.buy_node_failed');
     
     if (error.message.includes('user rejected')) {
       message = t('common.errors.user_rejected');
     } else if (error.message.includes('insufficient funds')) {
-      message = '余额不足或gas费不够';
+      message = t('staking.errors.insufficient_funds_or_gas');
     } else if (error.message.includes('network')) {
       message = t('common.errors.network_error');
     } else if (error.message.includes('execution reverted')) {
-      message = '合约执行失败，请检查参数或稍后重试';
+      message = t('staking.errors.contract_execution_failed');
     }
     
     return {

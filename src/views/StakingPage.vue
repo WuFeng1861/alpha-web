@@ -54,7 +54,7 @@ const updateUserStakes = async (forceUpdate: boolean = false) => {
   try {
     isLoading.value = true
     console.log('开始更新用户质押数据...')
-    const stakes = await getUserStakesWithCache(forceUpdate)
+    const stakes = await getUserStakesWithCache(forceUpdate, t)
     const showStakes = [];
     for (let index = 0; index < stakes.length; index++) {
       let item = {...stakes[index]};
@@ -90,7 +90,7 @@ const updatePoolsInfo = async (forceUpdate: boolean = false) => {
   try {
     isLoadingPools.value = true
     console.log('开始更新质押池数据...')
-    const pools = await getAllPoolsInfoWithCache(forceUpdate)
+    const pools = await getAllPoolsInfoWithCache(forceUpdate, t)
     stakingContracts.value = pools
     console.log('质押池数据更新完成:', pools)
   } catch (error) {
@@ -110,7 +110,7 @@ const updateStakingDividends = async (forceUpdate: boolean = false) => {
   try {
     console.log('开始更新质押收益数据...')
 
-    const stakes = await getUserStakesWithCache(forceUpdate)
+    const stakes = await getUserStakesWithCache(forceUpdate, t)
 
     // 获取所有质押记录的stakeId
     const stakeIds = stakes.map(stake => stake.stakeId)
@@ -294,8 +294,8 @@ const handleStakingContract = (contract: any) => {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 class="text-lg font-medium text-white mb-2">请先连接钱包</h3>
-                <p class="text-gray-400 text-sm">连接钱包后即可查看您的质押记录</p>
+                <h3 class="text-lg font-medium text-white mb-2">{{ t('staking.connect_wallet_to_view') }}</h3>
+                <p class="text-gray-400 text-sm">{{ t('staking.connect_wallet_to_view_desc') }}</p>
               </div>
             </div>
 
@@ -310,8 +310,8 @@ const handleStakingContract = (contract: any) => {
                     alt="质押"
                   />
                 </div>
-                <h3 class="text-lg font-medium text-white mb-2">暂无质押记录</h3>
-                <p class="text-gray-400 text-sm mb-4">您还没有进行任何质押，快去下方选择质押合约开始赚取收益吧！</p>
+                <h3 class="text-lg font-medium text-white mb-2">{{ t('staking.no_staking_records') }}</h3>
+                <p class="text-gray-400 text-sm mb-4">{{ t('staking.no_staking_records_desc') }}</p>
               </div>
             </div>
 
@@ -447,8 +447,8 @@ const handleStakingContract = (contract: any) => {
                     alt="质押"
                   />
                 </div>
-                <h3 class="text-lg font-medium text-white mb-2">暂无可用质押池</h3>
-                <p class="text-gray-400 text-sm">当前没有可用的质押池，请稍后再试</p>
+                <h3 class="text-lg font-medium text-white mb-2">{{ t('staking.no_available_pools') }}</h3>
+                <p class="text-gray-400 text-sm">{{ t('staking.no_available_pools_desc') }}</p>
               </div>
             </div>
 
@@ -522,7 +522,7 @@ const handleStakingContract = (contract: any) => {
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" :style="`color: ${contract.poolColor}`" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          总金额
+                          {{ t('staking.total_amount') }}
                         </p>
                         <!-- 趋势图标 -->
                         <div class="flex items-center">
@@ -547,7 +547,6 @@ const handleStakingContract = (contract: any) => {
                     </div>
                   </div>
 
-                  <!-- 质押时间和年化率在同一行 -->
                   <div class="grid grid-cols-2 gap-3">
                     <div class="rounded-lg p-3 border border-gray-600" style="background-color: #151b12;">
                       <p class="text-gray-400 text-sm mb-1">{{ t('staking.staking_time') }}</p>
