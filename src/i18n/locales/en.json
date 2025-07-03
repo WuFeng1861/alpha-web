@@ -160,7 +160,8 @@
       "lockup_period_not_ended": "Staking lockup period not ended, cannot unstake",
       "claim_pool_dividends_failed": "Failed to claim staking pool dividends",
       "transfer_pool_owner_failed": "Failed to update dividend address",
-      "approve_failed": "Failed to approve"
+      "approve_failed": "Failed to approve",
+      "not_start" : "It has not started yet."
     },
     "time_units": {
       "days": " days",

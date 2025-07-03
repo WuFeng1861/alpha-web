@@ -17,6 +17,12 @@ export const performUnstaking = async (
   stakeId: string,
   t: Function
 ): Promise<{ status: boolean, message: string, data: any }> => {
+  // 暂时关闭
+  return {
+    status: false,
+    message: t('staking.errors.not_start'),
+    data: null
+  };
   const walletStore = useWalletStore();
   
   // 检查钱包是否连接
@@ -176,7 +182,7 @@ const getPoolInfo = (pool: any, t?: Function) => {
   } else if (apr >= 500) {
     return {
       poolType: 'silver' as const,
-      poolName: t?t('staking.sliver_pool'): '银池',
+      poolName: t?t('staking.silver_pool'): '银池',
       poolColor: '#C0C0C0',
       poolGradient: 'from-gray-300 to-gray-500'
     };
@@ -276,6 +282,12 @@ export const performStaking = async (
   amount: string,
   t: Function
 ): Promise<{ status: boolean, message: string, data: any }> => {
+  // 暂时关闭
+  return {
+    status: false,
+    message: t('staking.errors.not_start'),
+    data: null
+  };
   const walletStore = useWalletStore();
   
   // 检查钱包是否连接
@@ -937,6 +949,12 @@ export const claimPoolDividends = async (poolId: string, t: Function): Promise<{
 
 // 转移质押池分红地址
 export const transferPoolOwner = async (poolId: string, newAddress: string, t: Function): Promise<{ status: boolean, message: string, data: any }> => {
+  // 暂时关闭
+  return {
+    status: false,
+    message: t('staking.errors.not_start'),
+    data: null
+  };
   const walletStore = useWalletStore();
   // 检查钱包是否连接
   if (!walletStore.address) {
@@ -1063,7 +1081,7 @@ export const getNodeMessage = async (t: Function) => {
     return {
       status: true,
       message: t('node.get_node_info_success'),
-      data: resultList
+      data: resultList.reverse()
     };
   } catch (error) {
     console.error('获取质押节点信息失败:', error);
@@ -1089,6 +1107,18 @@ export const getNodeMessage = async (t: Function) => {
 
 // 购买质押节点
 export const buyNode = async (id: string | number, type: 'token'|'u', amount: string, t: Function): Promise<{ status: boolean, message: string, data: any }> => {
+  // 暂时关闭
+  // 获取距离1751904000000时间戳的小时分钟秒
+  const now = new Date().getTime();
+  const startTime = 1751904000000;
+  const nowHour = Math.floor((startTime - now) / 1000 / 60 / 60) < 0 ? 0 : Math.floor((startTime - now) / 1000 / 60 / 60);
+  const nowMinute = Math.floor((startTime - now) / 1000 / 60) % 60 < 0 ? 0 : Math.floor((startTime - now) / 1000 / 60) % 60;
+  const nowSecond = Math.floor((startTime - now) / 1000) % 60 < 0 ? 0 : Math.floor((startTime - now) / 1000) % 60;
+  return {
+    status: false,
+    message: t('staking.errors.not_start') + `  ${nowHour}:${nowMinute}:${nowSecond}`,
+    data: null
+  };
   const walletStore = useWalletStore();
   
   // 检查钱包是否连接

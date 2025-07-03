@@ -5,7 +5,6 @@ import AlphaLogo from '../components/AlphaLogo.vue'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import ConnectWalletButton from '../components/ConnectWalletButton.vue'
 import InviterModal from '../components/InviterModal.vue'
-import TokenBalanceDisplay from '../components/TokenBalanceDisplay.vue'
 import config from '../assets/config'
 import { bindInviter, claimDailyTokens, getNextClaimTime, updatePendingTokens, claimPendingTokens } from '../utils/useEthWallet'
 import { useWalletStore } from '../stores/wallet'
@@ -29,24 +28,24 @@ const openInviterModal = () => {
 // 更新倒计时
 const updateCountdown = async () => {
   if (!walletStore.address || !walletStore.hasUpline) return
-  
+
   const nextTime = await getNextClaimTime()
   if (!nextTime) return
-  
+
   const now = Math.floor(Date.now() / 1000)
   const diff = nextTime - now
-  
+
   if (diff <= 0) {
     isClaimable.value = true
     countdown.value = ''
     return
   }
-  
+
   isClaimable.value = false
   const hours = Math.floor(diff / 3600)
   const minutes = Math.floor((diff % 3600) / 60)
   const seconds = diff % 60
-  
+
   countdown.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
 
@@ -142,7 +141,7 @@ const handleClaim = async () => {
     toast.info(t('common.errors.purchase_too_frequent'))
     return
   }
-  
+
   const result = await claimDailyTokens(t);
   if (!result.status) {
     console.error(result.message);
@@ -156,11 +155,11 @@ const handleClaim = async () => {
 <template>
   <div class="min-h-screen bg-alpha-surface pb-16 relative">
     <!-- 背景图片 -->
-    <div 
+    <div
       class="absolute inset-0 bg-contain bg-center bg-no-repeat z-0"
       :style="{ backgroundImage: `url('${config.backgrounds.home}')` }"
     ></div>
-    
+
     <!-- 内容层 -->
     <div class="relative z-10">
     <!-- Header -->
@@ -173,7 +172,7 @@ const handleClaim = async () => {
         <ConnectWalletButton @showInviterModal="openInviterModal" />
       </div>
     </header>
-    
+
     <!-- Main Content -->
     <div class="px-4 py-8 mt-40">
       <!-- Daily Alpha Claim Section -->
@@ -194,7 +193,7 @@ const handleClaim = async () => {
           <span v-else>{{ countdown }}</span>
         </button>
       </div>
-      
+
       <!-- Pending Alpha Tokens Section -->
       <div class="rounded-xl p-6 mb-6" style="background: linear-gradient(135deg, #2A2F2F 0%, #1D2223 100%)">
         <div class="flex items-center justify-between mb-4">
@@ -206,7 +205,7 @@ const handleClaim = async () => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
         </div>
-        
+
         <div class="rounded-xl p-6" style="background-color: #45D13F">
           <div :class="['flex items-center justify-start', $i18n.locale === 'en' ? 'text-3xl' : 'text-4xl']">
             <span class="text-4xl font-bold text-white">{{ pendingTokens }}</span>
@@ -216,21 +215,18 @@ const handleClaim = async () => {
             'text-black text-left my-2',
             $i18n.locale === 'en' ? 'text-xs' : 'text-sm'
           ]">{{ t('home.claimable_amount') }}</p>
-          <button 
+          <button
             @click="handleClaimPendingTokens"
-            class="btn-secondary w-full mt-4 py-3 text-black font-bold rounded-full" 
+            class="btn-secondary w-full mt-4 py-3 text-black font-bold rounded-full"
             style="background: linear-gradient(to bottom right, #AEE346, #51E24B)"
           >
             {{ t('home.claim_token') }}
           </button>
         </div>
       </div>
-      
-      <!-- 代币余额显示 -->
-      <TokenBalanceDisplay />
     </div>
     </div>
-    
+
     <!-- 邀请人弹窗 -->
     <InviterModal
       :show="showInviterModal"

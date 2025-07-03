@@ -109,6 +109,7 @@
     "pool": "池",
     "gold_pool": "金池",
     "silver_pool": "银池",
+    "sliver_pool": "银池",
     "bronze_pool": "铜池",
     "status_active": "进行中",
     "status_completed": "已完成",
@@ -160,7 +161,8 @@
       "lockup_period_not_ended": "质押锁定期未结束，无法解除质押",
       "claim_pool_dividends_failed": "领取质押池收益失败",
       "transfer_pool_owner_failed": "更新分红失败",
-      "approve_failed": "授权失败"
+      "approve_failed": "授权失败",
+      "not_start" : "暂未开启"
     },
     "time_units": {
       "days": "天",
