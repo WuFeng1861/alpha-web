@@ -2,7 +2,7 @@ import config from '../assets/config';
 import {useWalletStore} from '../stores/wallet';
 import {getEthWallet} from './useEthWallet';
 import {ref} from 'vue';
-import {getTokenBalances, updateTokenBalances} from './useTokenBalance';
+import {getAllowance, getTokenBalances, setApprove, updateTokenBalances} from './useTokenBalance';
 import {sleep} from './utils';
 
 /**
@@ -1154,14 +1154,20 @@ export const buyNode = async (id: string | number, type: 'token'|'u', amount: st
     const amountInWei = wallet.ethToWei(newAmount);
     
     // 检查用户地址允许合约使用代币的数量
-    let ownerAllowance = await wallet.contractFn('allowance', walletStore.address, tokenAddress);
-    ownerAllowance = wallet.weiToEth(ownerAllowance);
+    let ownerAllowance = await getAllowance(config.shakingContractAddress, tokenAddress);
     console.log(ownerAllowance, '检查用户地址允许合约使用代币的数量');
     
     if (Number(ownerAllowance) < Number(newAmount)) {
       // 调用approve方法授权质押合约使用代币
       console.log(`授权质押合约 ${tokenAddress} 使用 ${newAmount} ${type}...`);
-      await wallet.contractFn('approve', tokenAddress, amountInWei);
+      let result = await setApprove(config.shakingContractAddress, tokenAddress, amountInWei)
+      if (!result) {
+        return {
+          status: false,
+          message: t('staking.errors.approve_failed'),
+          data: null
+        };
+      }
       await sleep(3.5 * 1000);
     }
     

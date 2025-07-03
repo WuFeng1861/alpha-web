@@ -92,13 +92,15 @@ const confirmExchange = async (type: string, amount: string) => {
     amount
   })
 
+  // 这里可以添加实际的购买逻辑
+  // 比如调用合约方法、更新用户余额等
+  await buyNode(selectedNode.value?.id, selectedNode.value?.type, amount, t);
+
   // 显示成功提示
   const exchangeTypeName = type === 'token' ? t('node.alpha_tokens') : t('node.u_tokens')
   const nodeTypeName = t(`node.${selectedNode.value?.type}`)
   toast.success(t('node.purchase_success', {amount, tokenType: exchangeTypeName, nodeType: nodeTypeName}))
-  // 这里可以添加实际的购买逻辑
-  // 比如调用合约方法、更新用户余额等
-  await buyNode(selectedNode.value?.id, selectedNode.value?.type, amount, t);
+
 
   // 关闭弹窗
   closeExchangeModal()

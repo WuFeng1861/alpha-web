@@ -159,7 +159,8 @@
       "stake_already_withdrawn": "质押已经被解除",
       "lockup_period_not_ended": "质押锁定期未结束，无法解除质押",
       "claim_pool_dividends_failed": "领取质押池收益失败",
-      "transfer_pool_owner_failed": "更新分红失败"
+      "transfer_pool_owner_failed": "更新分红失败",
+      "approve_failed": "授权失败"
     },
     "time_units": {
       "days": "天",
