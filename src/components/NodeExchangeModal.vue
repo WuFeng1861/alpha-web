@@ -256,7 +256,7 @@ watch(exchangeType, () => {
               >
                 <div class="flex items-center justify-center space-x-1">
                   <img
-                      src="http://wufeng98.cn/imgServerApi/images/8b4ac19c-a29c-490f-9a91-6ffe467fed7e.png"
+                      src="https://wufeng98.cn/imgServerApi/images/8b4ac19c-a29c-490f-9a91-6ffe467fed7e.png"
                       alt="USDT"
                       class="w-5 h-5 object-contain"
                   />
