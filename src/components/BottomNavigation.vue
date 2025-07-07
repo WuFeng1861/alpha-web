@@ -91,6 +91,20 @@ const navigateTo = (path: string) => {
         />
         <span class="text-xs mt-1">{{ t('nav.node') }}</span>
       </button>
+
+      <button
+        @click="navigateTo('/token')"
+        class="flex flex-col items-center py-1 transition-all duration-300"
+        :class="currentRoute === '/token' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
+      >
+        <img
+          :src="'https://wufeng98.cn/imgServerApi/images/327806d7-3a0a-4203-b8da-bbc504ab75c0.png'"
+          class="w-6 h-6"
+          :class="currentRoute !== '/token' ? 'opacity-40' : ''"
+          alt="代币"
+        />
+        <span class="text-xs mt-1">{{ t('nav.token') }}</span>
+      </button>
     </div>
   </nav>
 </template>

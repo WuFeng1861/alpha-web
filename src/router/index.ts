@@ -8,6 +8,9 @@ import NFTStakingPage from '../views/NFTStakingPage.vue'
 import StakingDetailPage from '../views/StakingDetailPage.vue'
 import NodePage from '../views/NodePage.vue'
 import NodeDetailPage from '../views/NodeDetailPage.vue'
+import TokenPage from "../views/TokenPage.vue"
+import TokenTransferPage from '../views/TokenTransferPage.vue'
+
 
 const router = createRouter({
   history: createWebHistory(),
@@ -65,6 +68,18 @@ const router = createRouter({
       name: 'node-detail',
       component: NodeDetailPage,
       meta: { title: 'Node Detail - Alpha Project' }
+    },
+    {
+      path: '/token',
+      name: 'token',
+      component: TokenPage,
+      meta: { title: 'Token - Alpha Project' }
+    },
+    {
+      path: '/token/transfer',
+      name: 'token-transfer',
+      component: TokenTransferPage,
+      meta: { title: 'Token Transfer - Alpha Project' }
     },
     // Redirect any unknown routes to home
     {

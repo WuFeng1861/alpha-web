@@ -8,7 +8,8 @@
     "box": "Mystery Box",
     "alpha": "Alpha",
     "staking": "Staking",
-    "node": "Node"
+    "node": "Node",
+    "token": "Token"
   },
   "home": {
     "connect_wallet": "Connect Wallet",
@@ -264,5 +265,58 @@
     "address_placeholder": "Please enter wallet address (0x...)",
     "invalid_address_format": "Please enter a valid Ethereum address format",
     "address_format_note": "Address format: 0x + 40 hexadecimal characters"
+  },
+  "token": {
+    "title": "Token Balance",
+    "balance": "Balance",
+    "available_balance": "Available Balance",
+    "click_to_transfer": "Click to transfer",
+    "last_updated": "Last updated",
+    "connect_wallet_first": "Please connect wallet first",
+    "connect_wallet_desc": "Connect wallet to view your token balances",
+    "refresh_balance": "Refresh balance",
+    "transfer": {
+      "title": "Transfer",
+      "transfer_token": "Transfer {token}",
+      "recipient_address": "Recipient Address",
+      "recipient_address_placeholder": "Enter recipient address (0x...)",
+      "transfer_amount": "Transfer Amount",
+      "transfer_amount_placeholder": "Enter transfer amount",
+      "memo": "Memo",
+      "memo_optional": "Memo (Optional)",
+      "memo_placeholder": "Transfer memo",
+      "max": "Max",
+      "confirm_transfer": "Confirm Transfer",
+      "transferring": "Transferring...",
+      "transfer_success": "Transfer successful!",
+      "invalid_address": "Please enter a valid Ethereum address format",
+      "invalid_amount": "Invalid amount or exceeds available balance",
+      "amount_exceeds_balance": "Transfer amount exceeds available balance",
+      "user_cancelled": "User cancelled the transaction",
+      "insufficient_funds": "Insufficient balance or gas fee",
+      "network_error": "Network error, please try again",
+      "transfer_failed": "Transfer failed, please try again",
+      "wallet_not_initialized": "Wallet not initialized",
+      "risk_warning": {
+        "title": "Risk Warning",
+        "address_warning": "• Please carefully verify the recipient address, transfers cannot be reversed",
+        "token_support": "• Ensure the recipient address supports this token type",
+        "gas_fee": "• Transfer requires payment of network gas fees"
+      }
+    },
+    "tokens": {
+      "bnb": {
+        "name": "BNB",
+        "description": "Binance Coin"
+      },
+      "alpha": {
+        "name": "ALPHA",
+        "description": "Alpha Token"
+      },
+      "usdt": {
+        "name": "USDT",
+        "description": "Tether USD"
+      }
+    }
   }
 }

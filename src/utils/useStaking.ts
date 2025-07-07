@@ -1107,18 +1107,7 @@ export const getNodeMessage = async (t: Function) => {
 
 // 购买质押节点
 export const buyNode = async (id: string | number, type: 'token'|'u', amount: string, t: Function): Promise<{ status: boolean, message: string, data: any }> => {
-  // 暂时关闭
-  // 获取距离1751904000000时间戳的小时分钟秒
-  const now = new Date().getTime();
-  const startTime = 1751904000000;
-  const nowHour = Math.floor((startTime - now) / 1000 / 60 / 60) < 0 ? 0 : Math.floor((startTime - now) / 1000 / 60 / 60);
-  const nowMinute = Math.floor((startTime - now) / 1000 / 60) % 60 < 0 ? 0 : Math.floor((startTime - now) / 1000 / 60) % 60;
-  const nowSecond = Math.floor((startTime - now) / 1000) % 60 < 0 ? 0 : Math.floor((startTime - now) / 1000) % 60;
-  return {
-    status: false,
-    message: t('staking.errors.not_start') + `  ${nowHour}:${nowMinute}:${nowSecond}`,
-    data: null
-  };
+
   const walletStore = useWalletStore();
   
   // 检查钱包是否连接

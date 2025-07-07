@@ -8,7 +8,8 @@
     "box": "盲盒",
     "alpha": "Alpha",
     "staking": "质押",
-    "node": "节点"
+    "node": "节点",
+    "token": "代币"
   },
   "home": {
     "connect_wallet": "连接钱包",
@@ -265,5 +266,58 @@
     "address_placeholder": "请输入钱包地址 (0x...)",
     "invalid_address_format": "请输入有效的以太坊地址格式",
     "address_format_note": "地址格式：0x + 40位十六进制字符"
+  },
+  "token": {
+    "title": "代币余额",
+    "balance": "余额",
+    "available_balance": "可用余额",
+    "click_to_transfer": "点击进行转账",
+    "last_updated": "最后更新",
+    "connect_wallet_first": "请先连接钱包",
+    "connect_wallet_desc": "连接钱包后即可查看您的代币余额",
+    "refresh_balance": "刷新余额",
+    "transfer": {
+      "title": "转账",
+      "transfer_token": "转账 {token}",
+      "recipient_address": "收款地址",
+      "recipient_address_placeholder": "请输入收款地址 (0x...)",
+      "transfer_amount": "转账金额",
+      "transfer_amount_placeholder": "请输入转账金额",
+      "memo": "备注",
+      "memo_optional": "备注 (可选)",
+      "memo_placeholder": "转账备注",
+      "max": "全部",
+      "confirm_transfer": "确认转账",
+      "transferring": "转账中...",
+      "transfer_success": "转账成功！",
+      "invalid_address": "请输入有效的以太坊地址格式",
+      "invalid_amount": "金额无效或超过可用余额",
+      "amount_exceeds_balance": "转账金额超过可用余额",
+      "user_cancelled": "用户取消了交易",
+      "insufficient_funds": "余额不足或gas费不够",
+      "network_error": "网络错误，请重试",
+      "transfer_failed": "转账失败，请重试",
+      "wallet_not_initialized": "钱包未初始化",
+      "risk_warning": {
+        "title": "风险提示",
+        "address_warning": "• 请仔细核对收款地址，转账后无法撤销",
+        "token_support": "• 确保收款地址支持该代币类型",
+        "gas_fee": "• 转账需要支付网络gas费用"
+      }
+    },
+    "tokens": {
+      "bnb": {
+        "name": "BNB",
+        "description": "币安币"
+      },
+      "alpha": {
+        "name": "ALPHA",
+        "description": "Alpha代币"
+      },
+      "usdt": {
+        "name": "USDT",
+        "description": "泰达币"
+      }
+    }
   }
 }
