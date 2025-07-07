@@ -14,7 +14,7 @@ export default {
   // shakingContractAddress: '0x6eebd8db09b0f460f39bef5c8ca35511c519ced8',
   // shakingContractAddress: '0xB621fE8248F0496Ed2EcB38C70cfc39337a24328',
   // shakingContractAddress: '0x9d0d3f0c04106ad85bfe534b038dd8b900213b7f',
-  shakingContractAddress: '0xb32adbb0efa14a10d97fc0b93303edc8025e9529',
+  shakingContractAddress: '0x35499aa163f85e5694ccb95e28614e65e3d5503e',
   USDTAddress: '0x55d398326f99059fF775485246999027B3197955',
   contractAbi: contractAbi,
   shakingContractAbi: shakingContractAbi,

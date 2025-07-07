@@ -1081,7 +1081,7 @@ export const getNodeMessage = async (t: Function) => {
     return {
       status: true,
       message: t('node.get_node_info_success'),
-      data: resultList.reverse()
+      data: resultList
     };
   } catch (error) {
     console.error('获取质押节点信息失败:', error);
@@ -1138,7 +1138,7 @@ export const buyNode = async (id: string | number, type: 'token'|'u', amount: st
       };
     }
     
-    let newAmount = type === 'token' ? Number(amount) * 10000 : Number(amount);
+    let newAmount = type === 'token' ? Number(amount) : Number(amount);
     let tokenAddress = type === 'token' ? config.contractAddress : config.USDTAddress;
     console.log('第一步：检查用户ALPHA或者U余额...');
     const balances = await getTokenBalances(walletStore.address, true);

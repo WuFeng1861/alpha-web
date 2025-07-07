@@ -94,7 +94,7 @@ const confirmExchange = async (type: string, amount: string) => {
 
   // 这里可以添加实际的购买逻辑
   // 比如调用合约方法、更新用户余额等
-  let result = await buyNode(selectedNode.value?.id, selectedNode.value?.type, amount, t);
+  let result = await buyNode(selectedNode.value?.id, type as "token" | "u", amount, t);
 
   if (result.status) {
     // 显示成功提示
