@@ -24,7 +24,7 @@ const nodeList = ref([
     points: 20,
     totalPoints: 20,
     pointsNow: 0,
-    progress: 0, // 进度百分比
+    progress: 0.5, // 进度百分比
     tokens: 2000,
     uTokens: 2000,
     members: 2000,

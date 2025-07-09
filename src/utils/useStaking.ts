@@ -1058,9 +1058,9 @@ export const getNodeMessage = async (t: Function) => {
       'bronze': 'from-orange-400 to-orange-600',
     };
     const morePayNumber = {
-      'gold': 3,
-      'silver': 27,
-      'bronze': 96,
+      'gold': 3+4,
+      'silver': 27+24,
+      'bronze': 96+48,
     }
     for (let i = 0; i < nodeList.length; i++) {
       const node = nodeList[i];
@@ -1072,7 +1072,7 @@ export const getNodeMessage = async (t: Function) => {
       result['points'] = Number(nodePoints[nodeType]);
       result['totalPoints'] = Number(nodePoints[nodeType]);
       result['pointsNow'] = Number(payNumber);
-      result['progress'] = Number(payNumber) / Number(nodePoints[nodeType]);
+      result['progress'] = Number(payNumber) / Number(nodePoints[nodeType]) * 100;
       result['tokens'] = Number(wallet.weiToEth(node.paymentAmount)) * tokenURate / 10000;
       result['uTokens'] = Number(wallet.weiToEth(node.paymentAmount));
       result['members'] = Number(wallet.weiToEth(node.paymentAmount));
