@@ -66,12 +66,12 @@ const confirmExchange = (type: string, amount: string) => {
     type,
     amount
   })
-  
+
   // 显示成功提示
   const exchangeTypeName = type === 'token' ? t('node.alpha_tokens') : t('node.u_tokens')
   const nodeTypeName = t(`node.${nodeDetail.value.type}`)
   toast.success(t('node.purchase_success', { amount, tokenType: exchangeTypeName, nodeType: nodeTypeName }))
-  
+
   // 关闭弹窗
   closeExchangeModal()
 }
@@ -79,7 +79,7 @@ const confirmExchange = (type: string, amount: string) => {
 // 根据路由参数初始化节点数据
 onMounted(() => {
   const nodeType = route.params.type as string
-  
+
   if (nodeType === 'silver') {
     nodeDetail.value = {
       ...nodeDetail.value,
@@ -172,25 +172,25 @@ onMounted(() => {
         <div class="flex flex-col items-center mb-8">
           <!-- 节点卡片 -->
           <div class="relative mb-4 transform hover:scale-105 transition-transform duration-300">
-            <img 
-              :src="nodeDetail.cardImage" 
+            <img
+              :src="nodeDetail.cardImage"
               :alt="nodeDetail.type"
               class="w-64 h-auto object-cover rounded-2xl shadow-2xl"
               style="filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5))"
             />
-            
+
             <!-- 卡片上的光效 -->
             <div class="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-white opacity-20 rounded-2xl"></div>
           </div>
-          
+
           <!-- 底座 -->
           <div class="relative">
-            <img 
+            <img
               src="https://wufeng98.cn/imgServerApi/images/45541ccd-d7e3-497d-847a-bf7ab7026c31.png"
               alt="Node Base"
               class="w-80 h-auto object-cover"
             />
-            
+
             <!-- 底座上的文字 -->
             <div class="absolute inset-0 flex items-center justify-center">
               <div class="text-center">
@@ -202,8 +202,8 @@ onMounted(() => {
 
         <!-- 购买按钮 -->
         <div class="pt-4">
-          <button 
-            @click="handleExchange"
+          <button
+            @click="goBack"
             class="w-full py-4 text-black font-bold text-lg rounded-full transition-all duration-300 shadow-lg"
             :class="`bg-gradient-to-r ${nodeDetail.bgGradient} hover:shadow-xl`"
             :style="`box-shadow: 0 4px 20px ${nodeDetail.color}40`"
@@ -213,14 +213,14 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    
+
     <!-- 兑换弹窗 -->
-    <NodeExchangeModal
-      :show="showExchangeModal"
-      :node-data="nodeDetail"
-      @close="closeExchangeModal"
-      @confirm="confirmExchange"
-    />
+    <!--<NodeExchangeModal-->
+    <!--  :show="showExchangeModal"-->
+    <!--  :node-data="nodeDetail"-->
+    <!--  @close="closeExchangeModal"-->
+    <!--  @confirm="confirmExchange"-->
+    <!--/>-->
   </div>
 </template>
 

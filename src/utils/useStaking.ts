@@ -1057,11 +1057,16 @@ export const getNodeMessage = async (t: Function) => {
       'silver': 'from-gray-300 to-gray-500',
       'bronze': 'from-orange-400 to-orange-600',
     };
+    const morePayNumber = {
+      'gold': 3,
+      'silver': 27,
+      'bronze': 96,
+    }
     for (let i = 0; i < nodeList.length; i++) {
       const node = nodeList[i];
       let nodeType = getPoolInfo({apr: node.apr}, t).poolType;
       const result = {};
-      const payNumber = Number(node.payNumber) > nodePoints[nodeType] ? nodePoints[nodeType] : Number(node.payNumber);
+      const payNumber = (Number(node.payNumber) + morePayNumber[nodeType]) > nodePoints[nodeType] ? nodePoints[nodeType] : (Number(node.payNumber) + morePayNumber[nodeType]);
       result['id'] = i + 1;
       result['type'] = nodeType + '_node';
       result['points'] = Number(nodePoints[nodeType]);
