@@ -362,6 +362,67 @@ export const openBox = async (t: Function): Promise<{status: boolean, message: s
     }
   }
 }
+// 开启普通盲盒
+export const openTenBox = async (t: Function): Promise<{status: boolean, message: string, data: any}> => {
+  const walletStore = useWalletStore();
+  
+  // 检查钱包是否连接
+  if (!etherWallet || !walletStore.address) {
+    return {
+      status: false,
+      message: t('common.errors.wallet_not_connected'),
+      data: null
+    }
+  }
+  
+  // 检查是否已绑定邀请人
+  if (!walletStore.hasUpline) {
+    return {
+      status: false,
+      message: t('common.errors.not_bound'),
+      data: null
+    }
+  }
+
+  try {
+    // 设置合约ABI和地址
+    etherWallet.setABI(config.contractAbi);
+    etherWallet.updateTokenContract(config.contractAddress);
+    
+    // 调用合约的purchaseBox方法，同时发送0.0006 BNB
+    await etherWallet.contractFn('purchaseTenBox', {
+      value: etherWallet.ethToWei('0.006')
+    });
+    
+    // 强制更新下次开盲盒时间的缓存
+    await getNextBoxTime(true);
+    toast.success(t('common.success'));
+
+    return {
+      status: true,
+      message: t('common.success'),
+      data: null
+    }
+  } catch (error) {
+    console.error('开启盲盒失败:', error);
+    let message = t('common.errors.claim_failed');
+    
+    if (error.message.includes('user rejected')) {
+      message = t('common.errors.user_rejected');
+    } else if (error.message.includes('network')) {
+      message = t('common.errors.network_error');
+    } else if (error.message.includes('Purchase too frequent')) {
+      message = t('common.errors.purchase_too_frequent');
+    }
+    toast.info(message);
+    
+    return {
+      status: false,
+      message,
+      data: null
+    }
+  }
+}
 
 // 获取直推列表及其下级数量
 export const getDirectRefsList = async (forceUpdate: boolean = false): Promise<Array<{address: string; count: number}>> => {

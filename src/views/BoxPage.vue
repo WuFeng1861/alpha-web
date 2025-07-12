@@ -91,6 +91,35 @@ const handleOpenBox = async () => {
   isShareReward.value = false
   showRewardModal.value = true
 }
+// 打开十倍盲盒
+const handleOpenTenBox = async () => {
+  if (!walletStore.address) {
+    // 如果未连接钱包，显示连接钱包提示
+    const connectButton = document.querySelector('.btn-connect');
+    if (connectButton) {
+      connectButton.classList.add('animate-pulse');
+      setTimeout(() => {
+        connectButton.classList.remove('animate-pulse');
+      }, 1000);
+    }
+    return;
+  }
+
+  // 如果在倒计时中，显示购买太频繁的提示
+  if (countdown.value) {
+    toast.info(t('common.errors.purchase_too_frequent'))
+    return
+  }
+
+  const result = await openTenBox(t)
+  if (!result.status) {
+    console.error(result.message)
+    return
+  }
+
+  isShareReward.value = true
+  showRewardModal.value = true
+}
 
 // 关闭奖励弹窗
 const closeRewardModal = () => {
@@ -130,9 +159,9 @@ const closeRewardModal = () => {
           <button @click="handleOpenBox" class="btn-secondary w-full py-3 text-black font-bold rounded-full" style="background: linear-gradient(to bottom right, #AEE346, #51E24B)">
             {{ countdown ? countdown : t('box.open_box') }}
           </button>
-          <!--<button @click="handleOpenShareBox" class="btn-secondary w-full py-3 text-black font-bold rounded-full" style="background: linear-gradient(to bottom right, #AEE346, #51E24B)">-->
-          <!--  {{ countdown ? countdown : t('box.share_box') }}-->
-          <!--</button>-->
+          <button @click="handleOpenTenBox" class="btn-secondary w-full py-3 text-black font-bold rounded-full" style="background: linear-gradient(to bottom right, #AEE346, #51E24B)">
+            {{ countdown ? countdown : t('box.share_box') }}
+          </button>
         </div>
 
         <!-- 描述文字 -->
