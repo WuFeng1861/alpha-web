@@ -1058,9 +1058,9 @@ export const getNodeMessage = async (t: Function) => {
       'bronze': 'from-orange-400 to-orange-600',
     };
     const morePayNumber = {
-      'gold': 3+4+3+1,
-      'silver': 27+24+29+32+28,
-      'bronze': 96+48+104+112+147,
+      'gold': 3+4+3+1+1,
+      'silver': 27+24+29+32+28+25+39+7,
+      'bronze': 96+48+104+112+147+102+125+30,
     }
     for (let i = 0; i < nodeList.length; i++) {
       const node = nodeList[i];
