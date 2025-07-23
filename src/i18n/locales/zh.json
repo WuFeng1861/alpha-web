@@ -147,6 +147,10 @@
     "staking_in_progress": "质押中...",
     "pool_capacity_full": "质押池已满，无法继续质押",
     "pool_capacity_exceeded": "质押金额超出池子容量限制！当前池子剩余容量为 {remaining} ALPHA",
+    "search_placeholder_id": "搜索质押池id",
+    "not_find_search_contract": "未找到匹配的质押合约",
+    "staking_contract_id" : "质押合约ID",
+    "not_find_and_next": "不存在，请检查输入或清空搜索框查看全部合约",
     "errors": {
       "wallet_not_initialized": "钱包实例未初始化",
       "invalid_stake_amount": "请输入有效的质押数量",

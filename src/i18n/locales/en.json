@@ -146,6 +146,10 @@
     "staking_in_progress": "Staking in progress...",
     "pool_capacity_full": "Staking pool is full, cannot continue staking",
     "pool_capacity_exceeded": "Staking amount exceeds pool capacity limit! Current pool remaining capacity is {remaining} ALPHA",
+    "search_placeholder_id": "Search staking pool id",
+    "not_find_search_contract": "No matching staking contract found",
+    "staking_contract_id": "Staking Contract ID",
+    "not_find_and_next": "Not found, please check input or clear search box to view all contracts",
     "errors": {
       "wallet_not_initialized": "Wallet instance not initialized",
       "invalid_stake_amount": "Please enter a valid staking amount",

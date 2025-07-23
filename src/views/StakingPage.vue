@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import AlphaLogo from '../components/AlphaLogo.vue'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import config from '../assets/config'
@@ -28,6 +28,34 @@ const formatNumber = (num: string | number): string => {
   // 去除尾部的0和小数点
   return formatted.replace(/\.?0+$/, '')
 }
+
+// 过滤后的质押合约列表
+const filteredStakingContracts = computed(() => {
+  if (!searchContractId.value.trim()) {
+    return stakingContracts.value
+  }
+
+  const searchId = parseInt(searchContractId.value.trim())
+  if (isNaN(searchId)) {
+    return stakingContracts.value
+  }
+
+  return stakingContracts.value.filter(contract => contract.contractId === searchId)
+})
+
+// 处理搜索框输入，只允许数字
+const handleSearchInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = target.value
+  // 只保留数字
+  const numericValue = value.replace(/[^0-9]/g, '')
+  searchContractId.value = numericValue
+  // 更新输入框显示
+  target.value = numericValue
+}
+
+// 搜索框输入值
+const searchContractId = ref('')
 
 // 用户质押数据
 const myStakingList = ref<ProcessedStakeRecord[]>([])
@@ -63,10 +91,10 @@ const updateUserStakes = async (forceUpdate: boolean = false) => {
       let findIndex = showStakes.findIndex(it => it.poolNumber === item.poolNumber);
       let thisItem = null;
       if (findIndex !== -1) {
-    	thisItem = showStakes[findIndex];
-    	thisItem['stakingAmount'] += item['stakingAmount'];
-    	thisItem['stakingReward'] += item['stakingReward'];
-    	continue;
+        thisItem = showStakes[findIndex];
+        thisItem['stakingAmount'] += item['stakingAmount'];
+        thisItem['stakingReward'] += item['stakingReward'];
+        continue;
       }
       showStakes.push(item);
     }
@@ -234,8 +262,8 @@ const handleStakingContract = (contract: any) => {
   <div class="min-h-screen bg-alpha-surface pb-16 relative">
     <!-- 背景图片 -->
     <div
-      class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
-      :style="{ backgroundImage: `url('${config.backgrounds.friends}')` }"
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+        :style="{ backgroundImage: `url('${config.backgrounds.friends}')` }"
     ></div>
 
     <!-- 内容层 -->
@@ -255,8 +283,8 @@ const handleStakingContract = (contract: any) => {
 
         <!-- 我的质押池按钮 - 使用签到领取按钮样式 -->
         <button
-          @click="handleNFTStakingPool"
-          class="btn-primary w-full mb-6 py-4 text-black font-bold text-lg rounded-full"
+            @click="handleNFTStakingPool"
+            class="btn-primary w-full mb-6 py-4 text-black font-bold text-lg rounded-full"
         >
           {{ t('staking.my_staking_pool_nft') }}
         </button>
@@ -299,9 +327,9 @@ const handleStakingContract = (contract: any) => {
                 <!-- 质押图标 -->
                 <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-600 bg-opacity-50 flex items-center justify-center">
                   <img
-                    src="https://wufeng98.cn/imgServerApi/images/6f4c3eff-a594-49a5-82a2-be9e4a808452.png"
-                    class="w-8 h-8 opacity-40"
-                    alt="质押"
+                      src="https://wufeng98.cn/imgServerApi/images/6f4c3eff-a594-49a5-82a2-be9e4a808452.png"
+                      class="w-8 h-8 opacity-40"
+                      alt="质押"
                   />
                 </div>
                 <h3 class="text-lg font-medium text-white mb-2">{{ t('staking.no_staking_records') }}</h3>
@@ -312,10 +340,10 @@ const handleStakingContract = (contract: any) => {
             <!-- 质押记录列表 -->
             <div v-else class="space-y-4">
               <div
-                v-for="staking in myStakingList"
-                :key="staking.id"
-                @click="handleMyStakingPool(staking.poolNumber)"
-                class="bg-alpha-surface-light bg-opacity-90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-700"
+                  v-for="staking in myStakingList"
+                  :key="staking.id"
+                  @click="handleMyStakingPool(staking.poolNumber)"
+                  class="bg-alpha-surface-light bg-opacity-90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-700"
               >
                 <!-- 质押池编号和状态头部 -->
                 <div class="flex items-center justify-between mb-4">
@@ -380,8 +408,8 @@ const handleStakingContract = (contract: any) => {
                       <div class="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 animate-bounce" :style="`color: ${staking.poolColor}`" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                          </svg>
-                          <span class="text-white font-medium">{{ t('staking.status_active') }}</span>
+                        </svg>
+                        <span class="text-white font-medium">{{ t('staking.status_active') }}</span>
                       </div>
                     </div>
 
@@ -416,8 +444,26 @@ const handleStakingContract = (contract: any) => {
           </div>
 
           <!-- 质押合约列表 -->
-         <div id="staking-contracts">
+          <div id="staking-contracts">
             <h2 class="text-xl font-bold text-white mb-4">{{ t('staking.staking_contracts') }}</h2>
+
+            <!-- 搜索框 -->
+            <div class="mb-4">
+              <div class="relative">
+                <input
+                    v-model="searchContractId"
+                    @input="handleSearchInput"
+                    type="text"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    :placeholder="t('staking.staking_contract_id')"
+                    class="w-full bg-alpha-surface-light bg-opacity-90 text-white rounded-lg px-4 py-3 pl-10 border border-gray-600 focus:outline-none focus:border-alpha-primary transition-colors duration-300"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
 
             <!-- 加载状态 -->
             <div v-if="isLoadingPools" class="text-center py-8">
@@ -431,14 +477,13 @@ const handleStakingContract = (contract: any) => {
             </div>
 
             <!-- 暂无质押池 -->
-            <div v-else-if="stakingContracts.length === 0" class="text-center py-8">
+            <div v-else-if="filteredStakingContracts.length === 0 && !searchContractId" class="text-center py-8">
               <div class="bg-alpha-surface-light bg-opacity-90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-gray-700">
                 <!-- 质押图标 -->
                 <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-600 bg-opacity-50 flex items-center justify-center">
                   <img
-                    src="https://wufeng98.cn/imgServerApi/images/6f4c3eff-a594-49a5-82a2-be9e4a808452.png"
-                    class="w-8 h-8 opacity-40"
-                    alt="质押"
+                      src="https://wufeng98.cn/imgServerApi/images/6f4c3eff-a594-49a5-82a2-be9e4a808452.png"
+                      class="w-8 h-8 opacity-40"
                   />
                 </div>
                 <h3 class="text-lg font-medium text-white mb-2">{{ t('staking.no_available_pools') }}</h3>
@@ -446,13 +491,27 @@ const handleStakingContract = (contract: any) => {
               </div>
             </div>
 
+            <!-- 搜索无结果 -->
+            <div v-else-if="filteredStakingContracts.length === 0 && searchContractId" class="text-center py-8">
+              <div class="bg-alpha-surface-light bg-opacity-90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-gray-700">
+                <!-- 搜索图标 -->
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-600 bg-opacity-50 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <h3 class="text-lg font-medium text-white mb-2">{{t('staking.not_find_search_contract')}}</h3>
+                <p class="text-gray-400 text-sm">{{t('staking.staking_contract_id')}} "{{ searchContractId }}" {{t('staking.not_find_and_next')}}</p>
+              </div>
+            </div>
+
             <!-- 质押合约列表 - 显示所有池子供用户选择质押 -->
             <div class="space-y-4">
               <div
-                v-for="contract in stakingContracts"
-                :key="contract.id"
-                @click="handleStakingContract(contract)"
-                class="bg-alpha-surface-light bg-opacity-90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-700"
+                  v-for="contract in filteredStakingContracts"
+                  :key="contract.id"
+                  @click="handleStakingContract(contract)"
+                  class="bg-alpha-surface-light bg-opacity-90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-700"
               >
                 <!-- 合约头部设计 -->
                 <div class="flex items-center justify-between mb-4">
@@ -546,19 +605,19 @@ const handleStakingContract = (contract: any) => {
                       <p class="text-gray-400 text-sm mb-1">{{ t('staking.staking_time') }}</p>
                       <p class="text-white font-bold text-base">{{ contract.lockupPeriod }}</p>
                     </div>
-                  <div class="rounded-lg p-3 border border-gray-600" style="background-color: #151b12;">
-                    <p class="text-gray-400 text-sm mb-1">{{ t('staking.annual_rate') }}</p>
-                    <p class="font-bold text-base break-all" style="color: #5BF655">{{ contract.yearRate }}</p>
-                  </div>
+                    <div class="rounded-lg p-3 border border-gray-600" style="background-color: #151b12;">
+                      <p class="text-gray-400 text-sm mb-1">{{ t('staking.annual_rate') }}</p>
+                      <p class="font-bold text-base break-all" style="color: #5BF655">{{ contract.yearRate }}</p>
+                    </div>
                   </div>
                 </div>
 
                 <!-- 添加质押按钮 -->
                 <button
-                  @click.stop="handleStakingContract(contract)"
-                  class="w-full py-3 text-black font-bold rounded-full transition-all duration-300 hover:scale-105"
-                  :class="`bg-gradient-to-r ${contract.poolGradient} hover:shadow-lg`"
-                  :style="`box-shadow: 0 4px 15px ${contract.poolColor}40`"
+                    @click.stop="handleStakingContract(contract)"
+                    class="w-full py-3 text-black font-bold rounded-full transition-all duration-300 hover:scale-105"
+                    :class="`bg-gradient-to-r ${contract.poolGradient} hover:shadow-lg`"
+                    :style="`box-shadow: 0 4px 15px ${contract.poolColor}40`"
                 >
                   {{ t('staking.add_staking') }}
                 </button>
