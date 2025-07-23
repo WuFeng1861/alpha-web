@@ -494,7 +494,7 @@ const handleNFTCardClick = (nft: any) => {
               <div class="grid grid-cols-2 gap-3">
                 <!-- 领取按钮 -->
                 <button
-                    @click="handleClaim(nft.id, $event)"
+                    @click="handleClaim(nft.poolId, $event)"
                     class="py-3 text-black font-bold rounded-full transition-all duration-300"
                     :class="`bg-gradient-to-r ${nft.levelGradient} hover:shadow-lg`"
                     :style="`box-shadow: 0 4px 15px ${nft.levelColor}40`"
