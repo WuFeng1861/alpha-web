@@ -150,21 +150,16 @@ const updateStakingDividends = async (forceUpdate: boolean = false) => {
   }
 }
 
-// 启动定时器更新质押数据
-const startStakingTimer = () => {
-  if (stakingTimer) return
-  updateUserStakes(true) // 立即执行一次
-  stakingTimer = window.setInterval(() => {
-    updateUserStakes() // 每30秒更新一次
-  }, 30000)
-}
-
 // 启动定时器更新质押池数据
 const startPoolsTimer = () => {
   if (poolsTimer) return
-  updatePoolsInfo(true) // 立即执行一次
+  updatePoolsInfo(true).then(() => {
+    updateUserStakes(true) // 立即执行一次
+  }) // 立即执行一次
   poolsTimer = window.setInterval(() => {
-    updatePoolsInfo() // 每5分钟更新一次（质押池信息变化较少）
+    updatePoolsInfo().then(() => {
+      updateUserStakes() // 立即执行一次
+    }) // 每5分钟更新一次（质押池信息变化较少）
   }, 5 * 60 * 1000)
 }
 
@@ -201,7 +196,6 @@ const stopDividendsTimer = () => {
 
 onMounted(() => {
   console.log(1);
-  startStakingTimer()
   startPoolsTimer()
   startDividendsTimer()
 })

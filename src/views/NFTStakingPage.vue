@@ -353,7 +353,7 @@ const handleNFTCardClick = (nft: any) => {
                     <div class="flex items-center">
                       <h3 class="text-lg font-bold text-white mr-2">{{
                           t(`staking.${nft.level === '金卡' ? 'gold' : nft.level === '银卡' ? 'silver' : 'bronze'}_card`)
-                        }}</h3>
+                        }} {{nft.poolId}}</h3>
                     </div>
                     <p class="text-gray-400 text-sm">{{ t('staking.nft_staking_card') }}</p>
                   </div>
