@@ -17,12 +17,6 @@ export const performUnstaking = async (
   stakeId: string,
   t: Function
 ): Promise<{ status: boolean, message: string, data: any }> => {
-  // 暂时关闭
-  return {
-    status: false,
-    message: t('staking.errors.not_start'),
-    data: null
-  };
   const walletStore = useWalletStore();
   
   // 检查钱包是否连接
@@ -316,12 +310,6 @@ export const performStaking = async (
   amount: string,
   t: Function
 ): Promise<{ status: boolean, message: string, data: any }> => {
-  // 暂时关闭
-  return {
-    status: false,
-    message: t('staking.errors.not_start'),
-    data: null
-  };
   const walletStore = useWalletStore();
   
   // 检查钱包是否连接
@@ -987,12 +975,6 @@ export const claimPoolDividends = async (poolId: string, t: Function): Promise<{
 
 // 转移质押池分红地址
 export const transferPoolOwner = async (poolId: string, newAddress: string, t: Function): Promise<{ status: boolean, message: string, data: any }> => {
-  // 暂时关闭
-  return {
-    status: false,
-    message: t('staking.errors.not_start'),
-    data: null
-  };
   const walletStore = useWalletStore();
   // 检查钱包是否连接
   if (!walletStore.address) {
