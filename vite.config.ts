@@ -10,6 +10,6 @@ export default defineConfig({
     },
   },
   esbuild: {
-    drop: ['console', 'debugger'], // 移除所有 console 和 debugger
+    // drop: ['console', 'debugger'], // 移除所有 console 和 debugger
   },
 })

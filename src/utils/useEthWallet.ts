@@ -4,7 +4,7 @@ import { useWalletStore } from '../stores/wallet';
 import toast from './toast';
 import { ref, computed } from 'vue';
 import axios from 'axios';
-import { updateTokenBalances, clearTokenBalanceCache } from './useTokenBalance';
+import {updateTokenBalances, clearTokenBalanceCache} from './useTokenBalance';
 
 let etherWallet = new EthWallet();
 

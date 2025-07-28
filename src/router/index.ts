@@ -10,6 +10,8 @@ import NodePage from '../views/NodePage.vue'
 import NodeDetailPage from '../views/NodeDetailPage.vue'
 import TokenPage from "../views/TokenPage.vue"
 import TokenTransferPage from '../views/TokenTransferPage.vue'
+import BoBoPage from '../views/BoBoPage.vue'
+import DexPage from '../views/DexPage.vue';
 
 
 const router = createRouter({
@@ -80,6 +82,18 @@ const router = createRouter({
       name: 'token-transfer',
       component: TokenTransferPage,
       meta: { title: 'Token Transfer - Alpha Project' }
+    },
+    {
+      path: '/bobo',
+      name: 'bobo',
+      component: BoBoPage,
+      meta: { title: 'BoBo - Alpha Project' }
+    },
+    {
+      path: '/dex',
+      name: 'dex',
+      component: DexPage,
+      meta: { title: 'Dex - Alpha Project' }
     },
     // Redirect any unknown routes to home
     {

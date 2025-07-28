@@ -15,6 +15,7 @@ export default {
         'alpha-accent': '#F59E0B',
         'alpha-surface': '#0A0A0A',
         'alpha-surface-light': '#1A1A1A',
+        'bobo-green': '#4EBB4B',
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

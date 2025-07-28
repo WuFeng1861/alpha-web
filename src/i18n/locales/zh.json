@@ -321,6 +321,10 @@
       "usdt": {
         "name": "USDT",
         "description": "泰达币"
+      },
+      "BoBo": {
+        "name": "BoBo",
+        "description": "BoBo代币"
       }
     }
   }

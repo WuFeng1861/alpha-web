@@ -320,6 +320,10 @@
       "usdt": {
         "name": "USDT",
         "description": "Tether USD"
+      },
+      "BoBo": {
+        "name": "BoBo",
+        "description": "BoBo Token"
       }
     }
   }

@@ -1,4 +1,3 @@
-import EthWallet from './ethersHelper';
 import config from '../assets/config';
 import { useWalletStore } from '../stores/wallet';
 import { getEthWallet } from './useEthWallet';
@@ -94,6 +93,7 @@ interface TokenBalanceCache {
   address: string;
   alphaBalance: string;
   usdtBalance: string;
+  boboBalance: string;
   timestamp: number;
 }
 
@@ -189,6 +189,50 @@ export const getUSDTBalance = async (userAddress?: string, forceUpdate: boolean 
 };
 
 /**
+ * 获取用户的BoBo代币余额（不带缓存）
+ * @param userAddress 用户地址
+ * @returns BoBo代币余额（格式化后的字符串）
+ */
+
+export const getBoBoBalance = async (userAddress?: string): Promise<string> => {
+  const walletStore = useWalletStore();
+  const address = userAddress || walletStore.address;
+  
+  if (!address) {
+    console.log('用户地址为空，无法获取BoBo余额');
+    return '0';
+  }
+  
+  try {
+    const wallet = getEthWallet();
+    
+    if (!wallet) {
+      console.log('钱包实例未初始化');
+      return '0';
+    }
+    
+    // 设置BoBo代币合约ABI和地址
+    wallet.setABI(USDT_ABI);
+    wallet.updateTokenContract(config.boboContractAddress);
+    
+    console.log(`开始获取用户 ${address} 的BoBo代币余额...`);
+    // 调用合约的balanceOf方法获取余额
+    const balance = await wallet.contractFn('balanceOf', address);
+    
+    // USDT通常使用18位小数，转换为可读格式
+    const formattedBalance = wallet.weiToEth(balance);
+    
+    console.log(`用户 ${address} 的BoBo余额:`, formattedBalance);
+    
+    return formattedBalance;
+  } catch (error) {
+    console.error('获取BoBo代币余额失败:', error);
+    return '0';
+  }
+};
+
+
+/**
  * 获取用户的代币余额（带缓存）
  * @param userAddress 用户地址
  * @param forceUpdate 是否强制更新缓存
@@ -197,6 +241,7 @@ export const getUSDTBalance = async (userAddress?: string, forceUpdate: boolean 
 export const getTokenBalances = async (userAddress?: string, forceUpdate: boolean = false): Promise<{
   alphaBalance: string;
   usdtBalance: string;
+  boboBalance: string
 }> => {
   const walletStore = useWalletStore();
   const address = userAddress || walletStore.address;
@@ -204,7 +249,8 @@ export const getTokenBalances = async (userAddress?: string, forceUpdate: boolea
   if (!address) {
     return {
       alphaBalance: '0',
-      usdtBalance: '0'
+      usdtBalance: '0',
+      boboBalance: '0'
     };
   }
   
@@ -219,7 +265,8 @@ export const getTokenBalances = async (userAddress?: string, forceUpdate: boolea
     console.log('使用缓存的代币余额数据');
     return {
       alphaBalance: tokenBalanceCache.value.alphaBalance,
-      usdtBalance: tokenBalanceCache.value.usdtBalance
+      usdtBalance: tokenBalanceCache.value.usdtBalance,
+      boboBalance: tokenBalanceCache.value.boboBalance
     };
   }
   
@@ -227,9 +274,10 @@ export const getTokenBalances = async (userAddress?: string, forceUpdate: boolea
     console.log(`开始获取用户 ${address} 的代币余额...`);
     
     // 并发获取ALPHA和USDT余额
-    const [alphaBalance, usdtBalance] = await Promise.all([
+    const [alphaBalance, usdtBalance, boboBalance] = await Promise.all([
       getAlphaBalance(address, forceUpdate),
-      getUSDTBalance(address, forceUpdate)
+      getUSDTBalance(address, forceUpdate),
+      getBoBoBalance(address)
     ]);
     
     // 更新缓存
@@ -237,6 +285,7 @@ export const getTokenBalances = async (userAddress?: string, forceUpdate: boolea
       address,
       alphaBalance,
       usdtBalance,
+      boboBalance,
       timestamp: now
     };
     
@@ -244,13 +293,15 @@ export const getTokenBalances = async (userAddress?: string, forceUpdate: boolea
     
     return {
       alphaBalance,
-      usdtBalance
+      usdtBalance,
+      boboBalance
     };
   } catch (error) {
     console.error('获取代币余额失败:', error);
     return {
       alphaBalance: '0',
-      usdtBalance: '0'
+      usdtBalance: '0',
+      boboBalance: '0'
     };
   }
 };

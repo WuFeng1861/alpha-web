@@ -6,7 +6,7 @@ import AlphaLogo from '../components/AlphaLogo.vue'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import config from '../assets/config'
 import { useWalletStore } from '../stores/wallet'
-import { getTokenBalances, updateTokenBalances } from '../utils/useTokenBalance'
+import { getTokenBalances } from '../utils/useTokenBalance'
 import { getEthWallet } from '../utils/useEthWallet'
 
 const { t } = useI18n()
@@ -16,8 +16,9 @@ const router = useRouter()
 // 代币余额数据
 const tokenBalances = ref({
   bnbBalance: '0',     // BNB余额
-  alphaBalance: '0',   // ALPHA余额  
-  usdtBalance: '0'     // USDT余额
+  alphaBalance: '0',   // ALPHA余额
+  usdtBalance: '0',     // USDT余额
+  boboBalance: '0'     // BOBO余额
 })
 
 const isLoading = ref(false)
@@ -30,7 +31,7 @@ let balanceTimer: number | null = null
 const formatBalance = (balance: string): string => {
   const num = parseFloat(balance)
   if (isNaN(num)) return '0'
-  
+
   if (num >= 1000000) {
     return (num / 1000000).toFixed(2) + 'M'
   } else if (num >= 1000) {
@@ -45,7 +46,7 @@ const getBNBBalance = async (userAddress: string): Promise<string> => {
   try {
     const wallet = getEthWallet()
     if (!wallet) return '0'
-    
+
     const balance = await wallet.getAddressEthBalance(userAddress)
     return balance
   } catch (error) {
@@ -59,29 +60,31 @@ const updateAllBalances = async (forceUpdate: boolean = false) => {
   if (!walletStore.address) {
     tokenBalances.value = {
       bnbBalance: '0',
-      alphaBalance: '0', 
-      usdtBalance: '0'
+      alphaBalance: '0',
+      usdtBalance: '0',
+      boboBalance: '0'
     }
     return
   }
-  
+
   if (isLoading.value && !forceUpdate) return
-  
+
   try {
     isLoading.value = true
-    
+
     // 并发获取所有余额
     const [bnbBalance, tokenBalanceData] = await Promise.all([
       getBNBBalance(walletStore.address),
       getTokenBalances(walletStore.address, forceUpdate)
     ])
-    
+
     tokenBalances.value = {
       bnbBalance,
       alphaBalance: tokenBalanceData.alphaBalance,
-      usdtBalance: tokenBalanceData.usdtBalance
+      usdtBalance: tokenBalanceData.usdtBalance,
+      boboBalance: tokenBalanceData.boboBalance
     }
-    
+
     lastUpdateTime.value = new Date()
     console.log('代币余额更新完成:', tokenBalances.value)
   } catch (error) {
@@ -135,7 +138,7 @@ const tokenConfigs = [
   {
     nameKey: 'token.tokens.alpha.name',
     descKey: 'token.tokens.alpha.description',
-    symbol: 'ALPHA', 
+    symbol: 'ALPHA',
     icon: 'https://wufeng98.cn/imgServerApi/images/4d35f283-bf43-459b-be74-a1c1810f19a6.png',
     balance: 'alphaBalance',
     color: '#5BF655',
@@ -145,10 +148,19 @@ const tokenConfigs = [
     nameKey: 'token.tokens.usdt.name',
     descKey: 'token.tokens.usdt.description',
     symbol: 'USDT',
-    icon: 'https://wufeng98.cn/imgServerApi/images/8b4ac19c-a29c-490f-9a91-6ffe467fed7e.png', 
+    icon: 'https://wufeng98.cn/imgServerApi/images/8b4ac19c-a29c-490f-9a91-6ffe467fed7e.png',
     balance: 'usdtBalance',
     color: '#26A17B',
     gradient: 'from-green-500 to-teal-600'
+  },
+  {
+    nameKey: 'token.tokens.BoBo.name',
+    descKey: 'token.tokens.BoBo.description',
+    symbol: 'BoBo',
+    icon: 'https://wufeng98.cn/imgServerApi/images/63d52292-8b7b-42e5-82d4-d7a892e06ab3.png',
+    balance: 'boboBalance',
+    color: '#C49235',
+    gradient: 'from-yellow-200 to-yellow-300'
   }
 ]
 
@@ -168,7 +180,7 @@ const handleTokenClick = (token: any) => {
     // 如果未连接钱包，显示连接钱包提示
     return
   }
-  
+
   // 跳转到转账页面，传递代币信息
   router.push({
     path: '/token/transfer',
@@ -207,7 +219,7 @@ const handleTokenClick = (token: any) => {
         <!-- 标题和刷新按钮 -->
         <div class="flex items-center justify-between mb-6">
           <h1 class="text-3xl font-bold" style="color: #5BF655">{{ t('token.title') }}</h1>
-          <button 
+          <button
             @click="handleRefresh"
             :disabled="isLoading"
             class="p-3 rounded-full bg-alpha-primary bg-opacity-20 hover:bg-opacity-30 transition-all duration-300"
