@@ -8,6 +8,7 @@ import config from '../assets/config'
 import { useWalletStore } from '../stores/wallet'
 import { getTokenBalances } from '../utils/useTokenBalance'
 import { getEthWallet } from '../utils/useEthWallet'
+import {formatBalance} from '../utils/utils.ts';
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
@@ -26,20 +27,6 @@ const lastUpdateTime = ref<Date | null>(null)
 
 // 定时器
 let balanceTimer: number | null = null
-
-// 格式化数字显示
-const formatBalance = (balance: string): string => {
-  const num = parseFloat(balance)
-  if (isNaN(num)) return '0'
-
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(2) + 'M'
-  } else if (num >= 1000) {
-    return (num / 1000).toFixed(2) + 'K'
-  } else {
-    return num.toFixed(6)
-  }
-}
 
 // 获取BNB余额
 const getBNBBalance = async (userAddress: string): Promise<string> => {
@@ -181,6 +168,7 @@ const handleTokenClick = (token: any) => {
     return
   }
 
+
   // 跳转到转账页面，传递代币信息
   router.push({
     path: '/token/transfer',
@@ -190,7 +178,7 @@ const handleTokenClick = (token: any) => {
       icon: token.icon,
       color: token.color,
       gradient: token.gradient,
-      balance: tokenBalances.value[token.balance]
+      balance: tokenBalances.value[token.balance],
     }
   })
 }

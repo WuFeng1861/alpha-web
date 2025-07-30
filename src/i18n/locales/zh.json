@@ -9,7 +9,9 @@
     "alpha": "Alpha",
     "staking": "质押",
     "node": "节点",
-    "token": "代币"
+    "token": "代币",
+    "BoBo": "生态",
+    "Dex": "交易"
   },
   "home": {
     "connect_wallet": "连接钱包",
@@ -63,6 +65,7 @@
     "disconnect": "断开",
     "unbind": "未绑定",
     "loading": "加载中...",
+    "copy": "复制",
     "copied": "已复制！",
     "error": "发生错误",
     "success": "成功！",
@@ -76,6 +79,13 @@
     "unstake": "解除质押",
     "back": "返回",
     "processing": "进行中...",
+    "coming_soon": "即将上线 ...",
+    "units": {
+      "trillion": "兆",
+      "hundred_million": "亿",
+      "million": "万",
+      "thousand": "千"
+    },
     "errors": {
       "wallet_not_connected": "请先连接钱包",
       "invalid_address": "无效的邀请人地址",
@@ -149,7 +159,7 @@
     "pool_capacity_exceeded": "质押金额超出池子容量限制！当前池子剩余容量为 {remaining} ALPHA",
     "search_placeholder_id": "搜索质押池id",
     "not_find_search_contract": "未找到匹配的质押合约",
-    "staking_contract_id" : "质押合约ID",
+    "staking_contract_id": "质押合约ID",
     "not_find_and_next": "不存在，请检查输入或清空搜索框查看全部合约",
     "errors": {
       "wallet_not_initialized": "钱包实例未初始化",
@@ -167,7 +177,7 @@
       "claim_pool_dividends_failed": "领取质押池收益失败",
       "transfer_pool_owner_failed": "更新分红失败",
       "approve_failed": "授权失败",
-      "not_start" : "暂未开启"
+      "not_start": "暂未开启"
     },
     "time_units": {
       "days": "天",
@@ -327,5 +337,42 @@
         "description": "BoBo代币"
       }
     }
+  },
+  "BoBo": {
+    "daily_checkin": "每日签到",
+    "Today_reward": "今日奖励",
+    "airdrop": "空投",
+    "click_to_get_airdrop": "点击领取空投",
+    "BoBo_description": "每日签到可获得随机数量的 BoBo 代币奖励！连续签到奖励更多,奖励结算平均,奖励将直接发放到您的钱包,可用于交易或参与生态建设:",
+    "BoBo_tokenAddress": "BoBo代币合约地址",
+    "ecological_tokens": "生态代币",
+    "in_progress": "正在进行中",
+    "destroyed": "已销毁",
+    "completed": "已完成",
+    "just_go_online_to_start_trading": "上线即可接进行交易",
+    "create_a_trading_pair": "创建交易对",
+    "transaction_fee": "手续费",
+    "choose_token": "选择代币",
+    "quantity_selection": "数量选择",
+    "total": "总量",
+    "tips": {
+      "BNBNotEnough": "用户余额不足",
+      "SwapTokenSuccess": "兑换成功",
+      "SwapTokenFailed": "兑换失败",
+      "BoBoCoinNotEnough": "用户代币余额不足",
+      "swap_wait": "间隔一分钟"
+    }
+  },
+  "dex": {
+    "next_tip": "下一代交易平台 | 安全 • 高速 • 低费率",
+    "buy": "买入",
+    "sell": "卖出",
+    "pay": "支付",
+    "balance": "余额",
+    "get": "获得",
+    "current_rate": "当前汇率",
+    "you_can_win": "您可获得",
+    "buy_now": "立即买入",
+    "sell_now": "立即卖出"
   }
 }

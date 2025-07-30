@@ -5,11 +5,13 @@
   "nav": {
     "home": "Home",
     "friends": "Friends",
-    "box": "Mystery Box",
+    "box": "Box",
     "alpha": "Alpha",
     "staking": "Staking",
     "node": "Node",
-    "token": "Token"
+    "token": "Token",
+    "BoBo": "Eco",
+    "Dex": "Dex"
   },
   "home": {
     "connect_wallet": "Connect Wallet",
@@ -64,6 +66,7 @@
     "unbind": "Unbind",
     "loading": "Loading...",
     "copied": "Copied!",
+    "copy": "Copy",
     "error": "An error occurred",
     "success": "Success!",
     "cancel": "Cancel",
@@ -76,6 +79,7 @@
     "unstake": "Unstake",
     "back": "Back",
     "processing": "Processing...",
+    "coming_soon": "Coming Soon ...",
     "errors": {
       "wallet_not_connected": "Please connect wallet first",
       "invalid_address": "Invalid inviter address",
@@ -88,6 +92,12 @@
       "network_error": "Network error, please try again",
       "purchase_too_frequent": "Sign in Alpha tokens too frequent, please try again later",
       "no_pending_tokens": "No tokens available to claim"
+    },
+    "units": {
+      "trillion": "trillion",
+      "hundred_million": "Hundred Million",
+      "million": "Million",
+      "thousand": "Thousand"
     }
   },
   "staking": {
@@ -166,7 +176,7 @@
       "claim_pool_dividends_failed": "Failed to claim staking pool dividends",
       "transfer_pool_owner_failed": "Failed to update dividend address",
       "approve_failed": "Failed to approve",
-      "not_start" : "It has not started yet."
+      "not_start": "It has not started yet."
     },
     "time_units": {
       "days": " days",
@@ -326,5 +336,42 @@
         "description": "BoBo Token"
       }
     }
+  },
+  "BoBo": {
+    "daily_checkin": "Daily Checkin",
+    "Today_reward": "Today's Reward",
+    "airdrop": "Airdrop",
+    "click_to_get_airdrop": "Click to get airdrop",
+    "BoBo_description": "Daily sign-in gets random BoBo tokens. More for consecutive days. Rewards average out and go straight to your wallet for trading or eco-building",
+    "BoBo_tokenAddress": "BoBo Token Contract Address",
+    "ecological_tokens": "Ecological Tokens",
+    "in_progress": "In Progress",
+    "destroyed": "Destroyed",
+    "completed": "Completed",
+    "just_go_online_to_start_trading": "Just go online to start trading",
+    "create_a_trading_pair": "Create a Trading Pair",
+    "transaction_fee": "Transaction Fee",
+    "choose_token": "Choose Token",
+    "quantity_selection": "Quantity Selection",
+    "total": "total",
+    "tips": {
+      "BNBNotEnough": "User has insufficient BNB.",
+      "SwapTokenSuccess": "Exchange successful!",
+      "SwapTokenFailed": "Exchange failed.",
+      "BoBoCoinNotEnough": "User's token balance is not enough."
+    }
+  },
+  "dex": {
+    "next_tip": "Next - gen trading platform 丨 Secure • Fast • Low - fee",
+    "buy": "Buy",
+    "sell": "Sell",
+    "pay": "Pay",
+    "balance": "Balance",
+    "get": "Get",
+    "current_rate": "Current Rate",
+    "you_can_win": "You can win",
+    "buy_now": "Buy Now",
+    "sell_now": "Sell Now",
+    "swap_wait": "Interval one minute"
   }
 }

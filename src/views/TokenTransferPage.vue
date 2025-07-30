@@ -50,20 +50,20 @@ const isValidAddress = computed(() => {
 const isValidAmount = computed(() => {
   const amount = parseFloat(transferForm.value.amount)
   const balance = parseFloat(tokenInfo.value.balance)
-  
+
   if (!transferForm.value.amount) return true
   if (isNaN(amount) || amount <= 0) return false
   if (amount > balance) return false
-  
+
   return true
 })
 
 // 检查表单是否可以提交
 const canSubmit = computed(() => {
-  return transferForm.value.toAddress.trim() && 
-         transferForm.value.amount && 
-         isValidAddress.value && 
-         isValidAmount.value && 
+  return transferForm.value.toAddress.trim() &&
+         transferForm.value.amount &&
+         isValidAddress.value &&
+         isValidAmount.value &&
          !isTransferring.value
 })
 
@@ -79,7 +79,7 @@ const setMaxAmount = () => {
   // 如果是BNB，需要预留gas费用
   if (tokenInfo.value.symbol === 'BNB') {
     const balance = parseFloat(tokenInfo.value.balance)
-    const gasReserve = 0.001 // 预留gas费用  
+    const gasReserve = 0.001 // 预留gas费用
     const maxAmount = Math.max(0, balance - gasReserve)
     transferForm.value.amount = maxAmount.toFixed(6)
   } else {
@@ -90,11 +90,11 @@ const setMaxAmount = () => {
 // 执行转账
 const handleTransfer = async () => {
   if (!canSubmit.value) return
-  
+
   try {
     isTransferring.value = true
     toast.info(t('common.processing') + '...')
-    
+
     const wallet = getEthWallet()
     if (!wallet) {
       toast.error(t('token.transfer.wallet_not_initialized'))
@@ -105,7 +105,7 @@ const handleTransfer = async () => {
     const amount = parseFloat(transferForm.value.amount)
 
     let result
-    
+
     if (tokenInfo.value.symbol === 'BNB') {
       // BNB转账
       result = await wallet.sendTran(toAddress, amount)
@@ -116,10 +116,10 @@ const handleTransfer = async () => {
       const amountInWei = wallet.ethToWei(amount.toString())
       result = await wallet.contractFn('transfer', toAddress, amountInWei)
     } else if (tokenInfo.value.symbol === 'USDT') {
-      // USDT代币转账 
+      // USDT代币转账
       wallet.setABI([
         {
-          "inputs": [{"internalType": "address", "name": "to", "type": "address"}, 
+          "inputs": [{"internalType": "address", "name": "to", "type": "address"},
                     {"internalType": "uint256", "name": "value", "type": "uint256"}],
           "name": "transfer",
           "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
@@ -130,13 +130,28 @@ const handleTransfer = async () => {
       wallet.updateTokenContract(config.USDTAddress)
       const amountInWei = wallet.ethToWei(amount.toString())
       result = await wallet.contractFn('transfer', toAddress, amountInWei)
+    } else if (tokenInfo.value.symbol === 'BoBo') {
+      // USDT代币转账
+      wallet.setABI([
+        {
+          "inputs": [{"internalType": "address", "name": "to", "type": "address"},
+            {"internalType": "uint256", "name": "value", "type": "uint256"}],
+          "name": "transfer",
+          "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ])
+      wallet.updateTokenContract(config.boboContractAddress)
+      const amountInWei = wallet.ethToWei(amount.toString())
+      result = await wallet.contractFn('transfer', toAddress, amountInWei)
     }
 
     if (result) {
       toast.success(t('token.transfer.transfer_success'))
       // 清空表单
       transferForm.value = { toAddress: '', amount: '', memo: '' }
-      
+
       // 延迟返回上一页
       setTimeout(() => {
         router.back()
@@ -146,7 +161,7 @@ const handleTransfer = async () => {
   } catch (error) {
     console.error('转账失败:', error)
     let message = t('token.transfer.transfer_failed')
-    
+
     if (error.message.includes('user rejected')) {
       message = t('token.transfer.user_cancelled')
     } else if (error.message.includes('insufficient funds')) {
@@ -154,7 +169,7 @@ const handleTransfer = async () => {
     } else if (error.message.includes('network')) {
       message = t('token.transfer.network_error')
     }
-    
+
     toast.error(message)
   } finally {
     isTransferring.value = false

@@ -12,4 +12,7 @@ export default defineConfig({
   esbuild: {
     // drop: ['console', 'debugger'], // 移除所有 console 和 debugger
   },
+  server: {
+    host: '0.0.0.0', // 允许所有网络接口访问
+  }
 })
