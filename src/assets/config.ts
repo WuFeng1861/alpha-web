@@ -12,11 +12,8 @@ import boboAbi from "./BoBoAbi"
 export default {
   // contract configuration
   contractAddress: "0xb63214B454c08eBD7bb025F51E2278F0c10B113A",
-  // shakingContractAddress: '0x6eebd8db09b0f460f39bef5c8ca35511c519ced8',
-  // shakingContractAddress: '0xB621fE8248F0496Ed2EcB38C70cfc39337a24328',
-  // shakingContractAddress: '0x9d0d3f0c04106ad85bfe534b038dd8b900213b7f',
   shakingContractAddress: '0x35499aa163f85e5694ccb95e28614e65e3d5503e',
-  boboContractAddress: '0x5c66Ab711447eD640075012646516ad0ad1A6e79',
+  boboContractAddress: '0xeD1103AeeEeD012d2D28d07b590DF407Cc846F35',
   USDTAddress: '0x55d398326f99059fF775485246999027B3197955',
   contractAbi: contractAbi,
   shakingContractAbi: shakingContractAbi,
