@@ -173,46 +173,46 @@ updateShowTitle()
 
           <!-- ALP 平台币 -->
           <div class="bg-alpha-surface rounded-lg p-4 mb-4">
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center">
-                <div
-                    class="w-10 h-10 bg-black border-bobo-green border-[1px] rounded-full flex items-center justify-center mr-3">
-                  <img class="w-5 h-5"
-                       src="https://wufeng98.cn/imgServerApi/images/4d35f283-bf43-459b-be74-a1c1810f19a6.png"/>
-                </div>
-                <div>
-                  <h3 class="text-white font-bold text-left">ALP</h3>
-                  <p class="text-bobo-green font-bold">15,320.00 ALP</p>
-                </div>
-              </div>
-            </div>
+            <!--<div class="flex items-center justify-between mb-3">-->
+            <!--  <div class="flex items-center">-->
+            <!--    <div-->
+            <!--        class="w-10 h-10 bg-black border-bobo-green border-[1px] rounded-full flex items-center justify-center mr-3">-->
+            <!--      <img class="w-5 h-5"-->
+            <!--           src="https://wufeng98.cn/imgServerApi/images/4d35f283-bf43-459b-be74-a1c1810f19a6.png"/>-->
+            <!--    </div>-->
+            <!--    <div>-->
+            <!--      <h3 class="text-white font-bold text-left">ALP</h3>-->
+            <!--      <p class="text-bobo-green font-bold">15,320.00 ALP</p>-->
+            <!--    </div>-->
+            <!--  </div>-->
+            <!--</div>-->
 
             <!-- 进度条 -->
-            <div class="mb-3">
-              <div class="flex justify-between text-sm text-gray-400 mb-1">
-                <span>{{ t('BoBo.in_progress') }}</span>
-                <span>210 {{ t('common.units.hundred_million') }}</span>
-              </div>
-              <div class="w-full bg-gray-700 rounded-full h-2">
-                <div class="bg-bobo-green h-2 rounded-full" style="width: 65%"></div>
-              </div>
-              <div class="flex justify-between text-sm text-gray-400 mt-1">
-                <span>15.3 {{ t('common.units.hundred_million') }} ALP</span>
-              </div>
-            </div>
+            <!--<div class="mb-3">-->
+            <!--  <div class="flex justify-between text-sm text-gray-400 mb-1">-->
+            <!--    <span>{{ t('BoBo.in_progress') }}</span>-->
+            <!--    <span>210 {{ t('common.units.hundred_million') }}</span>-->
+            <!--  </div>-->
+            <!--  <div class="w-full bg-gray-700 rounded-full h-2">-->
+            <!--    <div class="bg-bobo-green h-2 rounded-full" style="width: 65%"></div>-->
+            <!--  </div>-->
+            <!--  <div class="flex justify-between text-sm text-gray-400 mt-1">-->
+            <!--    <span>15.3 {{ t('common.units.hundred_million') }} ALP</span>-->
+            <!--  </div>-->
+            <!--</div>-->
 
-            <div class="mb-3">
-              <div class="flex justify-between text-sm text-gray-400 mb-1">
-                <span>{{ t('BoBo.destroyed') }}</span>
-                <span>29 {{ t('common.units.hundred_million') }}</span>
-              </div>
-              <div class="w-full bg-gray-700 rounded-full h-2">
-                <div class="bg-bobo-green h-2 rounded-full" style="width: 45%"></div>
-              </div>
-              <div class="flex text-sm justify-between text-gray-400 mt-1">
-                <span class="">{{ t('BoBo.completed') }}</span>
-              </div>
-            </div>
+            <!--<div class="mb-3">-->
+            <!--  <div class="flex justify-between text-sm text-gray-400 mb-1">-->
+            <!--    <span>{{ t('BoBo.destroyed') }}</span>-->
+            <!--    <span>29 {{ t('common.units.hundred_million') }}</span>-->
+            <!--  </div>-->
+            <!--  <div class="w-full bg-gray-700 rounded-full h-2">-->
+            <!--    <div class="bg-bobo-green h-2 rounded-full" style="width: 45%"></div>-->
+            <!--  </div>-->
+            <!--  <div class="flex text-sm justify-between text-gray-400 mt-1">-->
+            <!--    <span class="">{{ t('BoBo.completed') }}</span>-->
+            <!--  </div>-->
+            <!--</div>-->
 
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center">
