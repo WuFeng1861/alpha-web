@@ -131,7 +131,7 @@ const handleTransfer = async () => {
       const amountInWei = wallet.ethToWei(amount.toString())
       result = await wallet.contractFn('transfer', toAddress, amountInWei)
     } else if (tokenInfo.value.symbol === 'BoBo') {
-      // USDT代币转账
+      // BOBO代币转账
       wallet.setABI([
         {
           "inputs": [{"internalType": "address", "name": "to", "type": "address"},
@@ -143,6 +143,21 @@ const handleTransfer = async () => {
         }
       ])
       wallet.updateTokenContract(config.boboContractAddress)
+      const amountInWei = wallet.ethToWei(amount.toString())
+      result = await wallet.contractFn('transfer', toAddress, amountInWei)
+    } else if (tokenInfo.value.symbol === 'ALPS') {
+      // ALPS代币转账
+      wallet.setABI([
+        {
+          "inputs": [{"internalType": "address", "name": "to", "type": "address"},
+            {"internalType": "uint256", "name": "value", "type": "uint256"}],
+          "name": "transfer",
+          "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ])
+      wallet.updateTokenContract(config.alpsContractAddress)
       const amountInWei = wallet.ethToWei(amount.toString())
       result = await wallet.contractFn('transfer', toAddress, amountInWei)
     }

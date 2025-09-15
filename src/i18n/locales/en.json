@@ -11,7 +11,8 @@
     "node": "Node",
     "token": "Token",
     "BoBo": "Eco",
-    "Dex": "Dex"
+    "Dex": "Dex",
+    "mapping": "Mapping"
   },
   "home": {
     "connect_wallet": "Connect Wallet",
@@ -321,19 +322,23 @@
     "tokens": {
       "bnb": {
         "name": "BNB",
-        "description": "Binance Coin"
+        "description": "Binance Smart Chain native token"
       },
       "alpha": {
         "name": "ALPHA",
-        "description": "Alpha Token"
+        "description": "Alpha Project governance token"
       },
       "usdt": {
         "name": "USDT",
-        "description": "Tether USD"
+        "description": "Tether USD stablecoin"
       },
       "BoBo": {
         "name": "BoBo",
-        "description": "BoBo Token"
+        "description": "Alpha ecosystem token"
+      },
+      "ALPS": {
+        "name": "ALPS",
+        "description": "Alpha Project Staking token"
       }
     }
   },
@@ -373,5 +378,44 @@
     "buy_now": "Buy Now",
     "sell_now": "Sell Now",
     "swap_wait": "Interval one minute"
+  },
+  "mapping": {
+    "title": "ALP Mapping",
+    "subtitle": "Convert ALP to ALPS tokens (1:1 ratio)",
+    "alp_amount": "ALP Amount",
+    "alps_amount": "ALPS Amount",
+    "alp_amount_placeholder": "Enter ALP amount to map",
+    "alps_amount_placeholder": "Auto-calculated ALPS amount",
+    "available_balance": "Available Balance",
+    "current_balance": "Current Balance",
+    "auto_calculated": "Auto-calculated at 1:1 ratio",
+    "max_mapping_amount": "Maximum single mapping: {amount} ALP",
+    "enter_mapping_amount": "Enter ALP amount to map",
+    "mapping_amount": "Mapping Amount",
+    "receive_amount": "Receive ALPS Amount",
+    "set_max": "Set Max",
+    "start_mapping": "Start Mapping",
+    "mapping_in_progress": "Mapping...",
+    "mapping_processing": "Mapping in progress...",
+    "confirm_mapping": "Confirm Mapping",
+    "mapping_success": "Successfully mapped {amount} ALP to ALPS",
+    "mapping_failed": "Mapping failed, please try again",
+    "invalid_amount": "Invalid amount or exceeds available balance",
+    "connect_wallet_desc": "Connect wallet to map ALP to ALPS tokens",
+    "errors": {
+      "invalid_amount": "Please enter a valid mapping amount",
+      "insufficient_balance": "Insufficient ALP balance",
+      "exceeds_max_amount": "Single mapping cannot exceed {amount} ALP",
+      "user_cancelled": "User cancelled the transaction",
+      "insufficient_allowance": "Insufficient allowance",
+      "approve_first": "Need to approve ALP for mapping contract first"
+    },
+    "info": {
+      "title": "Mapping Information",
+      "ratio": "Mapping ratio is 1:1, i.e., 1 ALP = 1 ALPS",
+      "irreversible": "Mapping process is irreversible, please confirm amount carefully",
+      "gas_fee": "Mapping requires a small gas fee",
+      "balance_update": "Balance will be updated automatically after mapping"
+    }
   }
 }

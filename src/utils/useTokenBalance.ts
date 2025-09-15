@@ -94,6 +94,7 @@ interface TokenBalanceCache {
   alphaBalance: string;
   usdtBalance: string;
   boboBalance: string;
+  alpsBalance: string;
   timestamp: number;
 }
 
@@ -231,17 +232,61 @@ export const getBoBoBalance = async (userAddress?: string): Promise<string> => {
   }
 };
 
+/**
+ * 获取用户的ALPS代币余额（不带缓存）
+ * @param userAddress 用户地址
+ * @returns ALPS代币余额（格式化后的字符串）
+ */
+
+export const getAlpsBalance = async (userAddress?: string): Promise<string> => {
+  const walletStore = useWalletStore();
+  const address = userAddress || walletStore.address;
+  
+  if (!address) {
+    console.log('用户地址为空，无法获取ALPS余额');
+    return '0';
+  }
+  
+  try {
+    const wallet = getEthWallet();
+    
+    if (!wallet) {
+      console.log('钱包实例未初始化');
+      return '0';
+    }
+    
+    // 设置ALPS代币合约ABI和地址
+    wallet.setABI(USDT_ABI);
+    wallet.updateTokenContract(config.alpsContractAddress);
+    
+    console.log(`开始获取用户 ${address} 的ALPS代币余额...`);
+    // 调用合约的balanceOf方法获取余额
+    const balance = await wallet.contractFn('balanceOf', address);
+    
+    // ALPS通常使用18位小数，转换为可读格式
+    const formattedBalance = wallet.weiToEth(balance);
+    
+    console.log(`用户 ${address} 的ALPS余额:`, formattedBalance);
+    
+    return formattedBalance;
+  } catch (error) {
+    console.error('获取ALPS代币余额失败:', error);
+    return '0';
+  }
+};
+
 
 /**
  * 获取用户的代币余额（带缓存）
  * @param userAddress 用户地址
  * @param forceUpdate 是否强制更新缓存
- * @returns 包含ALPHA和USDT余额的对象
+ * @returns 包含ALPHA、USDT、BOBO和ALPS余额的对象
  */
 export const getTokenBalances = async (userAddress?: string, forceUpdate: boolean = false): Promise<{
   alphaBalance: string;
   usdtBalance: string;
-  boboBalance: string
+  boboBalance: string;
+  alpsBalance: string
 }> => {
   const walletStore = useWalletStore();
   const address = userAddress || walletStore.address;
@@ -273,11 +318,12 @@ export const getTokenBalances = async (userAddress?: string, forceUpdate: boolea
   try {
     console.log(`开始获取用户 ${address} 的代币余额...`);
     
-    // 并发获取ALPHA和USDT余额
-    const [alphaBalance, usdtBalance, boboBalance] = await Promise.all([
+    // 并发获取所有代币余额
+    const [alphaBalance, usdtBalance, boboBalance, alpsBalance] = await Promise.all([
       getAlphaBalance(address, forceUpdate),
       getUSDTBalance(address, forceUpdate),
-      getBoBoBalance(address)
+      getBoBoBalance(address),
+      getAlpsBalance(address)
     ]);
     
     // 更新缓存
@@ -286,15 +332,17 @@ export const getTokenBalances = async (userAddress?: string, forceUpdate: boolea
       alphaBalance,
       usdtBalance,
       boboBalance,
+      alpsBalance,
       timestamp: now
     };
     
-    console.log('代币余额获取完成:', { alphaBalance, usdtBalance });
+    console.log('代币余额获取完成:', { alphaBalance, usdtBalance, boboBalance, alpsBalance });
     
     return {
       alphaBalance,
       usdtBalance,
-      boboBalance
+      boboBalance,
+      alpsBalance
     };
   } catch (error) {
     console.error('获取代币余额失败:', error);

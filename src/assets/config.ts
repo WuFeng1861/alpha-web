@@ -8,6 +8,7 @@
 import contractAbi from "./contractAbi"
 import shakingContractAbi from "./shakingContractAbi"
 import boboAbi from "./BoBoAbi"
+import multiTokenExchangeAbi from "./MultiTokenExchangeAbi"
 
 export default {
   // contract configuration
@@ -15,9 +16,12 @@ export default {
   shakingContractAddress: '0x35499aa163f85e5694ccb95e28614e65e3d5503e',
   boboContractAddress: '0xeD1103AeeEeD012d2D28d07b590DF407Cc846F35',
   USDTAddress: '0x55d398326f99059fF775485246999027B3197955',
+  mappingContractAddress: '0x4D342A0Dd0694F735B8c48fCd191325833E8a01a',
+  alpsContractAddress: '0x258948986c19ea2915E48a5D7a475dfE2B86E893',
   contractAbi: contractAbi,
   shakingContractAbi: shakingContractAbi,
   boboAbi: boboAbi,
+  multiTokenExchangeAbi: multiTokenExchangeAbi,
   creatorAddress: '0x5C595De7DcD328fa07A6eAfb7e7423f42665F3De',
   // Logo configuration
   logo: {

@@ -15,3 +15,11 @@ export const formatBalance = (balance: string|number): string => {
     return Number(num.toFixed(6)).toString();
   }
 }
+
+// 格式化余额显示，保留指定小数位数
+export const formatBalanceFixed = (balance: string|number, decimals: number = 2): string => {
+  const num = parseFloat(balance.toString())
+  if (isNaN(num)) return '0.00'
+  
+  return num.toFixed(decimals)
+}

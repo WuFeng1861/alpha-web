@@ -19,7 +19,8 @@ const tokenBalances = ref({
   bnbBalance: '0',     // BNB余额
   alphaBalance: '0',   // ALPHA余额
   usdtBalance: '0',     // USDT余额
-  boboBalance: '0'     // BOBO余额
+  boboBalance: '0',     // BOBO余额
+  alpsBalance: '0'     // ALPS余额
 })
 
 const isLoading = ref(false)
@@ -69,7 +70,8 @@ const updateAllBalances = async (forceUpdate: boolean = false) => {
       bnbBalance,
       alphaBalance: tokenBalanceData.alphaBalance,
       usdtBalance: tokenBalanceData.usdtBalance,
-      boboBalance: tokenBalanceData.boboBalance
+      boboBalance: tokenBalanceData.boboBalance,
+      alpsBalance: tokenBalanceData.alpsBalance
     }
 
     lastUpdateTime.value = new Date()
@@ -148,6 +150,15 @@ const tokenConfigs = [
     balance: 'boboBalance',
     color: '#C49235',
     gradient: 'from-yellow-200 to-yellow-300'
+  },
+  {
+    nameKey: 'token.tokens.ALPS.name',
+    descKey: 'token.tokens.ALPS.description',
+    symbol: 'ALPS',
+    icon: 'https://wufeng98.cn/imgServerApi/images/4d35f283-bf43-459b-be74-a1c1810f19a6.png',
+    balance: 'alpsBalance',
+    color: '#5BF655',
+    gradient: 'from-green-400 to-green-600'
   }
 ]
 

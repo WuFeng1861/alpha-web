@@ -11,7 +11,8 @@
     "node": "节点",
     "token": "代币",
     "BoBo": "生态",
-    "Dex": "交易"
+    "Dex": "交易",
+    "mapping": "映射"
   },
   "home": {
     "connect_wallet": "连接钱包",
@@ -322,19 +323,23 @@
     "tokens": {
       "bnb": {
         "name": "BNB",
-        "description": "币安币"
+        "description": "币安智能链原生代币"
       },
       "alpha": {
         "name": "ALPHA",
-        "description": "Alpha代币"
+        "description": "Alpha项目治理代币"
       },
       "usdt": {
         "name": "USDT",
-        "description": "泰达币"
+        "description": "泰达币稳定币"
       },
       "BoBo": {
         "name": "BoBo",
-        "description": "BoBo代币"
+        "description": "Alpha生态代币"
+      },
+      "ALPS": {
+        "name": "ALPS",
+        "description": "Alpha项目质押代币"
       }
     }
   },
@@ -374,5 +379,45 @@
     "you_can_win": "您可获得",
     "buy_now": "立即买入",
     "sell_now": "立即卖出"
+  },
+  "mapping": {
+    "title": "ALP映射",
+    "subtitle": "将ALP转换为ALPS代币（1:1比例）",
+    "alp_amount": "ALP 数量",
+    "alps_amount": "ALPS 数量",
+    "alp_amount_placeholder": "请输入要映射的ALP数量",
+    "alps_amount_placeholder": "自动计算的 ALPS 数量",
+    "available_balance": "可用余额",
+    "current_balance": "当前余额",
+    "auto_calculated": "根据 1:1 比例自动计算",
+    "max_mapping_amount": "单次最多映射：{amount} ALP",
+    "enter_mapping_amount": "请输入要映射的ALP数量",
+    "mapping_amount": "映射数量",
+    "receive_amount": "获得ALPS数量",
+    "set_max": "最大数量",
+    "confirm_mapping": "确认映射",
+    "start_mapping": "开始映射",
+    "mapping_in_progress": "映射中...",
+    "mapping_processing": "映射进行中...",
+    "processing": "正在处理映射请求...",
+    "mapping_success": "成功映射 {amount} ALP 到 ALPS",
+    "mapping_failed": "映射失败，请重试",
+    "invalid_amount": "数量无效或超过可用余额",
+    "connect_wallet_desc": "连接钱包后即可进行 ALP 到 ALPS 的映射",
+    "info": {
+      "title": "映射说明",
+      "ratio": "映射比例为 1:1，即 1 ALP = 1 ALPS",
+      "irreversible": "映射过程不可逆，请仔细确认数量",
+      "gas_fee": "映射需要支付少量 gas 费用",
+      "balance_update": "映射完成后余额将自动更新"
+    },
+    "errors": {
+      "invalid_amount": "请输入有效的映射数量",
+      "insufficient_balance": "ALP余额不足",
+      "exceeds_max_amount": "单次映射不能超过{amount} ALP",
+      "user_cancelled": "用户取消了交易",
+      "insufficient_allowance": "授权额度不足",
+      "approve_first": "需要先授权ALP给映射合约"
+    }
   }
 }
