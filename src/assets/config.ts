@@ -14,6 +14,7 @@ export default {
   // contract configuration
   contractAddress: "0xb63214B454c08eBD7bb025F51E2278F0c10B113A",
   shakingContractAddress: '0x35499aa163f85e5694ccb95e28614e65e3d5503e',
+  shakingALPSContractAddress: '0xF02D70B4b398180c80989E9a5aCB1B191bFd60FF',
   boboContractAddress: '0xeD1103AeeEeD012d2D28d07b590DF407Cc846F35',
   USDTAddress: '0x55d398326f99059fF775485246999027B3197955',
   mappingContractAddress: '0x4D342A0Dd0694F735B8c48fCd191325833E8a01a',
@@ -29,7 +30,11 @@ export default {
     // Alternative text for accessibility
     alt: 'Alpha Logo',
   },
-  
+  alpsLogo: {
+    path: 'https://wufeng98.cn/imgServerApi/images/d33954db-5c32-4554-9cbd-28a2fd144110.png',
+    alt: 'ALPS Logo',
+  },
+
   // Background images
   backgrounds: {
     // Home page background
@@ -39,19 +44,19 @@ export default {
     // Box page background
     box: 'https://wufeng98.cn/imgServerApi/images/2e76dc4b-595c-4941-b890-5c92b895530b.png',
   },
-  
+
   // Mascot image (green cat in the screenshots)
   mascot: {
     path: '/path/to/your/mascot.png',
     alt: 'Alpha Mascot',
   },
-  
+
   // Mystery box image
   mysteryBox: {
     path: '/path/to/your/mystery-box.png',
     alt: 'Mystery Box',
   },
-  
+
   // Social media links
   socialLinks: [
     {

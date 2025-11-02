@@ -104,6 +104,11 @@
   "staking": {
     "total_amount": "Total Amount",
     "title": "NFT Dividend Cards",
+    "nav_title": "Staking Navigation",
+    "alp_staking": "ALP Staking",
+    "alp_staking_desc": "Stake ALP tokens to earn rewards",
+    "alps_staking": "ALPS Staking",
+    "alps_staking_desc": "Stake ALPS tokens to earn rewards",
     "my_staking_pool": "My Staking Pool",
     "my_staking_pool_nft": "My Staking Pool (NFT)",
     "my_staking": "My Staking",
@@ -165,6 +170,7 @@
       "wallet_not_initialized": "Wallet instance not initialized",
       "invalid_stake_amount": "Please enter a valid staking amount",
       "insufficient_balance": "Insufficient balance! Your ALPHA balance is {balance}, need {required}",
+      "insufficient_balance_alps": "Insufficient balance! Your alps balance is {balance}, need {required}",
       "insufficient_funds_or_gas": "Insufficient balance or gas fee",
       "alpha_balance_insufficient": "Insufficient ALPHA token balance",
       "allowance_insufficient": "Insufficient allowance, please try again",
@@ -405,10 +411,12 @@
     "errors": {
       "invalid_amount": "Please enter a valid mapping amount",
       "insufficient_balance": "Insufficient ALP balance",
+      "insufficient_balance_alps": "Insufficient ALPS balance",
       "exceeds_max_amount": "Single mapping cannot exceed {amount} ALP",
       "user_cancelled": "User cancelled the transaction",
       "insufficient_allowance": "Insufficient allowance",
-      "approve_first": "Need to approve ALP for mapping contract first"
+      "approve_first": "Need to approve ALP for mapping contract first",
+      "first_mapping_closed": "The first phase of mapping has been closed. The second phase of mapping will be launched on November 25th"
     },
     "info": {
       "title": "Mapping Information",

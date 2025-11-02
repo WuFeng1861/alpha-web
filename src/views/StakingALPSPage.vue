@@ -12,7 +12,7 @@ import {
   getBatchStakeDividendsWithCache,
   type ProcessedStakeRecord,
   type ProcessedPool
-} from '../utils/useStaking'
+} from '../utils/useStakingALPS'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -150,7 +150,7 @@ const updateStakingDividends = async (forceUpdate: boolean = false) => {
     for (let index = 0; index < stakes.length; index++) {
       let item = {...stakes[index]};
       item['stakingAmount'] = Number(item['stakingAmount']);
-      item['stakingReward'] = Number(dividendsMap.get(item.stakeId));
+      item['stakingReward'] = Number(item['stakingReward']);
       let findIndex = showStakes.findIndex(it => it.poolNumber === item.poolNumber);
       let thisItem = null;
       if (findIndex !== -1) {
@@ -163,15 +163,6 @@ const updateStakingDividends = async (forceUpdate: boolean = false) => {
     }
     console.log(showStakes);
     myStakingList.value = showStakes;
-    // // 更新质押列表中的收益数据
-    // myStakingList.value.forEach(stake => {
-    //   let poolNumber = stake.poolNumber;
-    //   const newDividends = dividendsMap.get(stake.stakeId)
-    //   if (newDividends !== undefined) {
-    //     stake.stakingReward = newDividends
-    //   }
-    // })
-
     console.log('质押收益数据更新完成')
   } catch (error) {
     console.error('更新质押收益数据失败:', error)
@@ -237,23 +228,23 @@ onUnmounted(() => {
 const handleMyStakingPool = (stakingId?: number) => {
   if (stakingId) {
     // 如果传入了质押ID，跳转到详情页
-    router.push(`/staking-detail/${stakingId}?type=my-staking`)
+    router.push(`/staking-detail-alps/${stakingId}?type=my-staking`)
   } else {
     // 点击"我的质押池(NFT)"按钮，跳转到NFT质押页面
     console.log('跳转到NFT质押页面')
-    router.push('/nft-staking')
+    router.push('/nft-staking-alps')
   }
 }
 
 // 处理NFT质押池按钮点击
 const handleNFTStakingPool = () => {
   console.log('点击我的质押池(NFT)按钮，跳转到NFT质押页面', router)
-  router.push('/nft-staking')
+  router.push('/nft-staking-alps')
 }
 
 // 处理质押合约按钮点击
 const handleStakingContract = (contract: any) => {
-  router.push(`/staking-detail/${contract.id}?type=${contract.poolType}`)
+  router.push(`/staking-detail-alps/${contract.id}?type=${contract.poolType}`)
 }
 
 // 返回质押导航页
@@ -291,7 +282,7 @@ const goBackToStakingNav = () => {
       <!-- Main Content -->
       <div class="px-4 py-6">
         <!-- 标题 -->
-        <h1 class="text-3xl font-bold mb-6" style="color: #5BF655">{{ t('staking.title') }}</h1>
+        <h1 class="text-3xl font-bold mb-6" style="color: #5BF655">ALPS {{ t('staking.title') }}</h1>
 
         <!-- 我的质押池按钮 - 使用签到领取按钮样式 -->
         <button

@@ -4,7 +4,6 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import AlphaLogo from '../components/AlphaLogo.vue'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
-import NodeExchangeModal from '../components/NodeExchangeModal.vue'
 import config from '../assets/config'
 import toast from '../utils/toast'
 

@@ -20,7 +20,7 @@ const currentExchangeInfo = computed(() => {
   if (exchangeType.value === 'token') {
     return {
       type: t('node.alpha_tokens'),
-      unit: 'ALPHA',
+      unit: 'ALPS',
       available: '10000',
       price: props.nodeData?.tokens ? `${props.nodeData.tokens}${t('node.million')}` : '0',
       description: t('node.exchange_description_alpha', {
@@ -225,7 +225,7 @@ watch(exchangeType, () => {
             </div>
 
             <!-- 兑换类型选择 -->
-            <div class="grid grid-cols-2 gap-3 mb-5">
+            <!-- <div class="grid grid-cols-2 gap-3 mb-5">
               <button
                   @click="switchExchangeType('token')"
                   :class="[
@@ -241,7 +241,7 @@ watch(exchangeType, () => {
                       alt="ALPHA"
                       class="w-5 h-5 object-contain"
                   />
-                  <span class="text-sm">ALPHA</span>
+                  <span class="text-sm">ALPS</span>
                 </div>
               </button>
 
@@ -263,7 +263,7 @@ watch(exchangeType, () => {
                   <span class="text-sm">USDT</span>
                 </div>
               </button>
-            </div>
+            </div> -->
 
             <!-- 兑换信息卡片 -->
             <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-5 border border-white/20">

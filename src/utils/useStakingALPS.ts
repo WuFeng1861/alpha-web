@@ -43,7 +43,7 @@ export const performUnstaking = async (
 
     // 设置质押合约
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     // 调用unstake方法进行解除质押
     console.log(`调用unstake方法: poolId=${poolId}, stakeId=${stakeId}`);
@@ -71,7 +71,7 @@ export const performUnstaking = async (
       data: unstakeResult
     };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('解除质押失败:', error);
 
     let message = t('staking.errors.unstake_failed');
@@ -220,12 +220,12 @@ export const getUserStakes = async (forceUpdate: boolean = false, t?: Function):
 
     // 设置质押合约ABI和地址
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     console.log('开始获取用户质押记录...');
 
     // 调用合约获取用户所有质押记录
-    const stakes = await wallet.contractFn('getAllUserStakes', walletStore.address, config.contractAddress);
+    const stakes = await wallet.contractFn('getAllUserStakes', walletStore.address, config.alpsContractAddress);
 
     console.log('获取到的原始质押数据:', stakes);
 
@@ -265,29 +265,6 @@ export const getUserStakes = async (forceUpdate: boolean = false, t?: Function):
         stakeId
       });
     }
-    // filteredStakes.map((stake: any, index: number) => {
-    //   const poolInfo = getPoolInfo(stake.poolId.toString(), t);
-    //   const amount = wallet.weiToEth(stake.amount);
-    //   const apr = (Number(stake.lockedAPR)).toString();
-    //   const stakeStartTime = Number(stake.stakeStartTime);
-    //   const stakeId = stake.stakeId.toString();
-    //
-    //   // 从缓存中获取真实的质押收益
-    //   const stakingReward = dividendsMap.get(stakeId) || '0';
-    //
-    //   return {
-    //     id: stakeId,
-    //     poolNumber: Number(stake.poolId),
-    //     ...poolInfo,
-    //     stakingAmount: amount,
-    //     yearRate: `${apr}%`,
-    //     status: t ? t('staking.status_active') : '进行中',
-    //     statusColor: '#5BF655',
-    //     stakingReward,
-    //     stakeStartTime,
-    //     stakeId
-    //   };
-    // });
 
     console.log('处理后的质押数据:', processedStakes);
 
@@ -345,42 +322,42 @@ export const performStaking = async (
     console.log(`开始质押流程: 池子ID=${poolId}, 数量=${amount}`);
 
     // 第一步：检查用户ALPHA余额
-    console.log('第一步：检查用户ALPHA余额...');
+    console.log('第一步：检查用户ALPS余额...');
     const balances = await getTokenBalances(walletStore.address, true);
-    const userAlphaBalance = parseFloat(balances.alphaBalance);
+    const userAlpsBalance = parseFloat(balances.alpsBalance);
 
-    if (userAlphaBalance < stakeAmount) {
+    if (userAlpsBalance < stakeAmount) {
       return {
         status: false,
-        message: t('staking.errors.insufficient_balance', {
-          balance: balances.alphaBalance,
+        message: t('staking.errors.insufficient_balance_alps', {
+          balance: balances.alpsBalance,
           required: amount
         }),
         data: null
       };
     }
 
-    console.log(`余额检查通过: 用户余额=${userAlphaBalance}, 需要=${stakeAmount}`);
+    console.log(`余额检查通过: 用户余额=${userAlpsBalance}, 需要=${stakeAmount}`);
 
-    // 第二步：授权合约使用用户的ALPHA代币
-    console.log('第二步：授权合约使用ALPHA代币...');
+    // 第二步：授权合约使用用户的ALPS代币
+    console.log('第二步：授权合约使用ALPS代币...');
 
     // 设置ALPHA代币合约
     wallet.setABI(config.contractAbi);
-    wallet.updateTokenContract(config.contractAddress);
+    wallet.updateTokenContract(config.alpsContractAddress);
 
     // 将数量转换为wei格式
     const amountInWei = wallet.ethToWei(amount);
 
     // 检查用户地址允许合约使用代币的数量
-    let ownerAllowance = await wallet.contractFn('allowance', walletStore.address, config.shakingContractAddress);
+    let ownerAllowance = await wallet.contractFn('allowance', walletStore.address, config.shakingALPSContractAddress);
     ownerAllowance = wallet.weiToEth(ownerAllowance);
     console.log(ownerAllowance, '检查用户地址允许合约使用代币的数量');
 
     if (Number(ownerAllowance) < Number(amount)) {
       // 调用approve方法授权质押合约使用代币
-      console.log(`授权质押合约 ${config.shakingContractAddress} 使用 ${amount} ALPHA...`);
-      await wallet.contractFn('approve', config.shakingContractAddress, amountInWei);
+      console.log(`授权质押合约 ${config.shakingALPSContractAddress} 使用 ${amount} ALPHA...`);
+      await wallet.contractFn('approve', config.shakingALPSContractAddress, amountInWei);
       await sleep(3.5 * 1000);
     }
 
@@ -392,7 +369,7 @@ export const performStaking = async (
 
     // 设置质押合约
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     // 调用stake方法进行质押
     console.log(`调用stake方法: poolId=${poolId}, amount=${amountInWei.toString()}`);
@@ -421,7 +398,7 @@ export const performStaking = async (
       data: stakeResult
     };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('质押失败:', error);
 
     let message = t('staking.errors.stake_failed');
@@ -518,14 +495,14 @@ export const getAllPoolsInfo = async (forceUpdate: boolean = false, t?: Function
 
     // 设置质押合约ABI和地址
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     console.log('开始获取所有质押池信息...');
 
     // 调用合约获取所有质押池信息
-    const pools = await wallet.contractFn('getAllPoolsInfo', config.contractAddress);
+    const pools = await wallet.contractFn('getAllPoolsInfo', config.alpsContractAddress);
 
-    console.log('获取到的原始质押池数据:', pools, config.contractAddress);
+    console.log('获取到的原始质押池数据:', pools, config.alpsContractAddress);
 
     // 处理质押池数据
     const processedPools: ProcessedPool[] = pools.map((pool: any) => {
@@ -628,7 +605,7 @@ export const getStakeDividends = async (stakeId: string, forceUpdate: boolean = 
 
     // 设置质押合约ABI和地址
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     console.log(`开始获取质押记录 ${stakeId} 的收益...`);
 
@@ -740,12 +717,12 @@ export const getNFTStakingData = async (forceUpdate: boolean = false, t?: Functi
 
     // 设置质押合约ABI和地址
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     console.log('开始获取NFT质押数据...');
 
     // 获取所有质押池信息
-    const pools = await wallet.contractFn('getAllPoolsInfo', config.contractAddress);
+    const pools = await wallet.contractFn('getAllPoolsInfo', config.alpsContractAddress);
 
     console.log('获取到的原始质押池数据:', pools);
 
@@ -853,7 +830,7 @@ export const getPoolDividends = async (poolId: string, forceUpdate: boolean = fa
 
     // 设置质押合约ABI和地址
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     console.log(`开始获取质押池 ${poolId} 的可领取收益...`);
 
@@ -932,7 +909,7 @@ export const claimPoolDividends = async (poolId: string, t: Function): Promise<{
     }
     // 设置质押合约
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     // 调用claimDividends方法领取收益
     console.log(`调用claimDividends方法: poolId=${poolId}`);
@@ -953,7 +930,7 @@ export const claimPoolDividends = async (poolId: string, t: Function): Promise<{
       data: stakeResult
     };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('领取质押池收益失败:', error);
 
     let message = t('staking.errors.claim_pool_dividends_failed');
@@ -999,7 +976,7 @@ export const transferPoolOwner = async (poolId: string, newAddress: string, t: F
     }
     // 设置质押合约
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     // 调用更新分红地址方法
     console.log(`调用更新分红地址方法: poolId=${poolId}, newAddress=${newAddress}`);
@@ -1058,7 +1035,7 @@ export const getNodeMessage = async (t: Function) => {
 
     // 设置质押合约
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     // 调用获取质押节点信息方法
     const nodeList = await wallet.contractFn('getAllTiers');
@@ -1081,9 +1058,9 @@ export const getNodeMessage = async (t: Function) => {
       'bronze': 'from-orange-400 to-orange-600',
     };
     const morePayNumber = {
-      'gold': 3 + 4 + 3 + 1 + 1,
-      'silver': 27 + 24 + 29 + 32 + 28 + 25 + 39 + 7 + 15,
-      'bronze': 96 + 48 + 104 + 112 + 147 + 102 + 125 + 30 + 1,
+      'gold': 0,
+      'silver': 0,
+      'bronze': 0,
     }
     for (let i = 0; i < nodeList.length; i++) {
       const node = nodeList[i];
@@ -1111,7 +1088,7 @@ export const getNodeMessage = async (t: Function) => {
       message: t('node.get_node_info_success'),
       data: resultList
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('获取质押节点信息失败:', error);
 
     let message = t('node.errors.get_node_info_failed');
@@ -1167,16 +1144,16 @@ export const buyNode = async (id: string | number, type: 'token' | 'u', amount: 
     }
 
     let newAmount = type === 'token' ? Number(amount) : Number(amount);
-    let tokenAddress = type === 'token' ? config.contractAddress : config.USDTAddress;
-    console.log('第一步：检查用户ALPHA或者U余额...');
+    let tokenAddress = type === 'token' ? config.alpsContractAddress : config.USDTAddress;
+    console.log('第一步：检查用户ALPS或者U余额...');
     const balances = await getTokenBalances(walletStore.address, true);
     if (type === 'token') {
-      const userAlphaBalance = parseFloat(balances.alphaBalance);
-      if (userAlphaBalance < newAmount) {
+      const userAlpsBalance = parseFloat(balances.alpsBalance);
+      if (userAlpsBalance < newAmount) {
         return {
           status: false,
-          message: t('staking.errors.insufficient_balance', {
-            balance: balances.alphaBalance,
+          message: t('staking.errors.insufficient_balance_alps', {
+            balance: balances.alpsBalance,
             required: newAmount
           }),
           data: null
@@ -1201,13 +1178,13 @@ export const buyNode = async (id: string | number, type: 'token' | 'u', amount: 
     const amountInWei = wallet.ethToWei(newAmount);
 
     // 检查用户地址允许合约使用代币的数量
-    let ownerAllowance = await getAllowance(config.shakingContractAddress, tokenAddress);
+    let ownerAllowance = await getAllowance(config.shakingALPSContractAddress, tokenAddress);
     console.log(ownerAllowance, '检查用户地址允许合约使用代币的数量');
 
     if (Number(ownerAllowance) < Number(newAmount)) {
       // 调用approve方法授权质押合约使用代币
       console.log(`授权质押合约 ${tokenAddress} 使用 ${newAmount} ${type}...`);
-      let result = await setApprove(config.shakingContractAddress, tokenAddress, amountInWei)
+      let result = await setApprove(config.shakingALPSContractAddress, tokenAddress, amountInWei)
       if (!result) {
         return {
           status: false,
@@ -1222,12 +1199,12 @@ export const buyNode = async (id: string | number, type: 'token' | 'u', amount: 
 
     // 设置质押合约
     wallet.setABI(config.shakingContractAbi);
-    wallet.updateTokenContract(config.shakingContractAddress);
+    wallet.updateTokenContract(config.shakingALPSContractAddress);
 
     // 调用购买节点函数
     const funcName = type === 'token' ? 'createPoolWithStakeToken' : 'createPoolWithUSDT';
     console.log(`调用${funcName}方法: amount=${amountInWei.toString()}`);
-    const createPoolResult = await wallet.contractFn(funcName, id, config.contractAddress);
+    const createPoolResult = await wallet.contractFn(funcName, id, config.alpsContractAddress);
 
     console.log('购买节点成功:', createPoolResult);
 
@@ -1252,7 +1229,7 @@ export const buyNode = async (id: string | number, type: 'token' | 'u', amount: 
       data: createPoolResult
     };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('购买质押节点失败:', error);
 
     let message = t('node.errors.buy_node_failed');

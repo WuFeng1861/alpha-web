@@ -3,9 +3,13 @@ import HomePage from '../views/HomePage.vue'
 import FriendsPage from '../views/FriendsPage.vue'
 import BoxPage from '../views/BoxPage.vue'
 import EarnPage from '../views/EarnPage.vue'
+import StakingNavPage from '../views/StakingNavPage.vue'
 import StakingPage from '../views/StakingPage.vue'
+import StakingALPSPage from '../views/StakingALPSPage.vue'
 import NFTStakingPage from '../views/NFTStakingPage.vue'
+import NFTStakingALPSPage from '../views/NFTStakingALPSPage.vue'
 import StakingDetailPage from '../views/StakingDetailPage.vue'
+import StakingDetailALPSPage from '../views/StakingDetailALPSPage.vue'
 import NodePage from '../views/NodePage.vue'
 import NodeDetailPage from '../views/NodeDetailPage.vue'
 import TokenPage from "../views/TokenPage.vue"
@@ -43,10 +47,22 @@ const router = createRouter({
       meta: { title: 'Earn - Alpha Project' }
     },
     {
+      path: '/staking-nav',
+      name: 'staking-nav',
+      component: StakingNavPage,
+      meta: { title: 'Staking - Alpha Project' }
+    },
+    {
       path: '/staking',
       name: 'staking',
       component: StakingPage,
-      meta: { title: 'Staking - Alpha Project' }
+      meta: { title: 'ALP Staking - Alpha Project' }
+    },
+    {
+      path: '/staking-alps',
+      name: 'staking-alps',
+      component: StakingALPSPage,
+      meta: { title: 'ALPS Staking - Alpha Project' }
     },
     {
       path: '/nft-staking',
@@ -55,10 +71,22 @@ const router = createRouter({
       meta: { title: 'NFT Staking - Alpha Project' }
     },
     {
+      path: '/nft-staking-alps',
+      name: 'nft-staking-alps',
+      component: NFTStakingALPSPage,
+      meta: { title: 'ALPS NFT Staking - Alpha Project' }
+    },
+    {
       path: '/staking-detail/:id',
       name: 'staking-detail',
       component: StakingDetailPage,
       meta: { title: 'Staking Detail - Alpha Project' }
+    },
+    {
+      path: '/staking-detail-alps/:id',
+      name: 'staking-detail-alps',
+      component: StakingDetailALPSPage,
+      meta: { title: 'ALPS Staking Detail - Alpha Project' }
     },
     {
       path: '/node',

@@ -125,6 +125,15 @@ const tokenConfigs = [
     gradient: 'from-yellow-400 to-yellow-600'
   },
   {
+    nameKey: 'token.tokens.ALPS.name',
+    descKey: 'token.tokens.ALPS.description',
+    symbol: 'ALPS',
+    icon: 'https://wufeng98.cn/imgServerApi/images/4d35f283-bf43-459b-be74-a1c1810f19a6.png',
+    balance: 'alpsBalance',
+    color: '#5BF655',
+    gradient: 'from-green-400 to-green-600'
+  },
+  {
     nameKey: 'token.tokens.alpha.name',
     descKey: 'token.tokens.alpha.description',
     symbol: 'ALPHA',
@@ -150,15 +159,6 @@ const tokenConfigs = [
     balance: 'boboBalance',
     color: '#C49235',
     gradient: 'from-yellow-200 to-yellow-300'
-  },
-  {
-    nameKey: 'token.tokens.ALPS.name',
-    descKey: 'token.tokens.ALPS.description',
-    symbol: 'ALPS',
-    icon: 'https://wufeng98.cn/imgServerApi/images/4d35f283-bf43-459b-be74-a1c1810f19a6.png',
-    balance: 'alpsBalance',
-    color: '#5BF655',
-    gradient: 'from-green-400 to-green-600'
   }
 ]
 

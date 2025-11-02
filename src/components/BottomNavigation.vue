@@ -79,32 +79,32 @@ const navigateTo = (path: string) => {
       </button>
 
       <button
-        @click="navigateTo('/staking')"
+        @click="navigateTo('/staking-nav')"
         class="flex flex-col items-center py-1 transition-all duration-300"
-        :class="currentRoute === '/staking' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
+        :class="currentRoute === '/staking-nav' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
       >
         <img
           :src="'https://wufeng98.cn/imgServerApi/images/6f4c3eff-a594-49a5-82a2-be9e4a808452.png'"
           class="w-6 h-6"
-          :class="currentRoute !== '/staking' ? 'opacity-40' : ''"
+          :class="currentRoute !== '/staking-nav' ? 'opacity-40' : ''"
           alt="质押"
         />
         <span class="text-xs mt-1">{{ t('nav.staking') }}</span>
       </button>
 
-      <!--<button-->
-      <!--  @click="navigateTo('/node')"-->
-      <!--  class="flex flex-col items-center py-1 transition-all duration-300"-->
-      <!--  :class="currentRoute === '/node' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"-->
-      <!--&gt;-->
-      <!--  <img-->
-      <!--    :src="'https://wufeng98.cn/imgServerApi/images/dec88fbd-3e2c-42f7-998b-7f53ed650728.png'"-->
-      <!--    class="w-6 h-6"-->
-      <!--    :class="currentRoute !== '/node' ? 'opacity-40' : ''"-->
-      <!--    alt="节点"-->
-      <!--  />-->
-      <!--  <span class="text-xs mt-1">{{ t('nav.node') }}</span>-->
-      <!--</button>-->
+      <button
+       @click="navigateTo('/node')"
+       class="flex flex-col items-center py-1 transition-all duration-300"
+       :class="currentRoute === '/node' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
+       >
+       <img
+         :src="'https://wufeng98.cn/imgServerApi/images/dec88fbd-3e2c-42f7-998b-7f53ed650728.png'"
+         class="w-6 h-6"
+         :class="currentRoute !== '/node' ? 'opacity-40' : ''"
+         alt="节点"
+       />
+       <span class="text-xs mt-1">{{ t('nav.node') }}</span>
+      </button>
 
       <button
         @click="navigateTo('/token')"

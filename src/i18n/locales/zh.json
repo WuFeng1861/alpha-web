@@ -104,6 +104,11 @@
   "staking": {
     "total_amount": "总金额",
     "title": "NFT分红卡片",
+    "nav_title": "质押导航",
+    "alp_staking": "ALP 质押",
+    "alp_staking_desc": "质押 ALP 代币获取收益",
+    "alps_staking": "ALPS 质押",
+    "alps_staking_desc": "质押 ALPS 代币获取收益",
     "my_staking_pool": "我的质押池",
     "my_staking_pool_nft": "我的质押池(NFT)",
     "my_staking": "我的质押",
@@ -166,6 +171,7 @@
       "wallet_not_initialized": "钱包实例未初始化",
       "invalid_stake_amount": "请输入有效的质押数量",
       "insufficient_balance": "余额不足！您的ALPHA余额为 {balance}，需要 {required}",
+      "insufficient_balance_alps": "余额不足！您的ALPS余额为 {balance}，需要 {required}",
       "insufficient_funds_or_gas": "余额不足或gas费不够",
       "alpha_balance_insufficient": "ALPHA代币余额不足",
       "allowance_insufficient": "授权额度不足，请重试",
@@ -414,10 +420,12 @@
     "errors": {
       "invalid_amount": "请输入有效的映射数量",
       "insufficient_balance": "ALP余额不足",
+      "insufficient_balance_alps": "ALPS余额不足",
       "exceeds_max_amount": "单次映射不能超过{amount} ALP",
       "user_cancelled": "用户取消了交易",
       "insufficient_allowance": "授权额度不足",
-      "approve_first": "需要先授权ALP给映射合约"
+      "approve_first": "需要先授权ALP给映射合约",
+      "first_mapping_closed": "第一阶段映射已关闭，11.25开启第二期映射"
     }
   }
 }

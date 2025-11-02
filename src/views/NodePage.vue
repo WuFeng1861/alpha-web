@@ -7,7 +7,7 @@ import NodeExchangeModal from '../components/NodeExchangeModal.vue';
 import config from '../assets/config';
 import {useRouter} from 'vue-router';
 import toast from '../utils/toast';
-import {buyNode, getNodeMessage} from '../utils/useStaking';
+import {buyNode, getNodeMessage} from '../utils/useStakingALPS';
 
 const {t} = useI18n();
 const router = useRouter();
@@ -25,9 +25,9 @@ const nodeList = ref([
     totalPoints: 20,
     pointsNow: 0,
     progress: 0.5, // 进度百分比
-    tokens: 2000,
-    uTokens: 2000,
-    members: 2000,
+    tokens: 2200,
+    uTokens: 2200,
+    members: 2200,
     color: '#FFD700', // 金色
     bgGradient: 'from-yellow-400 to-yellow-600',
     buttonText: 'click_exchange',
@@ -40,9 +40,9 @@ const nodeList = ref([
     totalPoints: 300,
     pointsNow: 0,
     progress: 0, // 进度百分比
-    tokens: 500,
-    uTokens: 500,
-    members: 500,
+    tokens: 700,
+    uTokens: 700,
+    members: 700,
     color: '#C0C0C0', // 银色
     bgGradient: 'from-gray-300 to-gray-500',
     buttonText: 'click_exchange',
@@ -55,9 +55,9 @@ const nodeList = ref([
     totalPoints: 1000,
     pointsNow: 0,
     progress: 0, // 进度百分比
-    tokens: 100,
-    uTokens: 100,
-    members: 100,
+    tokens: 150,
+    uTokens: 150,
+    members: 150,
     color: '#CD7F32', // 铜色
     bgGradient: 'from-orange-400 to-orange-600',
     buttonText: 'click_exchange',
@@ -192,10 +192,10 @@ onMounted(async () => {
                   <span class="text-white font-medium">{{ node.tokens }}{{ t('node.million') }}</span>
                 </div>
                 <!-- U代币数量 -->
-                <div class="flex items-center">
+                <!-- <div class="flex items-center">
                   <div class="w-4 h-4 rounded-full bg-white bg-opacity-60 mr-2"></div>
                   <span class="text-white font-medium">{{ node.uTokens }} U</span>
-                </div>
+                </div> -->
               </div>
               <!-- 成员数量 -->
               <div class="flex items-center">
