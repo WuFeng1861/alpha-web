@@ -131,8 +131,8 @@ export function useAlpMapping() {
 
   // 执行ALP到ALPS的映射
   const executeMapping = async (amount: string, t?: (key: string, params?: any) => string): Promise<boolean> => {
-    toast.error(t ? t('mapping.errors.first_mapping_closed') : '第一阶段映射以关闭');
-    return false;
+    // toast.error(t ? t('mapping.errors.first_mapping_closed') : '第一阶段映射以关闭');
+    // return false;
     try {
       // 验证输入
       const numAmount = parseFloat(amount)
