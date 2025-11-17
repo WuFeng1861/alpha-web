@@ -269,7 +269,7 @@ const handleClaimBNB = async () => {
             </div>
           </div>
           <div v-if="paginatedDirectRefs.length === 0" class="text-center text-gray-400 py-2">
-            暂无直推
+            {{ t('friends.no_direct_refs') }}
           </div>
           <!-- 分页控制 -->
           <div v-if="directRefs.length > 0" class="flex justify-center items-center gap-2 mt-4">

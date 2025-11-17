@@ -35,7 +35,9 @@
     "contribution_points": "Contribution Points",
     "claim_bnb": "Claim BNB",
     "your_invitation_link": "Your Invitation Link",
-    "copy": "Copy"
+    "copy": "Copy",
+    "copyLink": "Copy Link",
+    "no_direct_refs": "No direct referrals"
   },
   "box": {
     "open_box": "Open Box",

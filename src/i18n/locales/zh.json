@@ -35,7 +35,9 @@
     "contribution_points": "贡献点",
     "claim_bnb": "领取BNB",
     "your_invitation_link": "您的邀请链接",
-    "copy": "复制"
+    "copy": "复制",
+    "copyLink": "复制邀请链接",
+    "no_direct_refs": "暂无直推"
   },
   "box": {
     "open_box": "开启盲盒",
