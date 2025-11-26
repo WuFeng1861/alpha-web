@@ -50,33 +50,33 @@ const navigateTo = (path: string) => {
         <span class="text-xs mt-1">{{ t('nav.box') }}</span>
       </button>
 
-      <button
-          @click="navigateTo('/bobo')"
-          class="flex flex-col items-center py-1 transition-all duration-300"
-          :class="currentRoute === '/bobo' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
-      >
-        <img
-            :src="'https://wufeng98.cn/imgServerApi/images/7d2f5c20-2dcd-45eb-a572-045f627a2c7c.png'"
-            class="w-6 h-6"
-            :class="currentRoute !== '/bobo' ? 'opacity-40' : ''"
-            alt="BoBo"
-        />
-        <span class="text-xs mt-1">{{t('nav.BoBo')}}</span>
-      </button>
+      <!--<button-->
+      <!--    @click="navigateTo('/bobo')"-->
+      <!--    class="flex flex-col items-center py-1 transition-all duration-300"-->
+      <!--    :class="currentRoute === '/bobo' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"-->
+      <!--&gt;-->
+      <!--  <img-->
+      <!--      :src="'https://wufeng98.cn/imgServerApi/images/7d2f5c20-2dcd-45eb-a572-045f627a2c7c.png'"-->
+      <!--      class="w-6 h-6"-->
+      <!--      :class="currentRoute !== '/bobo' ? 'opacity-40' : ''"-->
+      <!--      alt="BoBo"-->
+      <!--  />-->
+      <!--  <span class="text-xs mt-1">{{t('nav.BoBo')}}</span>-->
+      <!--</button>-->
 
-      <button
-          @click="navigateTo('/dex')"
-          class="flex flex-col items-center py-1 transition-all duration-300"
-          :class="currentRoute === '/dex' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"
-      >
-        <img
-            :src="'https://wufeng98.cn/imgServerApi/images/877ce503-d353-4c57-8458-a345d7ee91a9.png'"
-            class="w-6 h-6"
-            :class="currentRoute !== '/dex' ? 'opacity-40' : ''"
-            alt="Dex"
-        />
-        <span class="text-xs mt-1">{{t('nav.Dex')}}</span>
-      </button>
+      <!--<button-->
+      <!--    @click="navigateTo('/dex')"-->
+      <!--    class="flex flex-col items-center py-1 transition-all duration-300"-->
+      <!--    :class="currentRoute === '/dex' ? 'text-alpha-primary' : 'text-gray-400 hover:text-gray-200'"-->
+      <!--&gt;-->
+      <!--  <img-->
+      <!--      :src="'https://wufeng98.cn/imgServerApi/images/877ce503-d353-4c57-8458-a345d7ee91a9.png'"-->
+      <!--      class="w-6 h-6"-->
+      <!--      :class="currentRoute !== '/dex' ? 'opacity-40' : ''"-->
+      <!--      alt="Dex"-->
+      <!--  />-->
+      <!--  <span class="text-xs mt-1">{{t('nav.Dex')}}</span>-->
+      <!--</button>-->
 
       <button
         @click="navigateTo('/staking-nav')"

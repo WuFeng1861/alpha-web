@@ -15,8 +15,8 @@ import NodeDetailPage from '../views/NodeDetailPage.vue'
 import TokenPage from "../views/TokenPage.vue"
 import TokenTransferPage from '../views/TokenTransferPage.vue'
 import AlpMappingPage from '../views/AlpMappingPage.vue'
-import BoBoPage from '../views/BoBoPage.vue'
-import DexPage from '../views/DexPage.vue';
+// import BoBoPage from '../views/BoBoPage.vue'
+// import DexPage from '../views/DexPage.vue';
 
 
 const router = createRouter({
@@ -118,18 +118,18 @@ const router = createRouter({
       component: AlpMappingPage,
       meta: { title: 'ALP Mapping - Alpha Project' }
     },
-    {
-      path: '/bobo',
-      name: 'bobo',
-      component: BoBoPage,
-      meta: { title: 'BoBo - Alpha Project' }
-    },
-    {
-      path: '/dex',
-      name: 'dex',
-      component: DexPage,
-      meta: { title: 'Dex - Alpha Project' }
-    },
+    // {
+    //   path: '/bobo',
+    //   name: 'bobo',
+    //   component: BoBoPage,
+    //   meta: { title: 'BoBo - Alpha Project' }
+    // },
+    // {
+    //   path: '/dex',
+    //   name: 'dex',
+    //   component: DexPage,
+    //   meta: { title: 'Dex - Alpha Project' }
+    // },
     // Redirect any unknown routes to home
     {
       path: '/:pathMatch(.*)*',
